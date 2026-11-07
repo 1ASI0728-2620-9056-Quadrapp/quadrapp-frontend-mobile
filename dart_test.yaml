@@ -1,0 +1,6 @@
+tags:
+  # Capturas de pantalla para revisar el diseño (docs/screenshots/, fuera de
+  # git). No corren con `flutter test`; para generarlas:
+  #   flutter test --tags screenshots --run-skipped --update-goldens
+  screenshots:
+    skip: "Capturas: flutter test --tags screenshots --run-skipped --update-goldens"
