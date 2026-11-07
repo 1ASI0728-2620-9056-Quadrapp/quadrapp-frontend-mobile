@@ -878,47 +878,11 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get nav_settings;
 
-  /// Bottom bar (operations): the shift console.
-  ///
-  /// In en, this message translates to:
-  /// **'Shift'**
-  String get nav_shift;
-
-  /// Bottom bar (operations): the parking lots.
-  ///
-  /// In en, this message translates to:
-  /// **'Lots'**
-  String get nav_lots;
-
   /// Bottom bar (operations): sensors and gateways.
   ///
   /// In en, this message translates to:
   /// **'Devices'**
   String get nav_devices;
-
-  /// Placeholder title of the Shift tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Shift console coming soon'**
-  String get ops_shiftSoonTitle;
-
-  /// Placeholder message of the Shift tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Soon you\'ll see capacity, flow and the expected saturation of your lot.'**
-  String get ops_shiftSoonMessage;
-
-  /// Placeholder title of the Lots tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Lots overview coming soon'**
-  String get ops_lotsSoonTitle;
-
-  /// Placeholder message of the Lots tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Soon you\'ll see every lot with its occupancy and status.'**
-  String get ops_lotsSoonMessage;
 
   /// Placeholder title of the Devices tab.
   ///
@@ -1591,12 +1555,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No data'**
   String get space_unknown;
-
-  /// Honest note under the account card.
-  ///
-  /// In en, this message translates to:
-  /// **'More settings, like alerts and language, arrive in a later update.'**
-  String get settings_moreSoon;
 
   /// Label of the account role.
   ///
@@ -3023,6 +2981,480 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your arrival time was just updated'**
   String get eta_updatedNow;
+
+  /// Title of the language setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get settings_language;
+
+  /// Name of English, always written in English.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get settings_languageEnglish;
+
+  /// Name of Spanish, always written in Spanish.
+  ///
+  /// In en, this message translates to:
+  /// **'Español'**
+  String get settings_languageSpanish;
+
+  /// Help under the language choice.
+  ///
+  /// In en, this message translates to:
+  /// **'Applies right away and stays on this phone, even after you sign out.'**
+  String get settings_languageHelp;
+
+  /// Title of the map card on Home.
+  ///
+  /// In en, this message translates to:
+  /// **'Getting there'**
+  String get map_title;
+
+  /// Screen reader hint of the map card.
+  ///
+  /// In en, this message translates to:
+  /// **'Opens the map full screen'**
+  String get map_openHint;
+
+  /// Screen reader label of the map with the campus only.
+  ///
+  /// In en, this message translates to:
+  /// **'Map of {lot}'**
+  String map_semanticsLot(String lot);
+
+  /// Screen reader label of the map with the route.
+  ///
+  /// In en, this message translates to:
+  /// **'Map of the route from your location to {lot}'**
+  String map_semanticsRoute(String lot);
+
+  /// Privacy note under the map without the driver's location.
+  ///
+  /// In en, this message translates to:
+  /// **'Map by Google. It only shows your campus: your location isn\'t used.'**
+  String get map_noteLot;
+
+  /// Privacy note under the map with the route from the driver's location.
+  ///
+  /// In en, this message translates to:
+  /// **'Map by Google. To draw the route, Google gets your approximate location (about 100 m). Quadrapp never receives it.'**
+  String get map_noteLocation;
+
+  /// Shown instead of the map without connection.
+  ///
+  /// In en, this message translates to:
+  /// **'The map isn\'t available right now.'**
+  String get map_unavailable;
+
+  /// Privacy line when the Home map shows the route from the driver's location.
+  ///
+  /// In en, this message translates to:
+  /// **'Quadrapp receives only arrival minutes. Your approximate location goes to Google to draw the map.'**
+  String get home_privacyLineMap;
+
+  /// Heading of the Operations shift console (US29).
+  ///
+  /// In en, this message translates to:
+  /// **'Shift operations'**
+  String get shift_title;
+
+  /// Title of the capacity card.
+  ///
+  /// In en, this message translates to:
+  /// **'Capacity · {count} spaces'**
+  String shift_capacityTitle(int count);
+
+  /// Free spaces KPI label.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get shift_free;
+
+  /// Occupied spaces KPI label.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupied'**
+  String get shift_occupied;
+
+  /// Unknown spaces KPI label (never free).
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get shift_unknown;
+
+  /// Occupancy without unknown spaces.
+  ///
+  /// In en, this message translates to:
+  /// **'{pct}% occupied · unknown spaces never count as free'**
+  String shift_occupancyLine(int pct);
+
+  /// Capacity card when no space has data.
+  ///
+  /// In en, this message translates to:
+  /// **'No space is reporting right now · unknown spaces never count as free'**
+  String get shift_occupancyNoData;
+
+  /// Freshness of the shift data; age is already 'X s ago'.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated {age}'**
+  String shift_updated(String age);
+
+  /// Title of the saturation card (US29 sc. 2).
+  ///
+  /// In en, this message translates to:
+  /// **'Expected saturation'**
+  String get shift_saturationTitle;
+
+  /// Expected saturation moment.
+  ///
+  /// In en, this message translates to:
+  /// **'Reaches {pct}% at {time}'**
+  String shift_saturationAt(int pct, String time);
+
+  /// Minutes until expected saturation, with advice.
+  ///
+  /// In en, this message translates to:
+  /// **'In {minutes} min · plan the flow at the accesses before the peak.'**
+  String shift_saturationIn(int minutes);
+
+  /// Expected saturation is now or past.
+  ///
+  /// In en, this message translates to:
+  /// **'Imminent · plan the flow at the accesses now.'**
+  String get shift_saturationSoon;
+
+  /// Forecast does not expect saturation.
+  ///
+  /// In en, this message translates to:
+  /// **'No saturation expected for now'**
+  String get shift_saturationNone;
+
+  /// Partial response: forecast missing (TS17 sc. 3).
+  ///
+  /// In en, this message translates to:
+  /// **'The forecast isn\'t available right now. The current status is still up to date.'**
+  String get shift_saturationUnavailable;
+
+  /// Title of the device alerts card.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get shift_alertsTitle;
+
+  /// Link to the Devices tab.
+  ///
+  /// In en, this message translates to:
+  /// **'See devices'**
+  String get shift_alertsSeeDevices;
+
+  /// An unreachable gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway {id} offline'**
+  String shift_alertGatewayDown(String id);
+
+  /// Gateway alert detail; age is 'X min ago'.
+  ///
+  /// In en, this message translates to:
+  /// **'Its sensors report no data · last signal {age}'**
+  String shift_alertGatewaySeen(String age);
+
+  /// Gateway alert detail when it never reported.
+  ///
+  /// In en, this message translates to:
+  /// **'Its sensors report no data · never reported'**
+  String get shift_alertGatewayNever;
+
+  /// Unreachable space or pass sensors.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 sensor offline} other{{count} sensors offline}}'**
+  String shift_alertSensorsDown(int count);
+
+  /// Detail of unreachable sensors.
+  ///
+  /// In en, this message translates to:
+  /// **'Their spaces show as unknown'**
+  String get shift_alertSensorsDownHint;
+
+  /// Low battery sensors.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 sensor with low battery} other{{count} sensors with low battery}}'**
+  String shift_alertLowBattery(int count);
+
+  /// Detail of low battery sensors.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule their maintenance'**
+  String get shift_alertLowBatteryHint;
+
+  /// No device needs attention.
+  ///
+  /// In en, this message translates to:
+  /// **'All devices are reporting normally'**
+  String get shift_alertsNone;
+
+  /// Device health missing.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t read the device health. Pull down to retry.'**
+  String get shift_alertsUnavailable;
+
+  /// Title of the flow card.
+  ///
+  /// In en, this message translates to:
+  /// **'Flow · last {minutes} min'**
+  String shift_flowTitle(int minutes);
+
+  /// Entries and exits in the window.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries {entries} · Exits {exits}'**
+  String shift_flowDetail(int entries, int exits);
+
+  /// Screen reader text for the net flow.
+  ///
+  /// In en, this message translates to:
+  /// **'Net balance {value}'**
+  String shift_flowNet(String value);
+
+  /// Lot without flow counting.
+  ///
+  /// In en, this message translates to:
+  /// **'The accesses don\'t count entries or exits'**
+  String get shift_flowNone;
+
+  /// Partial response: flow missing.
+  ///
+  /// In en, this message translates to:
+  /// **'The flow isn\'t available right now'**
+  String get shift_flowUnavailable;
+
+  /// Recoverable error title.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the shift console'**
+  String get shift_errorTitle;
+
+  /// 403 from the server (TS17 sc. 2).
+  ///
+  /// In en, this message translates to:
+  /// **'Your account doesn\'t have access to this console.'**
+  String get shift_forbidden;
+
+  /// 404: no published layout.
+  ///
+  /// In en, this message translates to:
+  /// **'This lot has no published layout yet'**
+  String get shift_noLayoutTitle;
+
+  /// How to fix a lot without layout.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish it from the web console to see its operation here.'**
+  String get shift_noLayoutMessage;
+
+  /// Lot prompt in Operations.
+  ///
+  /// In en, this message translates to:
+  /// **'Which parking lot do you run?'**
+  String get shift_promptTitle;
+
+  /// Lot prompt message in Operations.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose it to see its operation live.'**
+  String get shift_promptMessage;
+
+  /// Screen reader text while loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the shift console'**
+  String get shift_loading;
+
+  /// Operations tab: vehicle accesses.
+  ///
+  /// In en, this message translates to:
+  /// **'Gates'**
+  String get nav_accesses;
+
+  /// Operations tab: analytics.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get nav_analytics;
+
+  /// Operations tab: university administration.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get nav_more;
+
+  /// Placeholder title.
+  ///
+  /// In en, this message translates to:
+  /// **'Gates arrive soon'**
+  String get ops_accessesSoonTitle;
+
+  /// Placeholder message.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon you\'ll see the live flow of each gate and its settings.'**
+  String get ops_accessesSoonMessage;
+
+  /// Placeholder title.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics arrive soon'**
+  String get ops_analyticsSoonTitle;
+
+  /// Placeholder message.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon you\'ll see the occupancy history and how accurate the forecast is.'**
+  String get ops_analyticsSoonMessage;
+
+  /// Placeholder title.
+  ///
+  /// In en, this message translates to:
+  /// **'Administration arrives soon'**
+  String get ops_moreSoonTitle;
+
+  /// Placeholder message.
+  ///
+  /// In en, this message translates to:
+  /// **'Soon you\'ll manage the campus calendar, the email domains and your team here.'**
+  String get ops_moreSoonMessage;
+
+  /// Link from More to Devices.
+  ///
+  /// In en, this message translates to:
+  /// **'See devices'**
+  String get ops_moreDevices;
+
+  /// Heading of the Operations zones tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking lots'**
+  String get lots_title;
+
+  /// Lot, that it is free and how many zones.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · free parking · {count, plural, =1{1 zone} other{{count} zones}}'**
+  String lots_subtitle(String name, int count);
+
+  /// Zone filter: all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get lots_filterAll;
+
+  /// Zone filter: zones without unknown spaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Operating'**
+  String get lots_filterOk;
+
+  /// Zone filter: zones with unknown spaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Attention'**
+  String get lots_filterAttention;
+
+  /// Zone occupancy without unknown spaces.
+  ///
+  /// In en, this message translates to:
+  /// **'{pct}% occupied'**
+  String lots_zoneOccupied(int pct);
+
+  /// Zone without any space reporting.
+  ///
+  /// In en, this message translates to:
+  /// **'No data'**
+  String get lots_zoneNoData;
+
+  /// Zone counts.
+  ///
+  /// In en, this message translates to:
+  /// **'{total} spaces · {free} free · {occupied} occupied · {unknown} unknown'**
+  String lots_zoneCounts(int total, int free, int occupied, int unknown);
+
+  /// Zone without unknown spaces.
+  ///
+  /// In en, this message translates to:
+  /// **'Operating'**
+  String get lots_zoneOk;
+
+  /// Zone with unknown spaces.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Attention · 1 unknown space} other{Attention · {count} unknown spaces}}'**
+  String lots_zoneAttention(int count);
+
+  /// Screen reader hint of a zone card.
+  ///
+  /// In en, this message translates to:
+  /// **'Shows its spaces below'**
+  String get lots_zoneHint;
+
+  /// Filter hides every zone.
+  ///
+  /// In en, this message translates to:
+  /// **'No zone matches this filter'**
+  String get lots_emptyFilter;
+
+  /// Published layout without zones.
+  ///
+  /// In en, this message translates to:
+  /// **'This parking lot doesn\'t have zones yet'**
+  String get lots_noZones;
+
+  /// Title of the spaces card.
+  ///
+  /// In en, this message translates to:
+  /// **'Spaces · {zone}'**
+  String lots_spacesTitle(String zone);
+
+  /// Opens the zone with every space.
+  ///
+  /// In en, this message translates to:
+  /// **'See all {count}'**
+  String lots_spacesSeeAll(int count);
+
+  /// Space filter: all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get lots_spacesAll;
+
+  /// Unknown space state (never free).
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get lots_spaceUnknown;
+
+  /// Note under the spaces grid.
+  ///
+  /// In en, this message translates to:
+  /// **'An unknown space doesn\'t mean it\'s available.'**
+  String get lots_spacesUnknownNote;
+
+  /// Space filter shows nothing.
+  ///
+  /// In en, this message translates to:
+  /// **'No spaces in this state'**
+  String get lots_spacesEmpty;
+
+  /// Spaces not shown in the grid.
+  ///
+  /// In en, this message translates to:
+  /// **'+{count} more'**
+  String lots_spacesMore(int count);
 }
 
 class _AppLocalizationsDelegate

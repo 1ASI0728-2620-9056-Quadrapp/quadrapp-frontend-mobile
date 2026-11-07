@@ -60,7 +60,9 @@ void main() {
     expect(world().notifications.eventAlerts, isTrue);
     // Lo demás no cambió: el PUT lleva todos los campos.
     expect(world().notifications.saturationAlerts, isTrue);
-    expect(world().notifications.locale, 'es-419');
+    // El idioma es el elegido en la app (inglés), no el que vino del
+    // servidor (docs/07).
+    expect(world().notifications.locale, 'en-US');
   });
 
   testWidgets('apagar las notificaciones desactiva las alertas', (

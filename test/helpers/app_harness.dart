@@ -6,6 +6,7 @@ import 'package:quadrapp_mobile/app/config/app_config.dart';
 import 'package:quadrapp_mobile/app/di/injector.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_controls.dart';
 import 'package:quadrapp_mobile/app/startup.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/core/storage/key_value_store.dart';
 import 'package:quadrapp_mobile/core/storage/secure_store.dart';
 import 'test_seed.dart';
@@ -55,6 +56,8 @@ class AppHarness {
 
   Widget app({Locale? locale, bool showDebugEntry = false}) => QuadrappApp(
     router: router,
+    // Con un idioma fijo, ese; si no, el que se elija en Ajustes.
+    languageCubit: locale == null ? locator<LanguageCubit>() : null,
     locale: locale,
     showDebugEntry: showDebugEntry,
   );

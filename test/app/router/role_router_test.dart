@@ -65,7 +65,7 @@ void main() {
       for (final label in ['Home', 'Zones', 'Forecast', 'Alerts']) {
         expect(tab(label), findsOneWidget);
       }
-      for (final label in ['Shift', 'Lots', 'Devices', 'Settings']) {
+      for (final label in ['Gates', 'Analytics', 'More']) {
         expect(tab(label), findsNothing);
       }
     });
@@ -76,17 +76,18 @@ void main() {
         await start(tester, role: role);
 
         expect(location(), opsShiftPath);
-        for (final label in ['Shift', 'Lots', 'Devices', 'Settings']) {
+        // La misma barra para los dos roles, como el diseño.
+        for (final label in ['Home', 'Zones', 'Gates', 'Analytics', 'More']) {
           expect(tab(label), findsOneWidget);
         }
-        for (final label in ['Home', 'Zones', 'Forecast', 'Alerts']) {
+        for (final label in ['Forecast', 'Alerts']) {
           expect(tab(label), findsNothing);
         }
       });
     }
 
-    testWidgets('en español las pestañas de Operación son Turno, Lotes, '
-        'Dispositivos y Ajustes', (tester) async {
+    testWidgets('en español las pestañas de Operación son Inicio, Zonas, '
+        'Accesos, Analítica y Más', (tester) async {
       tester.view
         ..physicalSize = const Size(400, 900)
         ..devicePixelRatio = 1;
@@ -100,7 +101,7 @@ void main() {
       await tester.pumpWidget(harness.app(locale: const Locale('es')));
       await tester.pumpAndSettle();
 
-      for (final label in ['Turno', 'Lotes', 'Dispositivos', 'Ajustes']) {
+      for (final label in ['Inicio', 'Zonas', 'Accesos', 'Analítica', 'Más']) {
         expect(tab(label), findsOneWidget);
       }
     });
@@ -115,14 +116,17 @@ void main() {
         for (final path in [
           opsPath,
           opsShiftPath,
-          opsLotsPath,
-          '$opsLotsPath/1',
+          opsZonesPath,
+          '$opsZonesPath/1',
+          opsAccessesPath,
+          opsAnalyticsPath,
+          opsMorePath,
           opsDevicesPath,
-          opsSettingsPath,
+          opsAccountPath,
         ]) {
           await goTo(tester, path);
           expect(location(), homePath, reason: path);
-          expect(tab('Home'), findsOneWidget, reason: path);
+          expect(tab('Forecast'), findsOneWidget, reason: path);
         }
       },
     );
@@ -142,7 +146,7 @@ void main() {
         ]) {
           await goTo(tester, path);
           expect(location(), opsShiftPath, reason: path);
-          expect(tab('Shift'), findsOneWidget, reason: path);
+          expect(tab('Analytics'), findsOneWidget, reason: path);
         }
       });
     }
@@ -171,16 +175,17 @@ void main() {
   });
 
   group('cada shell conserva su estado y su propia barra', () {
-    testWidgets('Operación: las cuatro pestañas navegan a sus rutas', (
+    testWidgets('Operación: las cinco pestañas navegan a sus rutas', (
       tester,
     ) async {
       await start(tester, role: UserRole.admin);
 
       for (final (label, path) in [
-        ('Lots', opsLotsPath),
-        ('Devices', opsDevicesPath),
-        ('Settings', opsSettingsPath),
-        ('Shift', opsShiftPath),
+        ('Zones', opsZonesPath),
+        ('Gates', opsAccessesPath),
+        ('Analytics', opsAnalyticsPath),
+        ('More', opsMorePath),
+        ('Home', opsShiftPath),
       ]) {
         await tester.tap(tab(label));
         await tester.pumpAndSettle();
@@ -189,33 +194,41 @@ void main() {
       }
     });
 
-    testWidgets('Ajustes de Operación muestra el rol Administrator y cierra '
-        'la sesión', (tester) async {
-      await start(tester, role: UserRole.admin);
+    testWidgets(
+      'La cuenta de Operación (avatar) muestra el rol Administrator y cierra '
+      'la sesión',
+      (tester) async {
+        await start(tester, role: UserRole.admin);
 
-      await tester.tap(tab('Settings'));
-      await tester.pumpAndSettle();
-      expect(find.text('Administrator'), findsOneWidget);
+        await tester.tap(find.byTooltip('Account'));
+        await tester.pumpAndSettle();
+        // La cuenta se apila sobre la consola, sin barra inferior.
+        expect(find.byType(NavigationBar), findsNothing);
+        expect(find.text('Administrator'), findsOneWidget);
 
-      await tester.tap(find.widgetWithText(FilledButton, 'Sign out'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(FilledButton, 'Sign out').last);
-      await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'Sign out'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'Sign out').last);
+        await tester.pumpAndSettle();
 
-      expect(location(), loginPath);
-      expect(await harness.locator<SessionStore>().read(), isNull);
-    });
+        expect(location(), loginPath);
+        expect(await harness.locator<SessionStore>().read(), isNull);
+      },
+    );
 
-    testWidgets('Ajustes de Operación muestra Operator para ese rol', (
-      tester,
-    ) async {
-      await start(tester, role: UserRole.operator);
+    testWidgets(
+      'La cuenta de Operación (avatar) muestra Operator para ese rol',
+      (
+        tester,
+      ) async {
+        await start(tester, role: UserRole.operator);
 
-      await tester.tap(tab('Settings'));
-      await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Account'));
+        await tester.pumpAndSettle();
 
-      expect(find.text('Operator'), findsOneWidget);
-    });
+        expect(find.text('Operator'), findsOneWidget);
+      },
+    );
   });
 
   group('el login lleva a cada rol a su experiencia', () {
@@ -236,7 +249,7 @@ void main() {
       await signIn(tester, 'administrador@upc.edu.pe');
 
       expect(location(), opsShiftPath);
-      expect(tab('Shift'), findsOneWidget);
+      expect(tab('Analytics'), findsOneWidget);
     });
 
     testWidgets('conductor@upc.edu.pe entra a /home', (tester) async {

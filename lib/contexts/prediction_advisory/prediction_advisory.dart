@@ -4,6 +4,7 @@ library;
 
 export 'application/usecases/estimate_arrival_eta.dart';
 export 'application/usecases/eta_preferences_usecases.dart';
+export 'application/usecases/get_approximate_position.dart';
 export 'application/usecases/get_lot_forecasts.dart';
 export 'application/usecases/get_next_availability.dart';
 export 'application/usecases/location_permission_usecases.dart';

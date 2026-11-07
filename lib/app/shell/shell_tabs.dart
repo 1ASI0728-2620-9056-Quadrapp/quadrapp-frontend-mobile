@@ -48,34 +48,41 @@ abstract final class AppTab {
   ];
 }
 
-/// Las pestañas de la experiencia de **Operación** (roles `ADMIN` y
-/// `OPERATOR`: un solo segmento), en el orden de sus ramas.
+/// Las pestañas de la experiencia de **Operación** (administrador de
+/// universidad: roles `ADMIN` y `OPERATOR`, la misma barra), en el orden de sus
+/// ramas, como el diseño. Dispositivos cuelga de Más; la cuenta, del avatar.
 abstract final class OpsTab {
-  static const int shift = 0;
-  static const int lots = 1;
-  static const int devices = 2;
-  static const int settings = 3;
+  static const int home = 0;
+  static const int zones = 1;
+  static const int accesses = 2;
+  static const int analytics = 3;
+  static const int more = 4;
 
   static final List<ShellTab> operations = [
     ShellTab(
-      label: (l10n) => l10n.nav_shift,
-      icon: Icons.dashboard_outlined,
-      selectedIcon: Icons.dashboard,
+      label: (l10n) => l10n.nav_home,
+      icon: Icons.space_dashboard_outlined,
+      selectedIcon: Icons.space_dashboard,
     ),
     ShellTab(
-      label: (l10n) => l10n.nav_lots,
+      label: (l10n) => l10n.nav_zones,
       icon: Icons.local_parking_outlined,
       selectedIcon: Icons.local_parking,
     ),
     ShellTab(
-      label: (l10n) => l10n.nav_devices,
-      icon: Icons.sensors_outlined,
-      selectedIcon: Icons.sensors,
+      label: (l10n) => l10n.nav_accesses,
+      icon: Icons.door_front_door_outlined,
+      selectedIcon: Icons.door_front_door,
     ),
     ShellTab(
-      label: (l10n) => l10n.nav_settings,
-      icon: Icons.settings_outlined,
-      selectedIcon: Icons.settings,
+      label: (l10n) => l10n.nav_analytics,
+      icon: Icons.insights_outlined,
+      selectedIcon: Icons.insights,
+    ),
+    ShellTab(
+      label: (l10n) => l10n.nav_more,
+      icon: Icons.more_horiz_rounded,
+      selectedIcon: Icons.more_horiz_rounded,
     ),
   ];
 }

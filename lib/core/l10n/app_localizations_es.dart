@@ -478,27 +478,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nav_settings => 'Ajustes';
 
   @override
-  String get nav_shift => 'Turno';
-
-  @override
-  String get nav_lots => 'Lotes';
-
-  @override
   String get nav_devices => 'Dispositivos';
-
-  @override
-  String get ops_shiftSoonTitle => 'La consola de turno llega pronto';
-
-  @override
-  String get ops_shiftSoonMessage =>
-      'Pronto verás la capacidad, el flujo y la saturación prevista de tu estacionamiento.';
-
-  @override
-  String get ops_lotsSoonTitle => 'El resumen de lotes llega pronto';
-
-  @override
-  String get ops_lotsSoonMessage =>
-      'Pronto verás cada lote con su ocupación y su estado.';
 
   @override
   String get ops_devicesSoonTitle => 'Los dispositivos llegan pronto';
@@ -917,10 +897,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get space_unknown => 'Sin datos';
-
-  @override
-  String get settings_moreSoon =>
-      'Más ajustes, como las alertas y el idioma, llegan en una próxima actualización.';
 
   @override
   String get settings_role => 'Rol';
@@ -1778,4 +1754,324 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get eta_updatedNow => 'Tu llegada se acaba de actualizar';
+
+  @override
+  String get settings_language => 'Idioma';
+
+  @override
+  String get settings_languageEnglish => 'English';
+
+  @override
+  String get settings_languageSpanish => 'Español';
+
+  @override
+  String get settings_languageHelp =>
+      'Se aplica al instante y queda guardado en este teléfono, incluso al cerrar sesión.';
+
+  @override
+  String get map_title => 'Cómo llegar';
+
+  @override
+  String get map_openHint => 'Abre el mapa en pantalla completa';
+
+  @override
+  String map_semanticsLot(String lot) {
+    return 'Mapa de $lot';
+  }
+
+  @override
+  String map_semanticsRoute(String lot) {
+    return 'Mapa de la ruta desde tu ubicación hasta $lot';
+  }
+
+  @override
+  String get map_noteLot =>
+      'Mapa de Google. Solo muestra tu sede: no usamos tu ubicación.';
+
+  @override
+  String get map_noteLocation =>
+      'Mapa de Google. Para dibujar la ruta, Google recibe tu ubicación aproximada (unos 100 m). Quadrapp nunca la recibe.';
+
+  @override
+  String get map_unavailable => 'El mapa no está disponible en este momento.';
+
+  @override
+  String get home_privacyLineMap =>
+      'Quadrapp recibe solo los minutos de llegada. Tu ubicación aproximada va a Google para dibujar el mapa.';
+
+  @override
+  String get shift_title => 'Operación de turno';
+
+  @override
+  String shift_capacityTitle(int count) {
+    return 'Aforo · $count espacios';
+  }
+
+  @override
+  String get shift_free => 'Libres';
+
+  @override
+  String get shift_occupied => 'Ocupados';
+
+  @override
+  String get shift_unknown => 'Desconocidos';
+
+  @override
+  String shift_occupancyLine(int pct) {
+    return '$pct % ocupado · los desconocidos no cuentan como libres';
+  }
+
+  @override
+  String get shift_occupancyNoData =>
+      'Ningún espacio reporta ahora · los desconocidos no cuentan como libres';
+
+  @override
+  String shift_updated(String age) {
+    return 'Actualizado $age';
+  }
+
+  @override
+  String get shift_saturationTitle => 'Saturación prevista';
+
+  @override
+  String shift_saturationAt(int pct, String time) {
+    return 'Llegará a $pct % a las $time';
+  }
+
+  @override
+  String shift_saturationIn(int minutes) {
+    return 'En $minutes min · coordina el flujo en los accesos antes del pico.';
+  }
+
+  @override
+  String get shift_saturationSoon =>
+      'Inminente · coordina el flujo en los accesos ahora.';
+
+  @override
+  String get shift_saturationNone => 'No se prevé saturación por ahora';
+
+  @override
+  String get shift_saturationUnavailable =>
+      'El pronóstico no está disponible ahora. El estado actual sí está al día.';
+
+  @override
+  String get shift_alertsTitle => 'Alertas';
+
+  @override
+  String get shift_alertsSeeDevices => 'Ver dispositivos';
+
+  @override
+  String shift_alertGatewayDown(String id) {
+    return 'Gateway $id sin señal';
+  }
+
+  @override
+  String shift_alertGatewaySeen(String age) {
+    return 'Sus sensores quedan sin datos · última señal $age';
+  }
+
+  @override
+  String get shift_alertGatewayNever =>
+      'Sus sensores quedan sin datos · nunca reportó';
+
+  @override
+  String shift_alertSensorsDown(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sensores sin comunicación',
+      one: '1 sensor sin comunicación',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shift_alertSensorsDownHint =>
+      'Sus espacios figuran como desconocidos';
+
+  @override
+  String shift_alertLowBattery(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sensores con batería baja',
+      one: '1 sensor con batería baja',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get shift_alertLowBatteryHint => 'Programa su mantenimiento';
+
+  @override
+  String get shift_alertsNone =>
+      'Todos los dispositivos reportan con normalidad';
+
+  @override
+  String get shift_alertsUnavailable =>
+      'No pudimos leer la salud de los dispositivos. Desliza hacia abajo para reintentar.';
+
+  @override
+  String shift_flowTitle(int minutes) {
+    return 'Flujo · últimos $minutes min';
+  }
+
+  @override
+  String shift_flowDetail(int entries, int exits) {
+    return 'Entradas $entries · Salidas $exits';
+  }
+
+  @override
+  String shift_flowNet(String value) {
+    return 'Saldo neto $value';
+  }
+
+  @override
+  String get shift_flowNone => 'Los accesos no cuentan entradas ni salidas';
+
+  @override
+  String get shift_flowUnavailable => 'El flujo no está disponible ahora';
+
+  @override
+  String get shift_errorTitle => 'No pudimos cargar la consola de turno';
+
+  @override
+  String get shift_forbidden => 'Tu cuenta no tiene acceso a esta consola.';
+
+  @override
+  String get shift_noLayoutTitle =>
+      'Este estacionamiento aún no tiene distribución publicada';
+
+  @override
+  String get shift_noLayoutMessage =>
+      'Publícala desde la consola web para ver aquí su operación.';
+
+  @override
+  String get shift_promptTitle => '¿Qué estacionamiento operas?';
+
+  @override
+  String get shift_promptMessage => 'Elígelo para ver su operación en vivo.';
+
+  @override
+  String get shift_loading => 'Cargando la consola de turno';
+
+  @override
+  String get nav_accesses => 'Accesos';
+
+  @override
+  String get nav_analytics => 'Analítica';
+
+  @override
+  String get nav_more => 'Más';
+
+  @override
+  String get ops_accessesSoonTitle => 'Los accesos llegan pronto';
+
+  @override
+  String get ops_accessesSoonMessage =>
+      'Pronto verás el flujo en vivo de cada acceso y su configuración.';
+
+  @override
+  String get ops_analyticsSoonTitle => 'La analítica llega pronto';
+
+  @override
+  String get ops_analyticsSoonMessage =>
+      'Pronto verás el historial de ocupación y qué tan preciso es el pronóstico.';
+
+  @override
+  String get ops_moreSoonTitle => 'La administración llega pronto';
+
+  @override
+  String get ops_moreSoonMessage =>
+      'Pronto gestionarás aquí el calendario del campus, los dominios y tu equipo.';
+
+  @override
+  String get ops_moreDevices => 'Ver dispositivos';
+
+  @override
+  String get lots_title => 'Estacionamientos';
+
+  @override
+  String lots_subtitle(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zonas',
+      one: '1 zona',
+    );
+    return '$name · gratuito · $_temp0';
+  }
+
+  @override
+  String get lots_filterAll => 'Todas';
+
+  @override
+  String get lots_filterOk => 'Operativas';
+
+  @override
+  String get lots_filterAttention => 'Atención';
+
+  @override
+  String lots_zoneOccupied(int pct) {
+    return '$pct % ocupado';
+  }
+
+  @override
+  String get lots_zoneNoData => 'Sin datos';
+
+  @override
+  String lots_zoneCounts(int total, int free, int occupied, int unknown) {
+    return '$total espacios · $free libres · $occupied ocupados · $unknown desc.';
+  }
+
+  @override
+  String get lots_zoneOk => 'Operativa';
+
+  @override
+  String lots_zoneAttention(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Atención · $count desconocidos',
+      one: 'Atención · 1 desconocido',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lots_zoneHint => 'Muestra sus espacios abajo';
+
+  @override
+  String get lots_emptyFilter => 'Ninguna zona coincide con este filtro';
+
+  @override
+  String get lots_noZones => 'Este estacionamiento aún no tiene zonas';
+
+  @override
+  String lots_spacesTitle(String zone) {
+    return 'Espacios · $zone';
+  }
+
+  @override
+  String lots_spacesSeeAll(int count) {
+    return 'Ver los $count';
+  }
+
+  @override
+  String get lots_spacesAll => 'Todos';
+
+  @override
+  String get lots_spaceUnknown => 'Desconocido';
+
+  @override
+  String get lots_spacesUnknownNote =>
+      'Un espacio desconocido no implica disponibilidad.';
+
+  @override
+  String get lots_spacesEmpty => 'Ningún espacio en este estado';
+
+  @override
+  String lots_spacesMore(int count) {
+    return '+$count más';
+  }
 }

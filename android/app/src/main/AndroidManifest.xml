@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <!-- Red: la API de Quadrapp y el mapa de Google de Inicio (un iframe en un
+         WebView). En debug ya venía del manifiesto de debug. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <!-- Ubicación solo en primer plano, para estimar el ETA en el dispositivo
          (la posición no se envía a los servidores de Quadrapp). No se pide
          ubicación en segundo plano. El permiso se solicita en tiempo de

@@ -17,7 +17,17 @@ import 'package:quadrapp_mobile/core/view_state/view_state.dart';
 /// la invitación a elegir una. Con una sede elegida, [builder] arma el
 /// contenido.
 class SedeGate extends StatelessWidget {
-  const SedeGate({required this.skeleton, required this.builder, super.key});
+  const SedeGate({
+    required this.skeleton,
+    required this.builder,
+    this.promptTitle,
+    this.promptMessage,
+    super.key,
+  });
+
+  /// Sustituyen la invitación del conductor a elegir sede ([SedePrompt]).
+  final String? promptTitle;
+  final String? promptMessage;
 
   /// Lo que se ve mientras llegan las sedes.
   final Widget skeleton;
@@ -60,7 +70,11 @@ class SedeGate extends StatelessWidget {
         if (lot == null) {
           return Padding(
             padding: const EdgeInsets.only(top: QaSpacing.xl),
-            child: SedePrompt(selection: selection),
+            child: SedePrompt(
+              selection: selection,
+              title: promptTitle,
+              message: promptMessage,
+            ),
           );
         }
         return builder(context, lot);

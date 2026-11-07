@@ -1,7 +1,7 @@
-// US02, US03 (cerrar sesión); TS16 (rol y experiencia única)
-// TODO(fase-6): idioma, preferencias de notificación y suscripciones.
+// US02, US03 (cerrar sesión); TS16 (rol, experiencia única e idioma)
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/composition/sign_out/sign_out.dart';
 import 'package:quadrapp_mobile/composition/sign_out/sign_out_cubit.dart';
 import 'package:quadrapp_mobile/contexts/iam/iam.dart';
@@ -9,8 +9,8 @@ import 'package:quadrapp_mobile/core/design_system/design_system.dart';
 import 'package:quadrapp_mobile/core/l10n/app_localizations.dart';
 import 'package:quadrapp_mobile/core/view_state/view_state.dart';
 
-/// La cuenta: la tarjeta de cuenta (correo, institución y rol) y "Sign out" con
-/// confirmación que nombra la cuenta.
+/// La cuenta: la tarjeta de cuenta (correo, institución y rol), el idioma de la
+/// app y "Sign out" con confirmación que nombra la cuenta.
 ///
 /// - En la experiencia de Operación es la pestaña Ajustes (`/ops/settings`,
 ///   con [tabIndex]).
@@ -23,6 +23,7 @@ import 'package:quadrapp_mobile/core/view_state/view_state.dart';
 class SettingsPage extends StatelessWidget {
   const SettingsPage({
     required this.session,
+    this.languageCubit,
     this.tabIndex,
     this.onBack,
     this.onOpenLegal,
@@ -34,6 +35,9 @@ class SettingsPage extends StatelessWidget {
 
   /// La cuenta con la sesión iniciada.
   final Session session;
+
+  /// El idioma de la app; sin él, no se ofrece elegirlo.
+  final LanguageCubit? languageCubit;
 
   /// Posición de la pestaña en la barra inferior; `null` si no es una pestaña.
   final int? tabIndex;
@@ -47,8 +51,6 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final colors = context.qaColors;
 
     // "Sign out" al fondo, al alcance del pulgar.
     final footer = BlocBuilder<SignOutCubit, ViewState<SignOutReport>>(
@@ -100,13 +102,10 @@ class SettingsPage extends StatelessWidget {
             onPressed: onOpenLegal,
           ),
         ],
-        const SizedBox(height: QaSpacing.lg),
-        Text(
-          l10n.settings_moreSoon,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: colors.onSurfaceMuted,
-          ),
-        ),
+        if (languageCubit case final cubit?) ...[
+          const SizedBox(height: QaSpacing.xl),
+          _LanguageSection(cubit: cubit),
+        ],
       ],
     );
   }
@@ -126,6 +125,61 @@ class SettingsPage extends StatelessWidget {
       destructive: true,
     );
     if (confirmed) await cubit.signOut();
+  }
+}
+
+/// Elegir entre inglés y español. Cada idioma se nombra en sí mismo
+/// ("English", "Español") para que se reconozca aunque no se entienda el otro.
+class _LanguageSection extends StatelessWidget {
+  const _LanguageSection({required this.cubit});
+
+  final LanguageCubit cubit;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final theme = Theme.of(context);
+    final colors = context.qaColors;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Semantics(
+          header: true,
+          child: Text(
+            l10n.settings_language,
+            style: theme.textTheme.titleSmall,
+          ),
+        ),
+        const SizedBox(height: QaSpacing.sm),
+        BlocBuilder<LanguageCubit, AppLanguage>(
+          bloc: cubit,
+          builder: (context, language) => QaSegmentedToggle<AppLanguage>(
+            segments: [
+              QaSegment(
+                value: AppLanguage.en,
+                label: l10n.settings_languageEnglish,
+              ),
+              QaSegment(
+                value: AppLanguage.es,
+                label: l10n.settings_languageSpanish,
+              ),
+            ],
+            selected: language,
+            onChanged: (value) {
+              QaHaptics.confirm();
+              cubit.select(value).ignore();
+            },
+          ),
+        ),
+        const SizedBox(height: QaSpacing.sm),
+        Text(
+          l10n.settings_languageHelp,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: colors.onSurfaceMuted,
+          ),
+        ),
+      ],
+    );
   }
 }
 

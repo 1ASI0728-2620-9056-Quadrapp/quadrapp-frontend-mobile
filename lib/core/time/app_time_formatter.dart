@@ -24,6 +24,11 @@ class AppTimeFormatter {
   String formatDateTime(DateTime instant, String locale) =>
       DateFormat.MMMd(locale).add_jm().format(toLima(instant));
 
+  /// Día de la semana y fecha, por ejemplo "Saturday, October 3" o "sábado,
+  /// 3 de octubre".
+  String formatLongDate(DateTime instant, String locale) =>
+      DateFormat.MMMMEEEEd(locale).format(toLima(instant));
+
   /// Cuenta regresiva como minutos y segundos ("0:45", "1:05"). Los segundos
   /// se redondean hacia arriba: nunca muestra "0:00" mientras queda tiempo.
   String formatCountdown(Duration remaining) {

@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 import 'package:quadrapp_mobile/app/config/app_config.dart';
 import 'package:quadrapp_mobile/app/di/registrar.dart';
-import 'package:quadrapp_mobile/app/l10n/locale_resolution.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_controls.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_seed.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_world.dart';
 import 'package:quadrapp_mobile/app/session/session_token_source.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/contexts/iam/application/usecases/expire_session.dart';
 import 'package:quadrapp_mobile/core/logging/logger.dart';
 import 'package:quadrapp_mobile/core/network/auth_interceptor.dart';
@@ -45,6 +45,10 @@ void registerCoreModule(
       () => keyValueStore ?? SharedPreferencesStore(SharedPreferencesAsync()),
     )
     ..addLazy<SecureStore>(() => secureStore ?? const FlutterSecureStore())
+    ..addLazy<LanguageCubit>(
+      () => LanguageCubit(LanguagePreferenceStore(locator())),
+      dispose: (cubit) => cubit.close(),
+    )
     ..addLazy<WebSocketConnector>(() => const IoWebSocketConnector());
 
   // El reloj del servidor es el real; con mocks, el del teléfono puede
@@ -72,7 +76,7 @@ void registerCoreModule(
     () {
       final dio = createDio(baseUrl: config.apiBaseUrl);
       dio.interceptors.addAll([
-        LocaleInterceptor(currentLanguageCode),
+        LocaleInterceptor(() => locator<LanguageCubit>().state.code),
         AuthInterceptor(
           dio: dio,
           tokens: _LazySessionTokens(locator),
@@ -87,10 +91,6 @@ void registerCoreModule(
     dispose: (dio) => dio.close(),
   );
 }
-
-/// Idioma que se envía en `Accept-Language`. Hoy es el idioma inicial (inglés);
-/// en la fase 6 pasa a leer la preferencia guardada del usuario.
-String currentLanguageCode() => resolveLocale(null).languageCode;
 
 /// Los tokens de `iam` usan el mismo `Dio` que este interceptor (el refresh y
 /// el logout van por él): un ciclo. Se rompe resolviéndolos al primer uso y no

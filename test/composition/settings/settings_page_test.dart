@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/composition/settings/settings_page.dart';
 import 'package:quadrapp_mobile/composition/sign_out/sign_out.dart';
 import 'package:quadrapp_mobile/composition/sign_out/sign_out_cubit.dart';
 import 'package:quadrapp_mobile/contexts/iam/iam.dart';
 import 'package:quadrapp_mobile/contexts/notifications/domain/entities/device_token_removal.dart';
 import 'package:quadrapp_mobile/core/error/failure.dart';
+import 'package:quadrapp_mobile/core/storage/key_value_store.dart';
 import 'package:quadrapp_mobile/core/view_state/view_state.dart';
 
 import '../../contexts/iam/support.dart';
@@ -30,11 +32,17 @@ Future<void> _expectAccessible(WidgetTester tester) async {
 void main() {
   group('SettingsPage', () {
     late _MockSignOutCubit cubit;
+    late LanguageCubit language;
 
     setUp(() {
       cubit = _MockSignOutCubit();
       when(() => cubit.signOut()).thenAnswer((_) async {});
+      language = LanguageCubit(
+        LanguagePreferenceStore(InMemoryKeyValueStore()),
+      );
     });
+
+    tearDown(() => language.close());
 
     Future<void> pumpPage(
       WidgetTester tester,
@@ -54,7 +62,11 @@ void main() {
         tester,
         BlocProvider<SignOutCubit>.value(
           value: cubit,
-          child: SettingsPage(session: sampleSession(role: role), tabIndex: 3),
+          child: SettingsPage(
+            session: sampleSession(role: role),
+            languageCubit: language,
+            tabIndex: 3,
+          ),
         ),
         textScale: textScale,
         brightness: brightness,
@@ -211,6 +223,40 @@ void main() {
         tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
         isNull,
       );
+    });
+  });
+
+  group('idioma (TS16)', () {
+    testWidgets('ofrece English y Español; elegir uno lo aplica', (
+      tester,
+    ) async {
+      final cubit = _MockSignOutCubit();
+      whenListen(
+        cubit,
+        const Stream<ViewState<SignOutReport>>.empty(),
+        initialState: const ViewInitial<SignOutReport>(),
+      );
+      final language = LanguageCubit(
+        LanguagePreferenceStore(InMemoryKeyValueStore()),
+      );
+      addTearDown(language.close);
+      await pumpScreen(
+        tester,
+        BlocProvider<SignOutCubit>.value(
+          value: cubit,
+          child: SettingsPage(
+            session: sampleSession(),
+            languageCubit: language,
+            tabIndex: 3,
+          ),
+        ),
+      );
+
+      expect(find.text('Language'), findsOneWidget);
+      expect(find.text('English'), findsOneWidget);
+      await tester.tap(find.text('Español'));
+      await tester.pump();
+      expect(language.state, AppLanguage.es);
     });
   });
 

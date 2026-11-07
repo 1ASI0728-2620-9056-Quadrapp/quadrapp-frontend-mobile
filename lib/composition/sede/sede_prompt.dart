@@ -14,9 +14,19 @@ import 'package:quadrapp_mobile/core/l10n/app_localizations.dart';
 /// elegir con un toque. Elegir guarda la sede (queda para la próxima vez) y la
 /// pantalla se rellena sola.
 class SedePrompt extends StatelessWidget {
-  const SedePrompt({required this.selection, super.key});
+  const SedePrompt({
+    required this.selection,
+    this.title,
+    this.message,
+    super.key,
+  });
 
   final SedeSelection selection;
+
+  /// Sustituyen la pregunta y el texto del conductor (por ejemplo, en
+  /// Operación).
+  final String? title;
+  final String? message;
 
   @override
   Widget build(BuildContext context) {
@@ -32,14 +42,14 @@ class SedePrompt extends StatelessWidget {
         Semantics(
           header: true,
           child: Text(
-            l10n.sede_promptTitle,
+            title ?? l10n.sede_promptTitle,
             style: theme.textTheme.headlineSmall,
             textAlign: TextAlign.center,
           ),
         ),
         const SizedBox(height: QaSpacing.sm),
         Text(
-          l10n.sede_promptMessage,
+          message ?? l10n.sede_promptMessage,
           style: theme.textTheme.bodyLarge?.copyWith(
             color: colors.onSurfaceMuted,
           ),

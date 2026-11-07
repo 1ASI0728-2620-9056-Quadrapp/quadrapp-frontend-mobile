@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:quadrapp_mobile/app/di/registrar.dart';
 import 'package:quadrapp_mobile/composition/alerts/alerts_cubit.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 
 /// Crea el cubit de Alertas (`/alerts`). Cada pantalla tiene el suyo: el
 /// router lo crea al entrar a la ruta y lo cierra al salir.
@@ -19,6 +20,7 @@ void registerAlertsModule(GetIt locator) {
       setActive: locator(),
       removeSubscription: locator(),
       activateDevice: locator(),
+      languageCode: () => locator<LanguageCubit>().state.code,
     ),
   );
 }

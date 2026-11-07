@@ -11,6 +11,7 @@ import 'package:quadrapp_mobile/app/di/arrival_module.dart';
 import 'package:quadrapp_mobile/app/di/auth_module.dart';
 import 'package:quadrapp_mobile/app/di/eta_module.dart';
 import 'package:quadrapp_mobile/app/di/forecast_module.dart';
+import 'package:quadrapp_mobile/app/di/operations_module.dart';
 import 'package:quadrapp_mobile/app/di/sede_module.dart';
 import 'package:quadrapp_mobile/app/di/zones_module.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_controls.dart';
@@ -18,6 +19,7 @@ import 'package:quadrapp_mobile/app/mocks/mock_world.dart';
 import 'package:quadrapp_mobile/app/router/app_router.dart';
 import 'package:quadrapp_mobile/app/session/pending_removal_retrier.dart';
 import 'package:quadrapp_mobile/app/session/session_expiry_coordinator.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/contexts/iam/application/usecases/refresh_session.dart';
 import 'package:quadrapp_mobile/contexts/iam/presentation/cubit/auth_cubit.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/application/usecases/list_parking_lots.dart';
@@ -72,7 +74,10 @@ GoRouter createRouterFrom(
     createZonesCubit: locator<CreateZonesCubit>(),
     createForecastCubit: locator<CreateForecastCubit>(),
     createAlertsCubit: locator<CreateAlertsCubit>(),
+    createShiftCubit: locator<CreateShiftCubit>(),
     clock: locator<Clock>(),
+    languageCubit: locator<LanguageCubit>(),
+    createArrivalMapCubit: locator<CreateArrivalMapCubit>(),
     enableGallery: enableGallery,
     enableDebugPanel: enableDebugPanel,
     debugPanelBuilder: enableDebugPanel && locator<AppConfig>().useMocks

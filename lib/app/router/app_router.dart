@@ -9,6 +9,7 @@ import 'package:quadrapp_mobile/app/di/arrival_module.dart';
 import 'package:quadrapp_mobile/app/di/auth_module.dart';
 import 'package:quadrapp_mobile/app/di/eta_module.dart';
 import 'package:quadrapp_mobile/app/di/forecast_module.dart';
+import 'package:quadrapp_mobile/app/di/operations_module.dart';
 import 'package:quadrapp_mobile/app/di/sede_module.dart';
 import 'package:quadrapp_mobile/app/di/zones_module.dart';
 import 'package:quadrapp_mobile/app/gallery/gallery_page.dart';
@@ -17,12 +18,16 @@ import 'package:quadrapp_mobile/app/router/fade_through_page.dart';
 import 'package:quadrapp_mobile/app/session/session_expiry_coordinator.dart';
 import 'package:quadrapp_mobile/app/shell/app_shell.dart';
 import 'package:quadrapp_mobile/app/shell/driver_scope.dart';
+import 'package:quadrapp_mobile/app/shell/operations_scope.dart';
 import 'package:quadrapp_mobile/app/shell/operations_soon_page.dart';
 import 'package:quadrapp_mobile/app/shell/shell_tabs.dart';
 import 'package:quadrapp_mobile/composition/alerts/alerts_tab_page.dart';
 import 'package:quadrapp_mobile/composition/arrival/home_page.dart';
 import 'package:quadrapp_mobile/composition/forecast/forecast_tab_page.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
+import 'package:quadrapp_mobile/composition/lots/lots_page.dart';
 import 'package:quadrapp_mobile/composition/settings/settings_page.dart';
+import 'package:quadrapp_mobile/composition/shift/shift_page.dart';
 import 'package:quadrapp_mobile/composition/zones/level_page.dart';
 import 'package:quadrapp_mobile/composition/zones/zone_page.dart';
 import 'package:quadrapp_mobile/composition/zones/zones_tab_page.dart';
@@ -57,9 +62,24 @@ const String accountPath = '/account';
 /// Rutas de la experiencia de Operación (`ADMIN` y `OPERATOR`).
 const String opsPath = '/ops';
 const String opsShiftPath = '/ops/shift';
-const String opsLotsPath = '/ops/lots';
-const String opsDevicesPath = '/ops/devices';
-const String opsSettingsPath = '/ops/settings';
+const String opsZonesPath = '/ops/zones';
+
+/// Una zona del estacionamiento elegido, en Operación (`/ops/zones/:zoneId`).
+String opsZonePath(ZoneId zoneId) => '$opsZonesPath/${zoneId.value}';
+
+/// Un nivel de una zona, en Operación
+/// (`/ops/zones/:zoneId/levels/:levelId`).
+String opsLevelPath(ZoneId zoneId, LevelId levelId) =>
+    '$opsZonesPath/${zoneId.value}/levels/${levelId.value}';
+const String opsAccessesPath = '/ops/accesses';
+const String opsAnalyticsPath = '/ops/analytics';
+const String opsMorePath = '/ops/more';
+
+/// Dispositivos cuelga de Más (como el diseño), sin barra propia.
+const String opsDevicesPath = '/ops/more/devices';
+
+/// La cuenta de Operación: se abre desde el avatar, sin barra inferior.
+const String opsAccountPath = '/ops/account';
 const String debugMocksPath = '/debug/mocks';
 
 /// Motivo con el que `/login` avisa que la sesión venció (US03).
@@ -113,7 +133,10 @@ GoRouter createAppRouter({
   required CreateZonesCubit createZonesCubit,
   required CreateForecastCubit createForecastCubit,
   required CreateAlertsCubit createAlertsCubit,
+  required CreateShiftCubit createShiftCubit,
   required Clock clock,
+  LanguageCubit? languageCubit,
+  CreateArrivalMapCubit? createArrivalMapCubit,
   bool enableGallery = kDebugMode,
   bool enableDebugPanel = kDebugMode,
   WidgetBuilder? debugPanelBuilder,
@@ -222,17 +245,23 @@ GoRouter createAppRouter({
                 path: homePath,
                 builder: (context, state) {
                   final auth = authCubit.state;
-                  return BlocProvider(
-                    create: (_) => createArrivalCubit(),
-                    child: HomePage(
-                      clock: clock,
-                      tabIndex: AppTab.home,
-                      fullName: auth is Authenticated
-                          ? auth.session.fullName
-                          : null,
-                      onOpenAccount: () => context.push(accountPath),
-                      onOpenForecast: () => context.go(forecastPath),
-                    ),
+                  final page = HomePage(
+                    clock: clock,
+                    tabIndex: AppTab.home,
+                    showMap: createArrivalMapCubit != null,
+                    fullName: auth is Authenticated
+                        ? auth.session.fullName
+                        : null,
+                    onOpenAccount: () => context.push(accountPath),
+                    onOpenForecast: () => context.go(forecastPath),
+                  );
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (_) => createArrivalCubit()),
+                      if (createArrivalMapCubit != null)
+                        BlocProvider(create: (_) => createArrivalMapCubit()),
+                    ],
+                    child: page,
                   );
                 },
               ),
@@ -323,6 +352,7 @@ GoRouter createAppRouter({
             create: (_) => createSignOutCubit(authCubit.sessionEnded),
             child: SettingsPage(
               session: auth.session,
+              languageCubit: languageCubit,
               onBack: () =>
                   context.canPop() ? context.pop() : context.go(homePath),
               onOpenLegal: () => context.push(legalPath),
@@ -330,9 +360,35 @@ GoRouter createAppRouter({
           );
         },
       ),
-      // La experiencia de Operación (ADMIN y OPERATOR): su propio shell.
+      // La cuenta de Operación: se llega desde el avatar, sin barra inferior y
+      // con la flecha de volver.
+      GoRoute(
+        path: opsAccountPath,
+        builder: (context, state) {
+          final auth = authCubit.state;
+          // El redirect nunca deja entrar sin sesión.
+          if (auth is! Authenticated) return const SizedBox.shrink();
+          return BlocProvider(
+            create: (_) => createSignOutCubit(authCubit.sessionEnded),
+            child: SettingsPage(
+              session: auth.session,
+              languageCubit: languageCubit,
+              onBack: () =>
+                  context.canPop() ? context.pop() : context.go(opsShiftPath),
+              onOpenLegal: () => context.push(legalPath),
+            ),
+          );
+        },
+      ),
+      // La experiencia de Operación (administrador de universidad: ADMIN y
+      // OPERATOR, la misma barra): su propio shell. El estacionamiento elegido
+      // y sus zonas en vivo son unos solos para todas las pestañas.
       StatefulShellRoute(
-        builder: (context, state, navigationShell) => navigationShell,
+        builder: (context, state, navigationShell) => OperationsScope(
+          createSedeCubit: createSedeCubit,
+          createZonesCubit: createZonesCubit,
+          child: navigationShell,
+        ),
         navigatorContainerBuilder: (context, navigationShell, children) =>
             AppShell(
               navigationShell: navigationShell,
@@ -344,44 +400,98 @@ GoRouter createAppRouter({
             routes: [
               GoRoute(
                 path: opsShiftPath,
-                builder: (context, state) =>
-                    const OperationsSoonPage(tab: OpsTab.shift),
+                builder: (context, state) => BlocProvider(
+                  create: (_) => createShiftCubit(),
+                  child: ShiftPage(
+                    clock: clock,
+                    tabIndex: OpsTab.home,
+                    onOpenDevices: () => context.go(opsDevicesPath),
+                    onOpenAccount: () => context.push(opsAccountPath),
+                  ),
+                ),
               ),
             ],
           ),
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: opsLotsPath,
-                builder: (context, state) =>
-                    const OperationsSoonPage(tab: OpsTab.lots),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: opsDevicesPath,
-                builder: (context, state) =>
-                    const OperationsSoonPage(tab: OpsTab.devices),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
-            routes: [
-              GoRoute(
-                path: opsSettingsPath,
-                builder: (context, state) {
-                  final auth = authCubit.state;
-                  if (auth is! Authenticated) return const SizedBox.shrink();
-                  return BlocProvider(
-                    create: (_) => createSignOutCubit(authCubit.sessionEnded),
-                    child: SettingsPage(
-                      session: auth.session,
-                      tabIndex: OpsTab.settings,
+                path: opsZonesPath,
+                builder: (context, state) => LotsPage(
+                  clock: clock,
+                  tabIndex: OpsTab.zones,
+                  onOpenZone: (zoneId) => context.push(opsZonePath(zoneId)),
+                  onOpenLevel: (zoneId, levelId) =>
+                      context.push(opsLevelPath(zoneId, levelId)),
+                  onOpenAccount: () => context.push(opsAccountPath),
+                ),
+                // La zona y el nivel son los mismos del Conductor.
+                routes: [
+                  GoRoute(
+                    path: ':zoneId',
+                    builder: (context, state) => ZonePage(
+                      zoneId: ZoneId(_idOf(state, 'zoneId')),
+                      clock: clock,
+                      onBack: () => _backTo(context, opsZonesPath),
+                      onOpenLevel: (zoneId, levelId) =>
+                          context.push(opsLevelPath(zoneId, levelId)),
                     ),
-                  );
-                },
+                  ),
+                  GoRoute(
+                    path: ':zoneId/levels/:levelId',
+                    builder: (context, state) => LevelPage(
+                      zoneId: ZoneId(_idOf(state, 'zoneId')),
+                      levelId: LevelId(_idOf(state, 'levelId')),
+                      clock: clock,
+                      onBack: () => _backTo(context, opsZonesPath),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: opsAccessesPath,
+                builder: (context, state) => OperationsSoonPage(
+                  kind: OpsSoon.accesses,
+                  tabIndex: OpsTab.accesses,
+                  onOpenAccount: () => context.push(opsAccountPath),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: opsAnalyticsPath,
+                builder: (context, state) => OperationsSoonPage(
+                  kind: OpsSoon.analytics,
+                  tabIndex: OpsTab.analytics,
+                  onOpenAccount: () => context.push(opsAccountPath),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: opsMorePath,
+                builder: (context, state) => OperationsSoonPage(
+                  kind: OpsSoon.more,
+                  tabIndex: OpsTab.more,
+                  onOpenAccount: () => context.push(opsAccountPath),
+                  onOpenDevices: () => context.go(opsDevicesPath),
+                ),
+                routes: [
+                  GoRoute(
+                    path: 'devices',
+                    builder: (context, state) => OperationsSoonPage(
+                      kind: OpsSoon.devices,
+                      onBack: () => _backTo(context, opsMorePath),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -408,10 +518,14 @@ int _idOf(GoRouterState state, String name) =>
 
 /// Volver: a la pantalla anterior; con un enlace directo (sin anterior), a
 /// Zonas.
-void _back(BuildContext context) {
+void _back(BuildContext context) => _backTo(context, zonesPath);
+
+/// Volver: a la pantalla anterior; con un enlace directo (sin anterior), a
+/// [fallback].
+void _backTo(BuildContext context, String fallback) {
   if (context.canPop()) {
     context.pop();
   } else {
-    context.go(zonesPath);
+    context.go(fallback);
   }
 }

@@ -21,7 +21,8 @@ import '../../helpers/test_seed.dart';
 /// (solo el token del dispositivo, nada del usuario). Se declaran por el nombre
 /// del archivo que las guarda.
 const _deviceExceptions = {
-  // El idioma lo guarda la fase 6 (`device.language`): aún no hay archivo.
+  // El idioma (`device.language`).
+  'language_cubit.dart',
   'pending_push_token_removal_store_impl.dart',
 };
 

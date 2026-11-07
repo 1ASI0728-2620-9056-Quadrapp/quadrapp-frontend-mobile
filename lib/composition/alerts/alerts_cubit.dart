@@ -32,6 +32,7 @@ class AlertsCubit extends Cubit<ViewState<AlertsOverview>> {
     required this._setActive,
     required this._removeSubscription,
     required this._activateDevice,
+    this._languageCode,
   }) : super(const ViewInitial());
 
   final GetNotificationPreferences _getPreferences;
@@ -41,6 +42,10 @@ class AlertsCubit extends Cubit<ViewState<AlertsOverview>> {
   final SetAlertSubscriptionActive _setActive;
   final RemoveAlertSubscription _removeSubscription;
   final ActivateDeviceNotifications _activateDevice;
+
+  /// El idioma elegido en la app: al guardar, el servidor redacta las alertas
+  /// en ese idioma (docs/07). Sin él, se reenvía el que vino del servidor.
+  final String Function()? _languageCode;
 
   final StreamController<AlertsNotice> _notices =
       StreamController<AlertsNotice>.broadcast();
@@ -169,7 +174,7 @@ class AlertsCubit extends Cubit<ViewState<AlertsOverview>> {
     final preferences = _current?.preferences;
     if (preferences == null || isClosed) return;
     final version = _preferencesVersion;
-    switch (await _savePreferences(preferences)) {
+    switch (await _savePreferences(_inAppLanguage(preferences))) {
       case Success(value: final saved):
         _confirmed = saved;
         if (version == _preferencesVersion) {
@@ -184,6 +189,16 @@ class AlertsCubit extends Cubit<ViewState<AlertsOverview>> {
           _update((overview) => overview.copyWith(preferences: confirmed));
         }
     }
+  }
+
+  NotificationPreferences _inAppLanguage(NotificationPreferences preferences) {
+    final code = _languageCode?.call();
+    if (code == null) return preferences;
+    final language = AlertLanguage.values.firstWhere(
+      (l) => l.code == code,
+      orElse: () => AlertLanguage.en,
+    );
+    return preferences.copyWith(language: language);
   }
 
   // ----------------------------------------------------------------- franjas

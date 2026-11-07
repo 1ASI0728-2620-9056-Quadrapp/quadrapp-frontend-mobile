@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:quadrapp_mobile/composition/arrival/arrival_cubit.dart';
 import 'package:quadrapp_mobile/composition/arrival/arrival_hero_card.dart';
+import 'package:quadrapp_mobile/composition/arrival/arrival_map_card.dart';
+import 'package:quadrapp_mobile/composition/arrival/arrival_map_cubit.dart';
 import 'package:quadrapp_mobile/composition/arrival/arrival_state.dart';
 import 'package:quadrapp_mobile/composition/arrival/home_greeting.dart';
 import 'package:quadrapp_mobile/composition/arrival/horizons_card.dart';
@@ -18,6 +20,7 @@ import 'package:quadrapp_mobile/composition/sede/sede_no_data_card.dart';
 import 'package:quadrapp_mobile/composition/sede/sede_prompt.dart';
 import 'package:quadrapp_mobile/composition/sede/sede_state.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/parking_configuration.dart';
+import 'package:quadrapp_mobile/contexts/prediction_advisory/prediction_advisory.dart';
 import 'package:quadrapp_mobile/core/design_system/design_system.dart';
 import 'package:quadrapp_mobile/core/l10n/app_localizations.dart';
 import 'package:quadrapp_mobile/core/time/app_time_formatter.dart';
@@ -35,7 +38,8 @@ Stream<void> _everySecond() =>
 /// Cinco estados (docs/05): skeleton al cargar, vacío (la institución sin
 /// sedes), error recuperable, parcial o desactualizado (aviso de lo que falta,
 /// de datos vencidos o de sin conexión) y éxito. Deslizar hacia abajo recarga.
-/// Sin sede elegida, pide elegirla.
+/// Sin sede elegida, pide elegirla. Con [showMap], «Cómo llegar» muestra el
+/// mapa de la sede (necesita un [ArrivalMapCubit] encima).
 ///
 /// La antigüedad ("Updated 20 s ago") se recalcula cada segundo con la hora del
 /// servidor más el tiempo transcurrido (reloj monótono), nunca con el reloj del
@@ -47,6 +51,7 @@ class HomePage extends StatefulWidget {
     required this.onOpenAccount,
     required this.onOpenForecast,
     this.fullName,
+    this.showMap = false,
     this.ticker = _everySecond,
     super.key,
   });
@@ -59,6 +64,9 @@ class HomePage extends StatefulWidget {
 
   /// El nombre completo de la sesión; sin él se saluda sin nombre.
   final String? fullName;
+
+  /// Muestra el mapa «Cómo llegar» (con un [ArrivalMapCubit] encima).
+  final bool showMap;
   final Ticker ticker;
 
   /// El perfil de la barra superior lleva a la cuenta.
@@ -87,6 +95,7 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       _syncLot(context.read<SedeCubit>().state);
+      _syncMap();
       unawaited(
         context.read<ArrivalCubit>().setEta(
           context.read<EtaCubit>().state.estimate?.minutes.value,
@@ -109,6 +118,22 @@ class _HomePageState extends State<HomePage> {
     unawaited(context.read<ArrivalCubit>().setLot(selected));
   }
 
+  /// El mapa: la sede elegida y, si el ETA automático está encendido y hay
+  /// permiso, la posición aproximada del conductor.
+  void _syncMap() {
+    if (!widget.showMap) return;
+    final eta = context.read<EtaCubit>().state;
+    unawaited(
+      context.read<ArrivalMapCubit>().sync(
+        lot: _selectedOf(context.read<SedeCubit>().state),
+        useLocation: _usesLocation(eta),
+      ),
+    );
+  }
+
+  static bool _usesLocation(EtaState eta) =>
+      eta.autoEnabled && eta.permission == LocationPermissionStatus.granted;
+
   Future<void> _refresh() async {
     final sede = context.read<SedeCubit>();
     final arrival = context.read<ArrivalCubit>();
@@ -117,6 +142,7 @@ class _HomePageState extends State<HomePage> {
       _ => null,
     };
     if (selected == null) return sede.load();
+    _syncMap();
     await arrival.refresh();
   }
 
@@ -145,8 +171,21 @@ class _HomePageState extends State<HomePage> {
                 BlocListener<SedeCubit, ViewState<SedeSelection>>(
                   listenWhen: (before, after) =>
                       _selectedOf(before)?.id != _selectedOf(after)?.id,
-                  listener: (context, state) => _syncLot(state),
+                  listener: (context, state) {
+                    _syncLot(state);
+                    _syncMap();
+                  },
                 ),
+                // El mapa sigue al modo automático, al permiso y a cada ETA
+                // nuevo (que solo se publica con 2 minutos o más de cambio).
+                if (widget.showMap)
+                  BlocListener<EtaCubit, EtaState>(
+                    listenWhen: (before, after) =>
+                        _usesLocation(before) != _usesLocation(after) ||
+                        (_usesLocation(after) &&
+                            before.estimate != after.estimate),
+                    listener: (context, state) => _syncMap(),
+                  ),
                 // Cambió el tiempo de llegada: solo se pide de nuevo la
                 // asesoría.
                 BlocListener<EtaCubit, EtaState>(
@@ -383,9 +422,11 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ],
+          if (widget.showMap)
+            const QaStagger(index: 2, child: ArrivalMapCard()),
         ],
         const SizedBox(height: QaSpacing.lg),
-        const _PrivacyLine(),
+        _PrivacyLine(showMap: widget.showMap),
       ],
     );
   }
@@ -464,17 +505,22 @@ class _SkeletonTiles extends StatelessWidget {
   }
 }
 
-/// La nota de privacidad: sin el tráfico en vivo, «Compartimos minutos de
-/// llegada, nunca tu ubicación»; con él, dice que la ubicación aproximada va a
-/// Google (nunca a Quadrapp).
+/// La nota de privacidad: sin el tráfico en vivo ni el mapa con la ruta,
+/// «Compartimos minutos de llegada, nunca tu ubicación»; con alguno de ellos,
+/// dice que la ubicación aproximada va a Google (nunca a Quadrapp).
 class _PrivacyLine extends StatelessWidget {
-  const _PrivacyLine();
+  const _PrivacyLine({required this.showMap});
+
+  final bool showMap;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final theme = Theme.of(context);
     final colors = context.qaColors;
+    final mapUsesLocation =
+        showMap &&
+        context.select<ArrivalMapCubit, bool>((c) => c.state.origin != null);
     return BlocBuilder<EtaCubit, EtaState>(
       buildWhen: (before, after) => before.usesTraffic != after.usesTraffic,
       builder: (context, eta) => Row(
@@ -492,6 +538,8 @@ class _PrivacyLine extends StatelessWidget {
             child: Text(
               eta.usesTraffic
                   ? l10n.home_privacyLineTraffic
+                  : mapUsesLocation
+                  ? l10n.home_privacyLineMap
                   : l10n.home_privacyLine,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: colors.onSurfaceMuted,

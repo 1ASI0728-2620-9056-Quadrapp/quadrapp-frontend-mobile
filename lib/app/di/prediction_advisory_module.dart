@@ -10,6 +10,7 @@ import 'package:quadrapp_mobile/app/mocks/prediction_advisory/mock_traffic_route
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/selected_lot_store.dart';
 import 'package:quadrapp_mobile/contexts/prediction_advisory/application/usecases/estimate_arrival_eta.dart';
 import 'package:quadrapp_mobile/contexts/prediction_advisory/application/usecases/eta_preferences_usecases.dart';
+import 'package:quadrapp_mobile/contexts/prediction_advisory/application/usecases/get_approximate_position.dart';
 import 'package:quadrapp_mobile/contexts/prediction_advisory/application/usecases/get_lot_forecasts.dart';
 import 'package:quadrapp_mobile/contexts/prediction_advisory/application/usecases/get_next_availability.dart';
 import 'package:quadrapp_mobile/contexts/prediction_advisory/application/usecases/location_permission_usecases.dart';
@@ -132,6 +133,12 @@ void registerPredictionAdvisoryModule(GetIt locator, AppConfig config) {
     )
     ..addLazy<RequestLocationPermission>(
       () => RequestLocationPermission(locator()),
+    )
+    ..addLazy<GetApproximatePosition>(
+      () => GetApproximatePosition(
+        permission: locator(),
+        positions: locator(),
+      ),
     );
 }
 

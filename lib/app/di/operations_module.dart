@@ -6,6 +6,7 @@ import 'package:quadrapp_mobile/app/mocks/mock_world.dart';
 import 'package:quadrapp_mobile/app/mocks/parking_sensing/mock_device_datasources.dart';
 import 'package:quadrapp_mobile/app/mocks/shift/mock_shift_datasource.dart';
 import 'package:quadrapp_mobile/composition/shift/get_shift_overview.dart';
+import 'package:quadrapp_mobile/composition/shift/shift_cubit.dart';
 import 'package:quadrapp_mobile/composition/shift/shift_overview_mapper.dart';
 import 'package:quadrapp_mobile/composition/shift/shift_overview_reader_impl.dart';
 import 'package:quadrapp_mobile/composition/shift/shift_overview_remote_datasource.dart';
@@ -24,6 +25,10 @@ import 'package:quadrapp_mobile/contexts/parking_sensing/infrastructure/reposito
 import 'package:quadrapp_mobile/contexts/parking_sensing/infrastructure/repositories/device_registry_impl.dart';
 import 'package:quadrapp_mobile/core/logging/logger.dart';
 import 'package:quadrapp_mobile/core/time/clock.dart';
+
+/// Crea el cubit de la consola de turno (`/ops/shift`): el router lo crea al
+/// entrar a la ruta y lo cierra al salir.
+typedef CreateShiftCubit = ShiftCubit Function();
 
 /// Experiencia de Operación: el contexto `parking_sensing` (inventario y salud
 /// de dispositivos, US20, US32, TS10) y la composición `shift` (consola de
@@ -74,7 +79,13 @@ void registerOperationsModule(GetIt locator, AppConfig config) {
         clock: locator<Clock>(),
       ),
     )
-    ..addLazy<GetShiftOverview>(() => GetShiftOverview(locator()));
+    ..addLazy<GetShiftOverview>(() => GetShiftOverview(locator()))
+    ..addValue<CreateShiftCubit>(
+      () => ShiftCubit(
+        getShiftOverview: locator(),
+        getDeviceInventory: locator(),
+      ),
+    );
 }
 
 /// El rol de quien llama, para los mocks de consola (no pasan por el

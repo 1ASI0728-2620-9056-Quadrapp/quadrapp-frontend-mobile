@@ -6,7 +6,9 @@ library;
 //   flutter test --tags screenshots --run-skipped --update-goldens
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/repositories/session_store.dart';
+import 'package:quadrapp_mobile/contexts/iam/domain/value_objects/user_role.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/selected_lot_store.dart';
 import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
 
@@ -25,6 +27,8 @@ void main() {
     Shot shot,
     String path, {
     int? selectedLot = 1,
+    UserRole role = UserRole.driver,
+    AppLanguage? language,
     Future<void> Function(WidgetTester tester)? before,
   }) async {
     final size = Size(shot.size.width.toDouble(), shot.size.height.toDouble());
@@ -52,7 +56,8 @@ void main() {
 
     final harness = await AppHarness.create(
       seed: (locator) async {
-        await locator<SessionStore>().save(sampleStored());
+        await locator<SessionStore>().save(sampleStored(role: role));
+        if (language != null) await locator<LanguageCubit>().select(language);
         if (selectedLot != null) {
           await locator<SelectedLotStore>().save(LotId(selectedLot));
         }
@@ -235,5 +240,58 @@ void main() {
         ),
       );
     });
+  }
+
+  // Operación: la consola de turno con las sedes de prueba (docs/07):
+  // Monterrico normal, San Isidro llena, Villa con el dato vencido y sin
+  // flujo, y San Miguel sin distribución. En español, como el diseño.
+  // Operación: Estacionamientos (las zonas y los espacios de la elegida).
+  for (final (name, lot) in <(String, int)>[
+    ('ops_zones', 1),
+    ('ops_zones_stale', 4),
+  ]) {
+    for (final shot in [
+      const Shot(tall, Brightness.light, 1),
+      standardShots[2],
+    ]) {
+      testWidgets('$name ${shot.label}', (tester) async {
+        await withRealShadows(
+          () => shoot(
+            tester,
+            name,
+            shot,
+            '/ops/zones',
+            selectedLot: lot,
+            role: UserRole.admin,
+            language: AppLanguage.es,
+          ),
+        );
+      });
+    }
+  }
+  for (final (name, lot) in <(String, int)>[
+    ('ops_shift', 1),
+    ('ops_shift_full', 2),
+    ('ops_shift_stale', 4),
+    ('ops_shift_nodata', 3),
+  ]) {
+    for (final shot in [
+      const Shot(tall, Brightness.light, 1),
+      standardShots[2],
+    ]) {
+      testWidgets('$name ${shot.label}', (tester) async {
+        await withRealShadows(
+          () => shoot(
+            tester,
+            name,
+            shot,
+            '/ops/shift',
+            selectedLot: lot,
+            role: UserRole.admin,
+            language: AppLanguage.es,
+          ),
+        );
+      });
+    }
   }
 }
