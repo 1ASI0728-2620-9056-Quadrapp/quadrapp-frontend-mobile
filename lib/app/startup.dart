@@ -12,6 +12,7 @@ import 'package:quadrapp_mobile/app/di/auth_module.dart';
 import 'package:quadrapp_mobile/app/di/eta_module.dart';
 import 'package:quadrapp_mobile/app/di/forecast_module.dart';
 import 'package:quadrapp_mobile/app/di/operations_module.dart';
+import 'package:quadrapp_mobile/app/di/parking_configuration_module.dart';
 import 'package:quadrapp_mobile/app/di/sede_module.dart';
 import 'package:quadrapp_mobile/app/di/zones_module.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_controls.dart';
@@ -75,6 +76,7 @@ GoRouter createRouterFrom(
     createForecastCubit: locator<CreateForecastCubit>(),
     createAlertsCubit: locator<CreateAlertsCubit>(),
     createShiftCubit: locator<CreateShiftCubit>(),
+    createLayoutEditorCubit: locator<CreateLayoutEditorCubit>(),
     clock: locator<Clock>(),
     languageCubit: locator<LanguageCubit>(),
     createArrivalMapCubit: locator<CreateArrivalMapCubit>(),

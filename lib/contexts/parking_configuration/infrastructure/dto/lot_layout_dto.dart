@@ -60,6 +60,7 @@ class SpaceDto {
   const SpaceDto({
     required this.id,
     required this.label,
+    this.type,
     this.posX,
     this.posY,
   });
@@ -69,6 +70,9 @@ class SpaceDto {
 
   final int id;
   final String label;
+
+  /// `STANDARD` o `ACCESSIBLE`; si falta o no se reconoce, `STANDARD`.
+  final String? type;
   final double? posX;
   final double? posY;
 

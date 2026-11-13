@@ -5,6 +5,7 @@ import 'package:quadrapp_mobile/contexts/parking_configuration/domain/entities/s
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/entities/zone.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dto/lot_layout_dto.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dto/parking_lot_dto.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/mappers/layout_draft_mapper.dart';
 import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
 
 /// DTO -> entidades del dominio.
@@ -48,6 +49,7 @@ class ParkingConfigurationMapper {
                     Space(
                       id: SpaceId(space.id),
                       label: space.label,
+                      type: spaceTypeFromApi(space.type),
                       posX: space.posX,
                       posY: space.posY,
                     ),

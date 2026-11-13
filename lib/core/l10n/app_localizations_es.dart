@@ -2074,4 +2074,349 @@ class AppLocalizationsEs extends AppLocalizations {
   String lots_spacesMore(int count) {
     return '+$count más';
   }
+
+  @override
+  String get lots_manage => 'Gestionar zonas y espacios';
+
+  @override
+  String get layout_title => 'Editar distribución';
+
+  @override
+  String layout_subtitle(String lot) {
+    return '$lot · zonas y espacios';
+  }
+
+  @override
+  String layout_draftChip(int version) {
+    return 'Borrador · versión $version';
+  }
+
+  @override
+  String layout_publishedChip(int version) {
+    return 'Versión $version publicada';
+  }
+
+  @override
+  String get layout_noLayoutChip => 'Sin distribución publicada';
+
+  @override
+  String get layout_undo => 'Deshacer';
+
+  @override
+  String get layout_undone => 'Se deshizo el último cambio';
+
+  @override
+  String get layout_planTitle => 'Plano del estacionamiento';
+
+  @override
+  String get layout_planHint =>
+      'Toca una zona para ver sus espacios y un espacio para editarlo.';
+
+  @override
+  String get layout_planEmpty =>
+      'Aún no hay zonas. Añade la primera para empezar.';
+
+  @override
+  String layout_zoneSpaces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count espacios',
+      one: '1 espacio',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get layout_zoneNew => 'Nueva';
+
+  @override
+  String get layout_zoneSelected => 'Elegida';
+
+  @override
+  String layout_spacesOf(String zone) {
+    return 'Espacios de $zone';
+  }
+
+  @override
+  String layout_showAll(int count) {
+    return 'Mostrar los $count';
+  }
+
+  @override
+  String layout_spaceTitle(String zone, String label) {
+    return '$zone · $label';
+  }
+
+  @override
+  String get layout_typeStandard => 'Estándar';
+
+  @override
+  String get layout_typeAccessible => 'Accesible';
+
+  @override
+  String get layout_spaceStandard => 'Espacio estándar';
+
+  @override
+  String get layout_spaceAccessible => 'Espacio accesible';
+
+  @override
+  String get layout_spaceEnabled => 'habilitado';
+
+  @override
+  String get layout_spaceDisabled => 'deshabilitado al publicar';
+
+  @override
+  String get layout_spaceNew => 'nuevo';
+
+  @override
+  String get layout_spaceEdited => 'editado';
+
+  @override
+  String get layout_editData => 'Editar datos';
+
+  @override
+  String get layout_disable => 'Deshabilitar espacio';
+
+  @override
+  String get layout_enable => 'Volver a habilitar';
+
+  @override
+  String get layout_noSpaceSelected =>
+      'Elige un espacio en el plano para editarlo o deshabilitarlo.';
+
+  @override
+  String get layout_publishTitle => 'Publicar distribución';
+
+  @override
+  String layout_zonesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zonas',
+      one: '1 zona',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String layout_publishReady(String zones, String spaces) {
+    return '$zones · $spaces. Sin errores de validación. Los cambios se aplican al publicar.';
+  }
+
+  @override
+  String layout_publishNothing(String zones, String spaces) {
+    return '$zones · $spaces. Aún no hay cambios por publicar.';
+  }
+
+  @override
+  String layout_publishAction(int version) {
+    return 'Publicar versión $version';
+  }
+
+  @override
+  String get layout_publishing => 'Publicando…';
+
+  @override
+  String layout_publishDialogTitle(int version) {
+    return '¿Publicar versión $version?';
+  }
+
+  @override
+  String get layout_publishDialogMessage =>
+      'Los cambios se aplican a todo el estacionamiento.';
+
+  @override
+  String get layout_rowZones => 'Zonas';
+
+  @override
+  String get layout_rowSpaces => 'Espacios';
+
+  @override
+  String get layout_rowDisabled => 'Deshabilitados';
+
+  @override
+  String layout_rowNoChanges(int count) {
+    return '$count · sin cambios';
+  }
+
+  @override
+  String get layout_publishDialogNote =>
+      'Los conductores verán la nueva distribución en su próxima actualización.';
+
+  @override
+  String get layout_keepEditing => 'Seguir editando';
+
+  @override
+  String get layout_publishConfirm => 'Publicar';
+
+  @override
+  String layout_published(int version) {
+    return 'Versión $version publicada';
+  }
+
+  @override
+  String get layout_conflict =>
+      'Alguien publicó una versión más nueva. Descarta tu borrador y vuelve a hacer los cambios.';
+
+  @override
+  String get layout_discard => 'Descartar borrador';
+
+  @override
+  String get layout_draftDiscarded =>
+      'La distribución cambió mientras tanto: tu borrador anterior se descartó.';
+
+  @override
+  String get layout_forbidden =>
+      'Solo un administrador de la universidad puede editar la distribución.';
+
+  @override
+  String get layout_publishError =>
+      'No se pudo publicar. Revisa tu conexión e inténtalo de nuevo.';
+
+  @override
+  String get layout_saveFailed =>
+      'El cambio se aplicó, pero no se pudo guardar en el teléfono.';
+
+  @override
+  String get layout_loading => 'Cargando la distribución';
+
+  @override
+  String get layout_errorTitle => 'No pudimos cargar la distribución';
+
+  @override
+  String layout_disableTitle(String label) {
+    return '¿Deshabilitar $label?';
+  }
+
+  @override
+  String layout_disableMessage(
+    String zone,
+    int before,
+    int after,
+    int version,
+  ) {
+    return 'Dejará de contarse en el aforo de $zone ($before → $after espacios). El cambio se aplica al publicar la versión $version y puedes revertirlo antes.';
+  }
+
+  @override
+  String get layout_disableConfirm => 'Deshabilitar';
+
+  @override
+  String get layout_cancel => 'Cancelar';
+
+  @override
+  String get layout_close => 'Cerrar';
+
+  @override
+  String get layout_addZone => 'Añadir zona';
+
+  @override
+  String get layout_addSpace => 'Añadir espacio';
+
+  @override
+  String get layout_editSpaceTitle => 'Editar espacio';
+
+  @override
+  String layout_sheetSubtitle(int version) {
+    return 'Se agrega al borrador versión $version y se aplica al publicar.';
+  }
+
+  @override
+  String get layout_zoneName => 'Nombre de la zona *';
+
+  @override
+  String get layout_level => 'Nivel';
+
+  @override
+  String get layout_levelHelp =>
+      'Ayuda a ubicar la zona en pabellones con varios niveles.';
+
+  @override
+  String get layout_levelSurface => 'Superficie';
+
+  @override
+  String layout_levelBasement(int n) {
+    return 'Sótano $n';
+  }
+
+  @override
+  String layout_levelFloor(int n) {
+    return 'Piso $n';
+  }
+
+  @override
+  String get layout_initialSpaces => 'Espacios iniciales';
+
+  @override
+  String get layout_initialSpacesHelp =>
+      'De 1 a 200. Los códigos se crean con el nombre de la zona.';
+
+  @override
+  String get layout_addZoneNote =>
+      'Los espacios nuevos aparecen como desconocidos hasta que la plataforma asocie sus sensores. Nunca cuentan como libres.';
+
+  @override
+  String get layout_addToDraft => 'Añadir al borrador';
+
+  @override
+  String get layout_zoneField => 'Zona *';
+
+  @override
+  String get layout_levelField => 'Nivel *';
+
+  @override
+  String get layout_label => 'Código del espacio *';
+
+  @override
+  String layout_labelHelp(String label) {
+    return 'Debe ser único en el estacionamiento. Sugerido: $label.';
+  }
+
+  @override
+  String get layout_type => 'Tipo de espacio';
+
+  @override
+  String get layout_enabledTitle => 'Habilitado';
+
+  @override
+  String get layout_enabledHelp => 'Cuenta en el aforo en cuanto se publique.';
+
+  @override
+  String get layout_addSpaceNote =>
+      'Sin sensor asociado se mostrará como desconocido, nunca como libre.';
+
+  @override
+  String get layout_saveSpace => 'Guardar cambios';
+
+  @override
+  String get layout_errorZoneName => 'Escribe el nombre de la zona.';
+
+  @override
+  String get layout_errorZoneNameLong => 'Usa hasta 60 caracteres.';
+
+  @override
+  String get layout_errorZoneTaken => 'Ya hay una zona con ese nombre.';
+
+  @override
+  String get layout_errorSpaces => 'Elige entre 1 y 200 espacios.';
+
+  @override
+  String get layout_errorZone => 'Elige una zona.';
+
+  @override
+  String get layout_errorLevel => 'Elige un nivel.';
+
+  @override
+  String get layout_errorLabel => 'Escribe el código del espacio.';
+
+  @override
+  String get layout_errorLabelLong => 'Usa hasta 20 caracteres.';
+
+  @override
+  String get layout_errorLabelTaken =>
+      'Ese código ya existe en el estacionamiento.';
+
+  @override
+  String get layout_errorGeneric => 'No se pudo aplicar el cambio.';
 }

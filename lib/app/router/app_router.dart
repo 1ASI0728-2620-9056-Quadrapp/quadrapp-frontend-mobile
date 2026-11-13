@@ -10,6 +10,7 @@ import 'package:quadrapp_mobile/app/di/auth_module.dart';
 import 'package:quadrapp_mobile/app/di/eta_module.dart';
 import 'package:quadrapp_mobile/app/di/forecast_module.dart';
 import 'package:quadrapp_mobile/app/di/operations_module.dart';
+import 'package:quadrapp_mobile/app/di/parking_configuration_module.dart';
 import 'package:quadrapp_mobile/app/di/sede_module.dart';
 import 'package:quadrapp_mobile/app/di/zones_module.dart';
 import 'package:quadrapp_mobile/app/gallery/gallery_page.dart';
@@ -25,6 +26,7 @@ import 'package:quadrapp_mobile/composition/alerts/alerts_tab_page.dart';
 import 'package:quadrapp_mobile/composition/arrival/home_page.dart';
 import 'package:quadrapp_mobile/composition/forecast/forecast_tab_page.dart';
 import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
+import 'package:quadrapp_mobile/composition/layout_editor/layout_editor_page.dart';
 import 'package:quadrapp_mobile/composition/lots/lots_page.dart';
 import 'package:quadrapp_mobile/composition/settings/settings_page.dart';
 import 'package:quadrapp_mobile/composition/shift/shift_page.dart';
@@ -71,6 +73,9 @@ String opsZonePath(ZoneId zoneId) => '$opsZonesPath/${zoneId.value}';
 /// (`/ops/zones/:zoneId/levels/:levelId`).
 String opsLevelPath(ZoneId zoneId, LevelId levelId) =>
     '$opsZonesPath/${zoneId.value}/levels/${levelId.value}';
+
+/// «Editar distribución» del estacionamiento elegido (solo `ADMIN`).
+const String opsLayoutPath = '/ops/zones/layout';
 const String opsAccessesPath = '/ops/accesses';
 const String opsAnalyticsPath = '/ops/analytics';
 const String opsMorePath = '/ops/more';
@@ -134,6 +139,7 @@ GoRouter createAppRouter({
   required CreateForecastCubit createForecastCubit,
   required CreateAlertsCubit createAlertsCubit,
   required CreateShiftCubit createShiftCubit,
+  required CreateLayoutEditorCubit createLayoutEditorCubit,
   required Clock clock,
   LanguageCubit? languageCubit,
   CreateArrivalMapCubit? createArrivalMapCubit,
@@ -423,9 +429,27 @@ GoRouter createAppRouter({
                   onOpenLevel: (zoneId, levelId) =>
                       context.push(opsLevelPath(zoneId, levelId)),
                   onOpenAccount: () => context.push(opsAccountPath),
+                  onManageLayout: _isAdmin(authCubit)
+                      ? () => context.push(opsLayoutPath)
+                      : null,
                 ),
                 // La zona y el nivel son los mismos del Conductor.
                 routes: [
+                  // Antes que `:zoneId`, que también calzaría con «layout».
+                  // Solo el administrador edita la distribución; al operador
+                  // se le devuelve a Estacionamientos (el servidor responde
+                  // 403 igual).
+                  GoRoute(
+                    path: 'layout',
+                    redirect: (context, state) =>
+                        _isAdmin(authCubit) ? null : opsZonesPath,
+                    builder: (context, state) => BlocProvider(
+                      create: (_) => createLayoutEditorCubit(),
+                      child: LayoutEditorPage(
+                        onBack: () => _backTo(context, opsZonesPath),
+                      ),
+                    ),
+                  ),
                   GoRoute(
                     path: ':zoneId',
                     builder: (context, state) => ZonePage(
@@ -515,6 +539,13 @@ GoRouter createAppRouter({
 /// distribución y la pantalla lo dice.
 int _idOf(GoRouterState state, String name) =>
     int.tryParse(state.pathParameters[name] ?? '') ?? -1;
+
+/// ¿La sesión es de un administrador de universidad (`ADMIN`)? Solo él
+/// gestiona la distribución, los accesos, los dominios y el equipo.
+bool _isAdmin(AuthCubit authCubit) {
+  final auth = authCubit.state;
+  return auth is Authenticated && auth.session.role == UserRole.admin;
+}
 
 /// Volver: a la pantalla anterior; con un enlace directo (sin anterior), a
 /// Zonas.

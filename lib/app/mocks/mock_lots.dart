@@ -11,11 +11,15 @@ class MockSpace {
     required this.posY,
     required this.status,
     this.unknownReason,
+    this.type = 'STANDARD',
   });
 
   final int id;
   final int levelId;
-  final String label;
+
+  /// Mutables: la publicación de la distribución puede cambiarlos (US17).
+  String label;
+  String type;
   final double posX;
   final double posY;
   String status;
@@ -111,8 +115,8 @@ class MockLot {
   final double? latitude;
   final double? longitude;
 
-  /// 0 = sin distribución publicada (US04 esc. 2).
-  final int layoutVersion;
+  /// 0 = sin distribución publicada (US04 esc. 2). Sube al publicar (US17).
+  int layoutVersion;
   final List<MockZone> zones;
   final int staleAfterSeconds;
 

@@ -39,6 +39,7 @@ class LotsPage extends StatefulWidget {
     required this.onOpenZone,
     required this.onOpenLevel,
     required this.onOpenAccount,
+    this.onManageLayout,
     this.ticker,
     super.key,
   });
@@ -48,6 +49,10 @@ class LotsPage extends StatefulWidget {
   final ValueChanged<ZoneId> onOpenZone;
   final void Function(ZoneId zoneId, LevelId levelId) onOpenLevel;
   final VoidCallback onOpenAccount;
+
+  /// «Gestionar zonas y espacios»; `null` para el operador, que no edita la
+  /// distribución.
+  final VoidCallback? onManageLayout;
 
   /// Reloj de la antigüedad; en pruebas, uno que no corre.
   final Ticker? ticker;
@@ -116,6 +121,16 @@ class _LotsPageState extends State<LotsPage> {
       subtitle: l10n.lots_subtitle(overview.lot.name, zones.length),
     );
 
+    final onManage = widget.onManageLayout;
+    final manage = onManage == null
+        ? null
+        : QaButton(
+            label: l10n.lots_manage,
+            icon: Icons.tune_rounded,
+            expand: true,
+            onPressed: onManage,
+          );
+
     if (zones.isEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -127,6 +142,10 @@ class _LotsPageState extends State<LotsPage> {
             title: l10n.lots_noZones,
             compact: true,
           ),
+          if (manage != null) ...[
+            const SizedBox(height: QaSpacing.lg),
+            manage,
+          ],
         ],
       );
     }
@@ -196,6 +215,10 @@ class _LotsPageState extends State<LotsPage> {
                   : widget.onOpenZone(selected.id),
             ),
           ],
+        ],
+        if (manage != null) ...[
+          const SizedBox(height: QaSpacing.lg),
+          manage,
         ],
       ],
     );

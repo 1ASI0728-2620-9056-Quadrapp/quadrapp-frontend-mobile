@@ -58,6 +58,7 @@ Map<String, dynamic> _$LevelDtoToJson(LevelDto instance) => <String, dynamic>{
 SpaceDto _$SpaceDtoFromJson(Map<String, dynamic> json) => SpaceDto(
   id: (json['id'] as num).toInt(),
   label: json['label'] as String,
+  type: json['type'] as String?,
   posX: (json['posX'] as num?)?.toDouble(),
   posY: (json['posY'] as num?)?.toDouble(),
 );
@@ -65,6 +66,7 @@ SpaceDto _$SpaceDtoFromJson(Map<String, dynamic> json) => SpaceDto(
 Map<String, dynamic> _$SpaceDtoToJson(SpaceDto instance) => <String, dynamic>{
   'id': instance.id,
   'label': instance.label,
+  'type': instance.type,
   'posX': instance.posX,
   'posY': instance.posY,
 };

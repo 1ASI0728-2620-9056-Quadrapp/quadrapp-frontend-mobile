@@ -269,6 +269,57 @@ void main() {
       });
     }
   }
+  // Operación: Editar distribución y sus ventanas (Monterrico).
+  for (final (name, before) in <(String, Future<void> Function(WidgetTester)?)>[
+    ('ops_layout', null),
+    (
+      'ops_layout_zone_sheet',
+      (tester) async => tester.tap(find.text('Añadir zona')),
+    ),
+    (
+      'ops_layout_space_sheet',
+      (tester) async => tester.tap(find.text('Añadir espacio')),
+    ),
+    (
+      'ops_layout_draft',
+      (tester) async {
+        await tester.tap(find.text('A-02'));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('Deshabilitar espacio'));
+        await tester.tap(find.text('Deshabilitar espacio'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'Deshabilitar'));
+      },
+    ),
+    (
+      'ops_layout_publish',
+      (tester) async {
+        await tester.tap(find.text('A-02'));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('Deshabilitar espacio'));
+        await tester.tap(find.text('Deshabilitar espacio'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.widgetWithText(FilledButton, 'Deshabilitar'));
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('Publicar versión 5'));
+        await tester.tap(find.text('Publicar versión 5'));
+      },
+    ),
+  ]) {
+    testWidgets('$name ${small.width}', (tester) async {
+      await withRealShadows(
+        () => shoot(
+          tester,
+          name,
+          const Shot(tall, Brightness.light, 1),
+          '/ops/zones/layout',
+          role: UserRole.admin,
+          language: AppLanguage.es,
+          before: before,
+        ),
+      );
+    });
+  }
   for (final (name, lot) in <(String, int)>[
     ('ops_shift', 1),
     ('ops_shift_full', 2),

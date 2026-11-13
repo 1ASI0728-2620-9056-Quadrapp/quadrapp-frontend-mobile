@@ -2054,4 +2054,349 @@ class AppLocalizationsEn extends AppLocalizations {
   String lots_spacesMore(int count) {
     return '+$count more';
   }
+
+  @override
+  String get lots_manage => 'Manage zones and spaces';
+
+  @override
+  String get layout_title => 'Edit layout';
+
+  @override
+  String layout_subtitle(String lot) {
+    return '$lot · zones and spaces';
+  }
+
+  @override
+  String layout_draftChip(int version) {
+    return 'Draft · version $version';
+  }
+
+  @override
+  String layout_publishedChip(int version) {
+    return 'Version $version published';
+  }
+
+  @override
+  String get layout_noLayoutChip => 'No published layout';
+
+  @override
+  String get layout_undo => 'Undo';
+
+  @override
+  String get layout_undone => 'Last change undone';
+
+  @override
+  String get layout_planTitle => 'Parking plan';
+
+  @override
+  String get layout_planHint =>
+      'Tap a zone to see its spaces, and a space to edit it.';
+
+  @override
+  String get layout_planEmpty => 'No zones yet. Add the first one to start.';
+
+  @override
+  String layout_zoneSpaces(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count spaces',
+      one: '1 space',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get layout_zoneNew => 'New';
+
+  @override
+  String get layout_zoneSelected => 'Selected';
+
+  @override
+  String layout_spacesOf(String zone) {
+    return 'Spaces in $zone';
+  }
+
+  @override
+  String layout_showAll(int count) {
+    return 'Show all $count';
+  }
+
+  @override
+  String layout_spaceTitle(String zone, String label) {
+    return '$zone · $label';
+  }
+
+  @override
+  String get layout_typeStandard => 'Standard';
+
+  @override
+  String get layout_typeAccessible => 'Accessible';
+
+  @override
+  String get layout_spaceStandard => 'Standard space';
+
+  @override
+  String get layout_spaceAccessible => 'Accessible space';
+
+  @override
+  String get layout_spaceEnabled => 'enabled';
+
+  @override
+  String get layout_spaceDisabled => 'disabled when published';
+
+  @override
+  String get layout_spaceNew => 'new';
+
+  @override
+  String get layout_spaceEdited => 'edited';
+
+  @override
+  String get layout_editData => 'Edit details';
+
+  @override
+  String get layout_disable => 'Disable space';
+
+  @override
+  String get layout_enable => 'Enable again';
+
+  @override
+  String get layout_noSpaceSelected =>
+      'Choose a space in the plan to edit or disable it.';
+
+  @override
+  String get layout_publishTitle => 'Publish layout';
+
+  @override
+  String layout_zonesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zones',
+      one: '1 zone',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String layout_publishReady(String zones, String spaces) {
+    return '$zones · $spaces. No validation errors. Changes apply when you publish.';
+  }
+
+  @override
+  String layout_publishNothing(String zones, String spaces) {
+    return '$zones · $spaces. No changes to publish yet.';
+  }
+
+  @override
+  String layout_publishAction(int version) {
+    return 'Publish version $version';
+  }
+
+  @override
+  String get layout_publishing => 'Publishing…';
+
+  @override
+  String layout_publishDialogTitle(int version) {
+    return 'Publish version $version?';
+  }
+
+  @override
+  String get layout_publishDialogMessage =>
+      'Changes apply to the whole parking lot.';
+
+  @override
+  String get layout_rowZones => 'Zones';
+
+  @override
+  String get layout_rowSpaces => 'Spaces';
+
+  @override
+  String get layout_rowDisabled => 'Disabled';
+
+  @override
+  String layout_rowNoChanges(int count) {
+    return '$count · no changes';
+  }
+
+  @override
+  String get layout_publishDialogNote =>
+      'Drivers will see the new layout on their next update.';
+
+  @override
+  String get layout_keepEditing => 'Keep editing';
+
+  @override
+  String get layout_publishConfirm => 'Publish';
+
+  @override
+  String layout_published(int version) {
+    return 'Version $version published';
+  }
+
+  @override
+  String get layout_conflict =>
+      'Someone published a newer version. Discard your draft and make the changes again.';
+
+  @override
+  String get layout_discard => 'Discard draft';
+
+  @override
+  String get layout_draftDiscarded =>
+      'The layout changed in the meantime: your previous draft was discarded.';
+
+  @override
+  String get layout_forbidden =>
+      'Only a university administrator can edit the layout.';
+
+  @override
+  String get layout_publishError =>
+      'We couldn\'t publish. Check your connection and try again.';
+
+  @override
+  String get layout_saveFailed =>
+      'The change was applied but couldn\'t be saved on this phone.';
+
+  @override
+  String get layout_loading => 'Loading the layout';
+
+  @override
+  String get layout_errorTitle => 'We couldn\'t load the layout';
+
+  @override
+  String layout_disableTitle(String label) {
+    return 'Disable $label?';
+  }
+
+  @override
+  String layout_disableMessage(
+    String zone,
+    int before,
+    int after,
+    int version,
+  ) {
+    return 'It will stop counting toward the capacity of $zone ($before → $after spaces). The change applies when you publish version $version and you can revert it before.';
+  }
+
+  @override
+  String get layout_disableConfirm => 'Disable';
+
+  @override
+  String get layout_cancel => 'Cancel';
+
+  @override
+  String get layout_close => 'Close';
+
+  @override
+  String get layout_addZone => 'Add zone';
+
+  @override
+  String get layout_addSpace => 'Add space';
+
+  @override
+  String get layout_editSpaceTitle => 'Edit space';
+
+  @override
+  String layout_sheetSubtitle(int version) {
+    return 'Added to draft version $version and applied when you publish.';
+  }
+
+  @override
+  String get layout_zoneName => 'Zone name *';
+
+  @override
+  String get layout_level => 'Level';
+
+  @override
+  String get layout_levelHelp =>
+      'Helps locate the zone in buildings with several levels.';
+
+  @override
+  String get layout_levelSurface => 'Surface';
+
+  @override
+  String layout_levelBasement(int n) {
+    return 'Basement $n';
+  }
+
+  @override
+  String layout_levelFloor(int n) {
+    return 'Floor $n';
+  }
+
+  @override
+  String get layout_initialSpaces => 'Initial spaces';
+
+  @override
+  String get layout_initialSpacesHelp =>
+      'From 1 to 200. Codes are created from the zone name.';
+
+  @override
+  String get layout_addZoneNote =>
+      'New spaces show as unknown until the platform links their sensors. They never count as free.';
+
+  @override
+  String get layout_addToDraft => 'Add to draft';
+
+  @override
+  String get layout_zoneField => 'Zone *';
+
+  @override
+  String get layout_levelField => 'Level *';
+
+  @override
+  String get layout_label => 'Space code *';
+
+  @override
+  String layout_labelHelp(String label) {
+    return 'Must be unique in the parking lot. Suggested: $label.';
+  }
+
+  @override
+  String get layout_type => 'Space type';
+
+  @override
+  String get layout_enabledTitle => 'Enabled';
+
+  @override
+  String get layout_enabledHelp =>
+      'Counts toward capacity as soon as it is published.';
+
+  @override
+  String get layout_addSpaceNote =>
+      'Without a linked sensor it shows as unknown, never as free.';
+
+  @override
+  String get layout_saveSpace => 'Save changes';
+
+  @override
+  String get layout_errorZoneName => 'Enter the zone name.';
+
+  @override
+  String get layout_errorZoneNameLong => 'Use up to 60 characters.';
+
+  @override
+  String get layout_errorZoneTaken => 'There is already a zone with that name.';
+
+  @override
+  String get layout_errorSpaces => 'Choose between 1 and 200 spaces.';
+
+  @override
+  String get layout_errorZone => 'Choose a zone.';
+
+  @override
+  String get layout_errorLevel => 'Choose a level.';
+
+  @override
+  String get layout_errorLabel => 'Enter the space code.';
+
+  @override
+  String get layout_errorLabelLong => 'Use up to 20 characters.';
+
+  @override
+  String get layout_errorLabelTaken =>
+      'That code already exists in the parking lot.';
+
+  @override
+  String get layout_errorGeneric => 'The change couldn\'t be applied.';
 }

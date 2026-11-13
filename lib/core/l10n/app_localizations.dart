@@ -3455,6 +3455,552 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'+{count} more'**
   String lots_spacesMore(int count);
+
+  /// Opens the layout editor (admin only).
+  ///
+  /// In en, this message translates to:
+  /// **'Manage zones and spaces'**
+  String get lots_manage;
+
+  /// Layout editor title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit layout'**
+  String get layout_title;
+
+  /// Layout editor subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{lot} · zones and spaces'**
+  String layout_subtitle(String lot);
+
+  /// Chip: there are unpublished changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft · version {version}'**
+  String layout_draftChip(int version);
+
+  /// Chip: no changes.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} published'**
+  String layout_publishedChip(int version);
+
+  /// Chip: lot without layout.
+  ///
+  /// In en, this message translates to:
+  /// **'No published layout'**
+  String get layout_noLayoutChip;
+
+  /// Undo the last draft change.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get layout_undo;
+
+  /// Snackbar after undo.
+  ///
+  /// In en, this message translates to:
+  /// **'Last change undone'**
+  String get layout_undone;
+
+  /// Plan card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking plan'**
+  String get layout_planTitle;
+
+  /// Plan hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap a zone to see its spaces, and a space to edit it.'**
+  String get layout_planHint;
+
+  /// Plan without zones.
+  ///
+  /// In en, this message translates to:
+  /// **'No zones yet. Add the first one to start.'**
+  String get layout_planEmpty;
+
+  /// Spaces of a zone in the plan.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 space} other{{count} spaces}}'**
+  String layout_zoneSpaces(int count);
+
+  /// Badge of a draft zone.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get layout_zoneNew;
+
+  /// Screen reader: selected zone.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected'**
+  String get layout_zoneSelected;
+
+  /// Title above the space chips.
+  ///
+  /// In en, this message translates to:
+  /// **'Spaces in {zone}'**
+  String layout_spacesOf(String zone);
+
+  /// Shows every space chip.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all {count}'**
+  String layout_showAll(int count);
+
+  /// Selected space card title.
+  ///
+  /// In en, this message translates to:
+  /// **'{zone} · {label}'**
+  String layout_spaceTitle(String zone, String label);
+
+  /// Space type.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard'**
+  String get layout_typeStandard;
+
+  /// Space type.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessible'**
+  String get layout_typeAccessible;
+
+  /// Selected space type line.
+  ///
+  /// In en, this message translates to:
+  /// **'Standard space'**
+  String get layout_spaceStandard;
+
+  /// Selected space type line.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessible space'**
+  String get layout_spaceAccessible;
+
+  /// Selected space state.
+  ///
+  /// In en, this message translates to:
+  /// **'enabled'**
+  String get layout_spaceEnabled;
+
+  /// Selected space state.
+  ///
+  /// In en, this message translates to:
+  /// **'disabled when published'**
+  String get layout_spaceDisabled;
+
+  /// Selected space is a draft space.
+  ///
+  /// In en, this message translates to:
+  /// **'new'**
+  String get layout_spaceNew;
+
+  /// Selected space was edited in the draft.
+  ///
+  /// In en, this message translates to:
+  /// **'edited'**
+  String get layout_spaceEdited;
+
+  /// Opens the edit space sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit details'**
+  String get layout_editData;
+
+  /// Disables the selected space.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable space'**
+  String get layout_disable;
+
+  /// Reverts a disable before publishing.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable again'**
+  String get layout_enable;
+
+  /// No space selected.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a space in the plan to edit or disable it.'**
+  String get layout_noSpaceSelected;
+
+  /// Publish card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish layout'**
+  String get layout_publishTitle;
+
+  /// Zones count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 zone} other{{count} zones}}'**
+  String layout_zonesCount(int count);
+
+  /// Publish card with changes.
+  ///
+  /// In en, this message translates to:
+  /// **'{zones} · {spaces}. No validation errors. Changes apply when you publish.'**
+  String layout_publishReady(String zones, String spaces);
+
+  /// Publish card without changes.
+  ///
+  /// In en, this message translates to:
+  /// **'{zones} · {spaces}. No changes to publish yet.'**
+  String layout_publishNothing(String zones, String spaces);
+
+  /// Publish button.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish version {version}'**
+  String layout_publishAction(int version);
+
+  /// Publish button while sending.
+  ///
+  /// In en, this message translates to:
+  /// **'Publishing…'**
+  String get layout_publishing;
+
+  /// Publish dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish version {version}?'**
+  String layout_publishDialogTitle(int version);
+
+  /// Publish dialog message.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes apply to the whole parking lot.'**
+  String get layout_publishDialogMessage;
+
+  /// Publish summary row.
+  ///
+  /// In en, this message translates to:
+  /// **'Zones'**
+  String get layout_rowZones;
+
+  /// Publish summary row.
+  ///
+  /// In en, this message translates to:
+  /// **'Spaces'**
+  String get layout_rowSpaces;
+
+  /// Publish summary row.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get layout_rowDisabled;
+
+  /// Summary value without changes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} · no changes'**
+  String layout_rowNoChanges(int count);
+
+  /// Publish dialog note.
+  ///
+  /// In en, this message translates to:
+  /// **'Drivers will see the new layout on their next update.'**
+  String get layout_publishDialogNote;
+
+  /// Publish dialog cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep editing'**
+  String get layout_keepEditing;
+
+  /// Publish dialog confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Publish'**
+  String get layout_publishConfirm;
+
+  /// Snackbar after publishing.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} published'**
+  String layout_published(int version);
+
+  /// Publish 409: base version changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone published a newer version. Discard your draft and make the changes again.'**
+  String get layout_conflict;
+
+  /// Discards the draft.
+  ///
+  /// In en, this message translates to:
+  /// **'Discard draft'**
+  String get layout_discard;
+
+  /// Stored draft no longer matches.
+  ///
+  /// In en, this message translates to:
+  /// **'The layout changed in the meantime: your previous draft was discarded.'**
+  String get layout_draftDiscarded;
+
+  /// Publish 403.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a university administrator can edit the layout.'**
+  String get layout_forbidden;
+
+  /// Publish failed.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t publish. Check your connection and try again.'**
+  String get layout_publishError;
+
+  /// Draft could not be stored.
+  ///
+  /// In en, this message translates to:
+  /// **'The change was applied but couldn\'t be saved on this phone.'**
+  String get layout_saveFailed;
+
+  /// Screen reader while loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading the layout'**
+  String get layout_loading;
+
+  /// Load error title.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the layout'**
+  String get layout_errorTitle;
+
+  /// Disable dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable {label}?'**
+  String layout_disableTitle(String label);
+
+  /// Disable dialog message.
+  ///
+  /// In en, this message translates to:
+  /// **'It will stop counting toward the capacity of {zone} ({before} → {after} spaces). The change applies when you publish version {version} and you can revert it before.'**
+  String layout_disableMessage(String zone, int before, int after, int version);
+
+  /// Disable dialog confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Disable'**
+  String get layout_disableConfirm;
+
+  /// Cancel a sheet or dialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get layout_cancel;
+
+  /// Close a sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get layout_close;
+
+  /// Add zone button and sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add zone'**
+  String get layout_addZone;
+
+  /// Add space button and sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add space'**
+  String get layout_addSpace;
+
+  /// Edit space sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit space'**
+  String get layout_editSpaceTitle;
+
+  /// Sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to draft version {version} and applied when you publish.'**
+  String layout_sheetSubtitle(int version);
+
+  /// Field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Zone name *'**
+  String get layout_zoneName;
+
+  /// Field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Level'**
+  String get layout_level;
+
+  /// Field help.
+  ///
+  /// In en, this message translates to:
+  /// **'Helps locate the zone in buildings with several levels.'**
+  String get layout_levelHelp;
+
+  /// Level option.
+  ///
+  /// In en, this message translates to:
+  /// **'Surface'**
+  String get layout_levelSurface;
+
+  /// Level option.
+  ///
+  /// In en, this message translates to:
+  /// **'Basement {n}'**
+  String layout_levelBasement(int n);
+
+  /// Level option.
+  ///
+  /// In en, this message translates to:
+  /// **'Floor {n}'**
+  String layout_levelFloor(int n);
+
+  /// Field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Initial spaces'**
+  String get layout_initialSpaces;
+
+  /// Field help.
+  ///
+  /// In en, this message translates to:
+  /// **'From 1 to 200. Codes are created from the zone name.'**
+  String get layout_initialSpacesHelp;
+
+  /// Add zone note.
+  ///
+  /// In en, this message translates to:
+  /// **'New spaces show as unknown until the platform links their sensors. They never count as free.'**
+  String get layout_addZoneNote;
+
+  /// Add zone confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to draft'**
+  String get layout_addToDraft;
+
+  /// Field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Zone *'**
+  String get layout_zoneField;
+
+  /// Field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Level *'**
+  String get layout_levelField;
+
+  /// Field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Space code *'**
+  String get layout_label;
+
+  /// Field help.
+  ///
+  /// In en, this message translates to:
+  /// **'Must be unique in the parking lot. Suggested: {label}.'**
+  String layout_labelHelp(String label);
+
+  /// Field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Space type'**
+  String get layout_type;
+
+  /// Switch title.
+  ///
+  /// In en, this message translates to:
+  /// **'Enabled'**
+  String get layout_enabledTitle;
+
+  /// Switch help.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts toward capacity as soon as it is published.'**
+  String get layout_enabledHelp;
+
+  /// Add space note.
+  ///
+  /// In en, this message translates to:
+  /// **'Without a linked sensor it shows as unknown, never as free.'**
+  String get layout_addSpaceNote;
+
+  /// Edit space confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get layout_saveSpace;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the zone name.'**
+  String get layout_errorZoneName;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use up to 60 characters.'**
+  String get layout_errorZoneNameLong;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'There is already a zone with that name.'**
+  String get layout_errorZoneTaken;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose between 1 and 200 spaces.'**
+  String get layout_errorSpaces;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a zone.'**
+  String get layout_errorZone;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a level.'**
+  String get layout_errorLevel;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the space code.'**
+  String get layout_errorLabel;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use up to 20 characters.'**
+  String get layout_errorLabelLong;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'That code already exists in the parking lot.'**
+  String get layout_errorLabelTaken;
+
+  /// Validation fallback.
+  ///
+  /// In en, this message translates to:
+  /// **'The change couldn\'t be applied.'**
+  String get layout_errorGeneric;
 }
 
 class _AppLocalizationsDelegate

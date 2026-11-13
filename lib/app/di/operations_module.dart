@@ -42,7 +42,7 @@ void registerOperationsModule(GetIt locator, AppConfig config) {
       () => config.useMocks
           ? MockDeviceRemoteDataSource(
               locator<MockWorld>(),
-              _callerRole(locator),
+              mockCallerRole(locator),
             )
           : DeviceHttpDataSource(locator<Dio>()),
     )
@@ -68,7 +68,7 @@ void registerOperationsModule(GetIt locator, AppConfig config) {
       () => config.useMocks
           ? MockShiftOverviewRemoteDataSource(
               locator<MockWorld>(),
-              _callerRole(locator),
+              mockCallerRole(locator),
             )
           : ShiftOverviewHttpDataSource(locator<Dio>()),
     )
@@ -88,11 +88,11 @@ void registerOperationsModule(GetIt locator, AppConfig config) {
     );
 }
 
-/// El rol de quien llama, para los mocks de consola (no pasan por el
+/// El rol de quien llama, para los mocks de Operación (no pasan por el
 /// interceptor de red, así que el token real lo valida el servidor): el rol con
 /// el que se emitió el token de acceso vigente o, si no hay token (una sesión
 /// restaurada), el rol de la sesión.
-String? Function() _callerRole(GetIt locator) => () {
+String? Function() mockCallerRole(GetIt locator) => () {
   final token = locator<AccessTokenHolder>().current?.value;
   final world = locator<MockWorld>();
   final fromToken = world.iam.roleForAccessToken(token);
