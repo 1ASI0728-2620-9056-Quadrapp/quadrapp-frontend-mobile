@@ -30,11 +30,10 @@ flutter run --dart-define=USE_MOCKS=false
 | --- | --- |
 | Sign-in with a one-time code | `POST /iam/auth/request-otp`, `/sign-in`, `/refresh` (the refresh token rotates), `/sign-out`; `GET /iam/institutions/{id}` for the institution name |
 | Parking lots and layout | `GET /parking-lots`, `/parking-lots/{id}`, `/parking-lots/{id}/zones`, `/zones/{id}/levels`, `/levels/{id}/spaces` |
-| Occupancy | `GET /parking-lots/{id}/occupancy`, `/zones/{id}/occupancy`; live updates on STOMP `/topic/parking-lots/{id}/occupancy` (the JWT goes in the `CONNECT` frame) |
+| Occupancy | `GET /parking-lots/{id}/occupancy`, `/zones/{id}/occupancy`, `/parking-lots/{id}/spaces/status` (state of each space for the space map and level counts); live updates on STOMP `/topic/parking-lots/{id}/occupancy` (the JWT goes in the `CONNECT` frame) |
 | Forecasts and arrival advice | `GET /parking-lots/{id}/forecasts` (latest run, one per horizon), `POST /arrival-advices` |
 
 Not provided by the backend yet, so the real build shows them as unavailable:
 
-- The state of each space (the space map shows "no data"; zone counts come from the server).
 - The next availability estimate ("no estimate").
 - Alert subscriptions (`/notification-subscriptions`), notification preferences (`/notification-preferences`), device push tokens (`/device-tokens`) and the operator shift view (`/console/overview`) still call routes the backend does not have, so they show an error in the real build.

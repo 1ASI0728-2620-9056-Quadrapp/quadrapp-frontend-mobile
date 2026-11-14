@@ -11,9 +11,13 @@ import 'package:quadrapp_mobile/core/network/parse_exception.dart';
 ///   por zona;
 /// - `GET /parking-lots/{id}` → `staleAfterSeconds`.
 ///
+/// - `GET /parking-lots/{id}/spaces/status` → el estado de cada espacio
+///   activo (`spaceId`, `status`, `unknownReason`), para el mapa y los
+///   conteos por nivel. Un backend sin esa ruta (404 solo en ella) deja
+///   `spaces` vacío y los pabellones usan el conteo por zona del servidor.
+///
 /// `takenAt` es la hora del servidor al responder, así que vale también como
-/// `serverTime`. El backend no expone por REST el estado de cada espacio:
-/// `spaces` llega vacío y el mapa por espacio queda «sin datos».
+/// `serverTime`.
 class OccupancyHttpDataSource implements OccupancyRemoteDataSource {
   const OccupancyHttpDataSource(this._dio);
 
@@ -22,10 +26,11 @@ class OccupancyHttpDataSource implements OccupancyRemoteDataSource {
   @override
   Future<LotOccupancyDto> fetch(LotId lotId) async {
     final base = '/parking-lots/${lotId.value}';
-    final [lotData, summaryData, zonesData] = await Future.wait([
+    final [lotData, summaryData, zonesData, spacesData] = await Future.wait([
       _get(base),
       _get('$base/occupancy'),
       _get('$base/zones'),
+      _spaceStatuses(base),
     ]);
     final lot = _object(lotData, 'El estacionamiento');
     final summary = _object(summaryData, 'La ocupación');
@@ -51,7 +56,44 @@ class OccupancyHttpDataSource implements OccupancyRemoteDataSource {
         for (var i = 0; i < zoneIds.length; i++)
           _zone(zoneIds[i], _object(zoneSummaries[i], 'La zona')),
       ],
+      spaces: [
+        for (final space in _list(spacesData, 'Los espacios'))
+          _space(_object(space, 'El espacio')),
+      ],
     );
+  }
+
+  /// `SpaceStatusResource[]`; una lista vacía si el backend no tiene la ruta.
+  Future<Object?> _spaceStatuses(String base) async {
+    try {
+      return await _get('$base/spaces/status');
+    } on DioException catch (error) {
+      if (error.response?.statusCode == 404) {
+        // ¿El estacionamiento no existe? Entonces el resumen también da 404.
+        return const <Object?>[];
+      }
+      rethrow;
+    }
+  }
+
+  static SpaceStateDto _space(Map<String, dynamic> json) {
+    final status = json['status'];
+    final reason = json['unknownReason'];
+    if (status is! String) {
+      throw const ParseException('El campo status no es válido.');
+    }
+    return SpaceStateDto(
+      id: _int(json, 'spaceId'),
+      status: status,
+      unknownReason: reason is String ? reason : null,
+    );
+  }
+
+  static List<dynamic> _list(Object? data, String what) {
+    if (data is! List<dynamic>) {
+      throw ParseException('$what no son un arreglo.');
+    }
+    return data;
   }
 
   Future<Object?> _get(String path) async =>

@@ -189,6 +189,30 @@ void main() {
       'unknownCount': unknown,
     };
 
+    // `SpaceStatusResource[]` del backend, campo por campo, por `spaceId`.
+    Map<String, Object?> spaceStatus(
+      int spaceId,
+      int zoneId,
+      String status, {
+      String? unknownReason,
+    }) => {
+      'spaceId': spaceId,
+      'zoneId': zoneId,
+      'levelId': zoneId * 10,
+      'status': status,
+      'unknownReason': unknownReason,
+      'statusSince': '2026-11-14T14:58:00Z',
+      'lastDetectedAt': status == 'UNKNOWN' ? null : '2026-11-14T14:58:00Z',
+    };
+    final spaceStatuses = [
+      spaceStatus(1, 10, 'FREE'),
+      spaceStatus(2, 10, 'OCCUPIED'),
+      spaceStatus(3, 10, 'UNKNOWN', unknownReason: 'GATEWAY_OFFLINE'),
+      spaceStatus(4, 10, 'FREE'),
+      spaceStatus(5, 11, 'UNKNOWN', unknownReason: 'NOT_YET_REPORTED'),
+      spaceStatus(6, 11, 'OCCUPIED'),
+    ];
+
     ResponseBody backend(RequestOptions options) => switch (options.path) {
       '/parking-lots/1' => jsonResponse({
         'id': 1,
@@ -209,6 +233,7 @@ void main() {
       '/zones/11/occupancy' => jsonResponse(
         summary('ZONE', 11, total: 2, free: 1, occupied: 1, unknown: 0),
       ),
+      '/parking-lots/1/spaces/status' => jsonResponse(spaceStatuses),
       _ => jsonResponse({'title': 'Not found'}, status: 404),
     };
 
@@ -224,13 +249,58 @@ void main() {
       expect(dto.consolidatedAt, DateTime.utc(2026, 11, 14, 15));
       expect(dto.serverTime, DateTime.utc(2026, 11, 14, 15));
       expect(dto.staleAfterSeconds, 120);
-      expect(dto.spaces, isEmpty);
       expect(dto.zones.map((z) => (z.id, z.free, z.occupied, z.unknown)), [
         (10, 2, 1, 1),
         (11, 1, 1, 0),
       ]);
-      final entity = mapper.toEntity(dto, lotId, receivedAt: Duration.zero);
+      final logger = RecordingLogger();
+      final entity = OccupancyMapper(
+        logger,
+      ).toEntity(dto, lotId, receivedAt: Duration.zero);
       expect(entity.isFull, isFalse);
+      expect(
+        entity.spaces.map((s) => (s.id.value, s.status, s.unknownReason)),
+        [
+          (1, SpaceStatus.free, null),
+          (2, SpaceStatus.occupied, null),
+          (3, SpaceStatus.unknown, UnknownReason.noHeartbeat),
+          (4, SpaceStatus.free, null),
+          (5, SpaceStatus.unknown, null),
+          (6, SpaceStatus.occupied, null),
+        ],
+      );
+      // Los motivos del backend se reconocen sin avisos.
+      expect(logger.messages, isEmpty);
+    });
+
+    test('un backend sin /spaces/status deja los espacios vacíos y conserva '
+        'los conteos', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/parking-lots/1/spaces/status'
+            ? jsonResponse({'title': 'Not found'}, status: 404)
+            : backend(options),
+      );
+
+      final dto = await OccupancyHttpDataSource(dioWith(adapter)).fetch(lotId);
+
+      expect(dto.spaces, isEmpty);
+      expect(dto.capacity, 6);
+      expect(dto.zones, hasLength(2));
+    });
+
+    test('un estado de espacio sin status es ParseException', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/parking-lots/1/spaces/status'
+            ? jsonResponse([
+                {'spaceId': 1, 'zoneId': 10, 'levelId': 100},
+              ])
+            : backend(options),
+      );
+
+      await expectLater(
+        OccupancyHttpDataSource(dioWith(adapter)).fetch(lotId),
+        throwsA(isA<ParseException>()),
+      );
     });
 
     test('un 404 llega como NotFoundFailure', () async {

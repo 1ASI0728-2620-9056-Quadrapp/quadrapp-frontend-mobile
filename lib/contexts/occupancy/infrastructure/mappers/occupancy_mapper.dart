@@ -84,15 +84,25 @@ class OccupancyMapper {
   }
 
   /// `NO_HEARTBEAT`, `LOW_BATTERY` y `NO_SENSOR`; otro valor es `null`.
+  ///
+  /// Los motivos del backend (Occupancy): `GATEWAY_OFFLINE` y `SENSOR_FAULT`
+  /// son «sin señal del sensor»; `NOT_YET_REPORTED` y
+  /// `AWAITING_STABLE_DETECTION` no tienen un motivo propio en la app
+  /// («esperando datos»).
   UnknownReason? parseReason(String? raw) {
     if (raw == null) return null;
     switch (raw.toUpperCase()) {
       case 'NO_HEARTBEAT':
+      case 'GATEWAY_OFFLINE':
+      case 'SENSOR_FAULT':
         return UnknownReason.noHeartbeat;
       case 'LOW_BATTERY':
         return UnknownReason.lowBattery;
       case 'NO_SENSOR':
         return UnknownReason.noSensor;
+      case 'NOT_YET_REPORTED':
+      case 'AWAITING_STABLE_DETECTION':
+        return null;
     }
     _logger.warning('Motivo de estado desconocido no reconocido "$raw"');
     return null;
