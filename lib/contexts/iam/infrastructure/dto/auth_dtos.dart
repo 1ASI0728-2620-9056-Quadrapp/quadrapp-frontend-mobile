@@ -105,15 +105,20 @@ class RefreshTokenRequestDto {
   Map<String, dynamic> toJson() => _$RefreshTokenRequestDtoToJson(this);
 }
 
-/// La respuesta 200 de `POST /auth/refresh`: el refresh token no rota.
-@JsonSerializable()
+/// La respuesta 200 de `POST /auth/refresh`. El backend rota el refresh token
+/// y devuelve el nuevo en [refreshToken]; sin él (mocks), el actual sigue
+/// vigente.
+@JsonSerializable(includeIfNull: false)
 class RefreshResponseDto {
-  const RefreshResponseDto({required this.accessToken});
+  const RefreshResponseDto({required this.accessToken, this.refreshToken});
 
   factory RefreshResponseDto.fromJson(Map<String, dynamic> json) =>
       _$RefreshResponseDtoFromJson(json);
 
   final String accessToken;
+
+  /// El refresh token nuevo, si el servidor lo rotó.
+  final String? refreshToken;
 
   Map<String, dynamic> toJson() => _$RefreshResponseDtoToJson(this);
 }

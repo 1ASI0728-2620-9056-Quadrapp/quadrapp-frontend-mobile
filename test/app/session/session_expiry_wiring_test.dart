@@ -69,14 +69,14 @@ void main() {
       await notified.future.timeout(const Duration(seconds: 2));
 
       expect(result.failureOrNull, isA<UnauthorizedFailure>());
-      // Un solo refresh; sin `POST /auth/logout`: la sesión ya no era válida.
+      // Un solo refresh; sin `POST /iam/auth/sign-out`: la sesión ya no era válida.
       expect(
         server.requests.map((r) => r.path),
-        containsAllInOrder(['/parking-lots', '/auth/refresh']),
+        containsAllInOrder(['/parking-lots', '/iam/auth/refresh']),
       );
       expect(
         server.requests.map((r) => r.path),
-        isNot(contains('/auth/logout')),
+        isNot(contains('/iam/auth/sign-out')),
       );
       expect(expiredEvents, 1);
       // Limpieza local completa; el idioma se conserva.
@@ -94,7 +94,7 @@ void main() {
 
   test('sin red al renovar: la sesión se conserva', () async {
     await bootWith((options) {
-      if (options.path == '/auth/refresh') {
+      if (options.path == '/iam/auth/refresh') {
         throw DioException(
           requestOptions: options,
           type: DioExceptionType.connectionError,

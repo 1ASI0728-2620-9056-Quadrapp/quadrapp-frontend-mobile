@@ -57,13 +57,15 @@ class AuthInterceptor extends Interceptor {
        _onSessionExpired = onSessionExpired,
        _publicPaths = publicPaths;
 
-  /// Rutas que no llevan token ni disparan un refresh. `/device-tokens/
-  /// unregister` es la única mutación pública además de `/auth/*` (docs/07):
-  /// permite dar de baja el token push después de cerrar sesión.
+  /// Rutas que no llevan token ni disparan un refresh: las de
+  /// `/iam/auth/*` del backend (también `sign-out`: el servidor rechaza un
+  /// token vencido aunque la ruta sea pública) y `/device-tokens/unregister`,
+  /// que permite dar de baja el token push después de cerrar sesión.
   static const Set<String> defaultPublicPaths = {
-    '/auth/otp',
-    '/auth/login',
-    '/auth/refresh',
+    '/iam/auth/request-otp',
+    '/iam/auth/sign-in',
+    '/iam/auth/refresh',
+    '/iam/auth/sign-out',
     '/device-tokens/unregister',
   };
 

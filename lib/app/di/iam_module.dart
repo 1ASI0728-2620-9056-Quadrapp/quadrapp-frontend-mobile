@@ -47,6 +47,7 @@ void registerIamModule(GetIt locator, AppConfig config) {
         remote: locator(),
         mapper: locator(),
         clock: locator<Clock>(),
+        sessions: locator<SessionStore>(),
       ),
     )
     ..addLazy<SessionStoreImpl>(

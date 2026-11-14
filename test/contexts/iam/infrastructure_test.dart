@@ -83,13 +83,17 @@ void main() {
     });
   });
 
-  group('AuthRepositoryImpl', () {
+  group('AuthRepositoryImpl (backend /iam/auth)', () {
     test(
-      'POST /auth/otp: devuelve la vigencia con el reloj monótono',
+      'POST /iam/auth/request-otp: envía solo el correo; la vigencia es la '
+      'del servidor (5 min) con el reloj monótono',
       () async {
         final clock = FakeClock()..advance(const Duration(seconds: 7));
         final adapter = FakeHttpAdapter(
-          (_) => jsonResponse({'expiresInSec': 300}, status: 202),
+          (_) => jsonResponse({
+            'message':
+                'Si el correo está autorizado, recibirás un código de acceso.',
+          }, status: 202),
         );
 
         final result = await repositoryOn(
@@ -100,21 +104,48 @@ void main() {
         final challenge = result.valueOrNull!;
         expect(challenge.expiresIn, const Duration(seconds: 300));
         expect(challenge.receivedAt, const Duration(seconds: 7));
+        expect(adapter.requests.single.path, '/iam/auth/request-otp');
         expect(adapter.requests.single.data, {'email': 'conductor@upc.edu.pe'});
       },
     );
 
-    test('POST /auth/login envía solo email y code', () async {
-      final adapter = FakeHttpAdapter((_) => jsonResponse(loginJson()));
+    test('POST /iam/auth/sign-in envía email y otpCode; el nombre de la '
+        'institución se lee con el token emitido', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/iam/auth/sign-in'
+            ? jsonResponse(authenticatedUserJson())
+            : jsonResponse(institutionJson()),
+      );
 
       final result = await repositoryOn(adapter).login(email(), code());
 
-      expect(result.valueOrNull?.session, sampleSession());
-      expect(adapter.requests.single.data, {
+      expect(result.valueOrNull, sampleGrant());
+      final signIn = adapter.requests.first;
+      expect(signIn.path, '/iam/auth/sign-in');
+      expect(signIn.data, {
         'email': 'conductor@upc.edu.pe',
-        'code': '123456',
+        'otpCode': '123456',
       });
+      final institution = adapter.requests.last;
+      expect(institution.path, '/iam/institutions/1');
+      expect(institution.headers['Authorization'], 'Bearer access-1');
     });
+
+    test(
+      'sin poder leer la institución, la sesión sigue sin su nombre',
+      () async {
+        final adapter = FakeHttpAdapter(
+          (options) => options.path == '/iam/auth/sign-in'
+              ? jsonResponse(authenticatedUserJson())
+              : jsonResponse({'title': 'x'}, status: 403),
+        );
+
+        final result = await repositoryOn(adapter).login(email(), code());
+
+        expect(result.valueOrNull?.session.institution.name, '');
+        expect(result.valueOrNull?.session.userId, sampleSession().userId);
+      },
+    );
 
     test('403, 429 con retryAfterSec y 401 llegan como sus Failure', () async {
       Future<Failure?> failureFor(
@@ -150,24 +181,39 @@ void main() {
     });
 
     test('una respuesta ilegible es ParseFailure', () async {
-      final notAnObject = FakeHttpAdapter((_) => jsonResponse([1]));
+      ResponseBody institutionOr(RequestOptions o, Object? body) =>
+          o.path == '/iam/auth/sign-in'
+          ? jsonResponse(body)
+          : jsonResponse(institutionJson());
+      final notAnObject = FakeHttpAdapter((o) => institutionOr(o, [1]));
       final emptyToken = FakeHttpAdapter(
-        (_) => jsonResponse(loginJson(accessToken: '')),
+        (o) => institutionOr(o, authenticatedUserJson(accessToken: '')),
       );
       final badEmail = FakeHttpAdapter(
-        (_) => jsonResponse(loginJson(userEmail: 'no-correo')),
+        (o) => institutionOr(o, authenticatedUserJson(userEmail: 'no-correo')),
+      );
+      // PLATFORM_ADMIN no pertenece a ninguna institución.
+      final noInstitution = FakeHttpAdapter(
+        (o) => institutionOr(o, authenticatedUserJson(institutionId: null)),
       );
 
-      for (final adapter in [notAnObject, emptyToken, badEmail]) {
+      for (final adapter in [
+        notAnObject,
+        emptyToken,
+        badEmail,
+        noInstitution,
+      ]) {
         final result = await repositoryOn(adapter).login(email(), code());
         expect(result.failureOrNull, isA<ParseFailure>());
       }
     });
 
-    test('refresh y logout envían el refresh token en el cuerpo', () async {
+    test('refresh y sign-out envían el refresh token en el cuerpo', () async {
       final adapter = FakeHttpAdapter((options) {
-        return options.path == '/auth/refresh'
-            ? jsonResponse({'accessToken': 'access-2'})
+        return options.path == '/iam/auth/refresh'
+            ? jsonResponse(
+                authenticatedUserJson(accessToken: 'access-2'),
+              )
             : emptyResponse(204);
       });
       final repository = repositoryOn(adapter);
@@ -177,10 +223,49 @@ void main() {
 
       expect(refreshed.valueOrNull, accessToken('access-2'));
       expect(loggedOut.isSuccess, isTrue);
+      expect(adapter.requests.map((r) => r.path), [
+        '/iam/auth/refresh',
+        '/iam/auth/sign-out',
+      ]);
       expect(adapter.requests.map((r) => r.data), [
         {'refreshToken': 'refresh-1'},
         {'refreshToken': 'refresh-1'},
       ]);
+    });
+
+    test('refresh guarda el refresh token rotado por el servidor', () async {
+      final values = InMemoryKeyValueStore();
+      final secrets = InMemorySecureStore();
+      final sessions = SessionStoreImpl(
+        values: values,
+        secrets: secrets,
+        mapper: mapper,
+      );
+      await sessions.save(sampleStored());
+      final repository = AuthRepositoryImpl(
+        remote: AuthHttpDataSource(
+          dioWith(
+            FakeHttpAdapter(
+              (_) => jsonResponse(
+                authenticatedUserJson(
+                  accessToken: 'access-2',
+                  refreshToken: 'refresh-2',
+                ),
+              ),
+            ),
+          ),
+        ),
+        mapper: mapper,
+        clock: FakeClock(),
+        sessions: sessions,
+      );
+
+      final refreshed = await repository.refresh(refreshToken());
+
+      expect(refreshed.valueOrNull, accessToken('access-2'));
+      final stored = await sessions.read();
+      expect(stored?.refreshToken, refreshToken('refresh-2'));
+      expect(stored?.session, sampleSession());
     });
   });
 
