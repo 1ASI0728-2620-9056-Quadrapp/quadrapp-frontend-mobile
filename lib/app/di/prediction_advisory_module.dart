@@ -60,7 +60,7 @@ void registerPredictionAdvisoryModule(GetIt locator, AppConfig config) {
     ..addLazy<NextAvailabilityRemoteDataSource>(
       () => config.useMocks
           ? MockNextAvailabilityRemoteDataSource(locator<MockWorld>())
-          : NextAvailabilityHttpDataSource(locator<Dio>()),
+          : const UnavailableNextAvailabilityDataSource(),
     )
     ..addLazy<PredictionMapper>(() => PredictionMapper(locator<Logger>()))
     ..addLazy<ForecastReader>(
