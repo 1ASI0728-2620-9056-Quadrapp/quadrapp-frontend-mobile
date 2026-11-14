@@ -23,6 +23,9 @@ class FakeWebSocketChannel extends StreamChannelMixin<dynamic>
 
   bool get isClosedByClient => _sink.closed;
 
+  /// Lo que el cliente envió, en orden.
+  List<dynamic> get sent => _sink.sent;
+
   void emit(Object message) => _incoming.add(message);
 
   Future<void> drop() => _incoming.close();
@@ -45,10 +48,11 @@ class FakeWebSocketChannel extends StreamChannelMixin<dynamic>
 
 class _FakeSink implements WebSocketSink {
   bool closed = false;
+  final List<dynamic> sent = [];
   final Completer<void> _done = Completer<void>();
 
   @override
-  void add(dynamic data) {}
+  void add(dynamic data) => sent.add(data);
 
   @override
   void addError(Object error, [StackTrace? stackTrace]) {}

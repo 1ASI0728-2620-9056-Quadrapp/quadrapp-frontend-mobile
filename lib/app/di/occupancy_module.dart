@@ -20,7 +20,6 @@ import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/datasources/oc
 import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/mappers/occupancy_mapper.dart';
 import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/repositories/occupancy_reader_impl.dart';
 import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/repositories/occupancy_realtime_impl.dart';
-import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
 import 'package:quadrapp_mobile/core/logging/logger.dart';
 import 'package:quadrapp_mobile/core/network/web_socket_connector.dart';
 import 'package:quadrapp_mobile/core/storage/key_value_store.dart';
@@ -44,7 +43,7 @@ void registerOccupancyModule(GetIt locator, AppConfig config) {
           ? MockOccupancyRealtimeDataSource(locator<MockWorld>())
           : OccupancyWsDataSource(
               connector: locator<WebSocketConnector>(),
-              urlFor: (lotId) => occupancySocketUri(config.apiBaseUrl, lotId),
+              url: realtimeSocketUri(config.apiBaseUrl),
               // Se lee en cada conexión: el token cambia con cada refresh.
               accessToken: () => locator<AccessTokenHolder>().current?.value,
               logger: locator<Logger>(),
@@ -78,16 +77,15 @@ void registerOccupancyModule(GetIt locator, AppConfig config) {
     ..addLazy<GetLevelSummary>(GetLevelSummary.new);
 }
 
-/// `ws://` o `wss://` según la URL base de la API, más `/ws/parking-lots/{id}`
-/// (docs/07). La autenticación va por cabecera, no en la URL.
-Uri occupancySocketUri(String apiBaseUrl, LotId lotId) {
+/// El endpoint STOMP del backend: `ws://` o `wss://` según la URL base de la
+/// API, en la raíz del servidor (`/ws`, fuera de `/api/v1`). La autenticación
+/// va en el frame `CONNECT`, no en la URL.
+Uri realtimeSocketUri(String apiBaseUrl) {
   final base = Uri.parse(apiBaseUrl);
   return Uri(
     scheme: base.scheme == 'https' ? 'wss' : 'ws',
     host: base.host,
     port: base.hasPort ? base.port : null,
-    path:
-        '${base.path.replaceAll(RegExp(r'/+$'), '')}'
-        '/ws/parking-lots/${lotId.value}',
+    path: '/ws',
   );
 }
