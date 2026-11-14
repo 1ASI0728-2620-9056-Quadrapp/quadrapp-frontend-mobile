@@ -123,3 +123,77 @@ Map<String, Object?> layoutJson({int version = 4, bool withPositions = true}) {
     ],
   };
 }
+
+/// `ParkingLotResource` del backend (`GET /api/v1/parking-lots[/{id}]`),
+/// campo por campo.
+Map<String, Object?> backendLotJson(
+  int id, {
+  int layoutVersion = 0,
+  bool active = true,
+}) => {
+  'id': id,
+  'institutionId': 1,
+  'createdBy': 1,
+  'name': 'Estacionamiento $id',
+  'address': 'Av. Prueba $id',
+  'latitude': -12.1035,
+  'longitude': -76.963,
+  'opensAt': '06:00:00',
+  'closesAt': '23:00:00',
+  'saturationThresholdPct': 90,
+  'lowBatteryThresholdPct': 20,
+  'staleAfterSeconds': 180,
+  'flowWindowMinutes': 15,
+  'accuracyMarginPct': 10,
+  'occupiedDebounceS': 10,
+  'freedDebounceS': 10,
+  'lowAvailabilityPct': 10,
+  'layoutVersion': layoutVersion,
+  'layoutPublishedAt': null,
+  'active': active,
+  'createdAt': '2026-11-01T12:00:00Z',
+  'updatedAt': '2026-11-01T12:00:00Z',
+};
+
+/// `ZoneResource` del backend.
+Map<String, Object?> backendZoneJson(int id, String name, int sortOrder) => {
+  'id': id,
+  'parkingLotId': 1,
+  'name': name,
+  'description': '',
+  'sortOrder': sortOrder,
+  'createdAt': '2026-11-01T12:00:00Z',
+  'updatedAt': '2026-11-01T12:00:00Z',
+};
+
+/// `LevelResource` del backend.
+Map<String, Object?> backendLevelJson(int id, int zoneId, String name) => {
+  'id': id,
+  'zoneId': zoneId,
+  'name': name,
+  'sortOrder': 0,
+  'createdAt': '2026-11-01T12:00:00Z',
+  'updatedAt': '2026-11-01T12:00:00Z',
+};
+
+/// `SpaceResource` del backend.
+Map<String, Object?> backendSpaceJson(
+  int id,
+  int levelId,
+  String label, {
+  bool active = true,
+}) => {
+  'id': id,
+  'levelId': levelId,
+  'label': label,
+  'type': 'STANDARD',
+  'posX': 1.5,
+  'posY': 2,
+  'status': 'UNKNOWN',
+  'unknownReason': 'NO_SENSOR',
+  'statusSince': '2026-11-01T12:00:00Z',
+  'lastEventAt': null,
+  'active': active,
+  'createdAt': '2026-11-01T12:00:00Z',
+  'updatedAt': '2026-11-01T12:00:00Z',
+};

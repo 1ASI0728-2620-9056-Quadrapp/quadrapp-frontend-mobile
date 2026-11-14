@@ -235,59 +235,76 @@ void main() {
 
       expect(result.failureOrNull, isA<NotFoundFailure>());
     });
+
+    test(
+      'lee el ParkingLotResource del backend; sin distribución publicada '
+      '(versión 0) se trata como versión 1 y los inactivos no se listan',
+      () async {
+        final adapter = FakeHttpAdapter(
+          (_) => jsonResponse([
+            backendLotJson(1),
+            backendLotJson(2, layoutVersion: 3),
+            backendLotJson(3, active: false),
+          ]),
+        );
+
+        final lots = await ParkingLotHttpDataSource(dioWith(adapter)).list();
+
+        expect(lots.map((l) => l.id), [1, 2]);
+        expect(lots.map((l) => l.layoutVersion), [1, 3]);
+        final lot = mapper.toLot(lots.first);
+        expect(lot.hasPublishedLayout, isTrue);
+        expect(lot.address, 'Av. Prueba 1');
+        expect(lots.first.saturationThresholdPct, 90);
+        expect(lots.first.staleAfterSeconds, 180);
+      },
+    );
   });
 
-  group('LotLayoutHttpDataSource', () {
-    test('sin versión conocida no manda If-None-Match', () async {
-      final adapter = FakeHttpAdapter((_) => jsonResponse(layoutJson()));
+  group('LotLayoutHttpDataSource (backend)', () {
+    ResponseBody backend(RequestOptions options) => switch (options.path) {
+      '/parking-lots/1' => jsonResponse(backendLotJson(1)),
+      '/parking-lots/1/zones' => jsonResponse([
+        backendZoneJson(11, 'Pabellón B', 2),
+        backendZoneJson(10, 'Pabellón A', 1),
+      ]),
+      '/zones/10/levels' => jsonResponse([backendLevelJson(100, 10, 'S1')]),
+      '/zones/11/levels' => jsonResponse(<Object?>[]),
+      '/levels/100/spaces' => jsonResponse([
+        backendSpaceJson(1, 100, 'A-01'),
+        backendSpaceJson(2, 100, 'A-02', active: false),
+      ]),
+      _ => jsonResponse({'title': 'Not found'}, status: 404),
+    };
+
+    test('arma la distribución con zonas, niveles y espacios activos, en '
+        'su orden', () async {
+      final adapter = FakeHttpAdapter(backend);
 
       final fetch = await LotLayoutHttpDataSource(
         dioWith(adapter),
-      ).fetch(lotId);
+      ).fetch(lotId, knownVersion: 1);
 
-      expect(adapter.requests.single.path, '/parking-lots/1/layout');
+      final dto = (fetch as LayoutFetched).dto;
+      expect(dto.version, 1);
+      expect(dto.zones.map((z) => z.id), [10, 11]);
+      expect(dto.zones.first.name, 'Pabellón A');
+      expect(dto.zones.first.levels.single.name, 'S1');
+      final space = dto.zones.first.levels.single.spaces.single;
+      expect(space.id, 1);
+      expect(space.label, 'A-01');
+      expect(space.posX, 1.5);
+      expect(space.posY, 2.0);
+      expect(dto.zones.last.levels, isEmpty);
       expect(
-        adapter.requests.single.headers.containsKey('If-None-Match'),
+        adapter.requests.any((r) => r.headers.containsKey('If-None-Match')),
         isFalse,
       );
-      expect(fetch, isA<LayoutFetched>());
-    });
-
-    test('con versión conocida manda If-None-Match: "v4"', () async {
-      final adapter = FakeHttpAdapter((_) => jsonResponse(layoutJson()));
-
-      await LotLayoutHttpDataSource(
-        dioWith(adapter),
-      ).fetch(lotId, knownVersion: 4);
-
-      expect(adapter.requests.single.headers['If-None-Match'], '"v4"');
-    });
-
-    test('un 304 no es un error: conserva la copia local', () async {
-      final adapter = FakeHttpAdapter((_) => emptyResponse(304));
-
-      final fetch = await LotLayoutHttpDataSource(
-        dioWith(adapter),
-      ).fetch(lotId, knownVersion: 4);
-
-      expect(fetch, isA<LayoutNotModified>());
-    });
-
-    test('un 200 con una versión nueva trae la distribución', () async {
-      final adapter = FakeHttpAdapter(
-        (_) => jsonResponse(layoutJson(version: 5)),
-      );
-
-      final fetch = await LotLayoutHttpDataSource(
-        dioWith(adapter),
-      ).fetch(lotId, knownVersion: 4);
-
-      expect((fetch as LayoutFetched).dto.version, 5);
     });
 
     test('un 404 sigue siendo un error', () async {
       final adapter = FakeHttpAdapter(
-        (_) => jsonResponse({'title': 'No layout'}, status: 404),
+        (_) => jsonResponse({'title': 'Not found'}, status: 404),
       );
 
       final result = await guardResult(
@@ -297,8 +314,12 @@ void main() {
       expect(result.failureOrNull, isA<NotFoundFailure>());
     });
 
-    test('un cuerpo que no es un objeto es ParseException', () async {
-      final adapter = FakeHttpAdapter((_) => jsonResponse([1]));
+    test('una lista que no es un arreglo es ParseException', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/parking-lots/1'
+            ? jsonResponse(backendLotJson(1))
+            : jsonResponse({'a': 1}),
+      );
 
       await expectLater(
         LotLayoutHttpDataSource(dioWith(adapter)).fetch(lotId),

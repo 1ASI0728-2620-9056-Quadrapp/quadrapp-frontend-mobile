@@ -1,10 +1,19 @@
 import 'package:dio/dio.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/backend_json.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/lot_layout_remote_datasource.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/parking_lot_http_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dto/lot_layout_dto.dart';
 import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
-import 'package:quadrapp_mobile/core/network/parse_exception.dart';
 
-/// `GET /parking-lots/{lotId}/layout` con `If-None-Match: "v4"`.
+/// La distribución armada con las rutas del backend, que no tiene un
+/// `/layout` único:
+/// `GET /parking-lots/{id}` (versión), `GET /parking-lots/{id}/zones`,
+/// `GET /zones/{id}/levels` y `GET /levels/{id}/spaces`.
+///
+/// El backend todavía no publica versiones de la distribución (todo
+/// estacionamiento queda en `layoutVersion` 0 aunque cambien sus zonas), así
+/// que la copia local no se da por vigente: siempre se pide entera. Las zonas
+/// y los niveles van en su `sortOrder`; los espacios inactivos no se muestran.
 class LotLayoutHttpDataSource implements LotLayoutRemoteDataSource {
   const LotLayoutHttpDataSource(this._dio);
 
@@ -12,23 +21,61 @@ class LotLayoutHttpDataSource implements LotLayoutRemoteDataSource {
 
   @override
   Future<LayoutFetch> fetch(LotId lotId, {int? knownVersion}) async {
-    final response = await _dio.get<Object?>(
-      '/parking-lots/${lotId.value}/layout',
-      options: Options(
-        headers: {
-          if (knownVersion != null) 'If-None-Match': '"v$knownVersion"',
-        },
-        // Un 304 no es un error: conserva la copia local.
-        validateStatus: (status) =>
-            status != null &&
-            ((status >= 200 && status < 300) || status == 304),
+    final lot = backendObject(
+      (await _dio.get<Object?>('/parking-lots/${lotId.value}')).data,
+      'El estacionamiento',
+    );
+    final zones = _sorted(
+      await _list('/parking-lots/${lotId.value}/zones', 'Las zonas'),
+    );
+    return LayoutFetched(
+      LotLayoutDto(
+        version: effectiveLayoutVersion(backendInt(lot, 'layoutVersion')),
+        zones: await Future.wait([for (final zone in zones) _zone(zone)]),
       ),
     );
-    if (response.statusCode == 304) return const LayoutNotModified();
-    final data = response.data;
-    if (data is! Map<String, dynamic>) {
-      throw const ParseException('La distribución no es un objeto JSON.');
-    }
-    return LayoutFetched(LotLayoutDto.fromJson(data));
   }
+
+  Future<ZoneDto> _zone(Map<String, dynamic> zone) async {
+    final id = backendInt(zone, 'id');
+    final levels = _sorted(await _list('/zones/$id/levels', 'Los niveles'));
+    final description = zone['description'];
+    return ZoneDto(
+      id: id,
+      name: zone['name'] as String? ?? '',
+      description: description is String ? description : null,
+      levels: await Future.wait([for (final level in levels) _level(level)]),
+    );
+  }
+
+  Future<LevelDto> _level(Map<String, dynamic> level) async {
+    final id = backendInt(level, 'id');
+    final spaces = await _list('/levels/$id/spaces', 'Los espacios');
+    return LevelDto(
+      id: id,
+      name: level['name'] as String? ?? '',
+      spaces: [
+        for (final space in spaces)
+          if (space['active'] != false)
+            SpaceDto(
+              id: backendInt(space, 'id'),
+              label: space['label'] as String? ?? '',
+              posX: (space['posX'] as num?)?.toDouble(),
+              posY: (space['posY'] as num?)?.toDouble(),
+            ),
+      ],
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> _list(String path, String what) async =>
+      backendObjects((await _dio.get<Object?>(path)).data, what);
+
+  static List<Map<String, dynamic>> _sorted(
+    List<Map<String, dynamic>> items,
+  ) => [...items]
+    ..sort(
+      (a, b) => ((a['sortOrder'] as num?) ?? 0).compareTo(
+        (b['sortOrder'] as num?) ?? 0,
+      ),
+    );
 }
