@@ -54,3 +54,48 @@ Map<String, Object?> loginJson({
     'institutionName': 'Universidad de prueba',
   },
 };
+
+/// `POST /api/v1/iam/auth/sign-in` y `/refresh` (200): el
+/// `AuthenticatedUserResource` del backend, campo por campo.
+Map<String, Object?> authenticatedUserJson({
+  String role = 'DRIVER',
+  String accessToken = 'access-1',
+  String refreshToken = 'refresh-1',
+  String userEmail = 'conductor@upc.edu.pe',
+  Object? institutionId = 1,
+}) => {
+  'user': {
+    'id': 1,
+    'institutionId': institutionId,
+    'email': userEmail,
+    'fullName': null,
+    'role': role,
+    'status': 'ACTIVE',
+    'verifiedAt': '2026-11-01T12:00:00Z',
+    'lastLoginAt': '2026-11-14T12:00:00Z',
+    'locale': 'es-PE',
+    'notificationPreferences': {
+      'pushEnabled': true,
+      'saturationAlerts': true,
+      'lowArrivalAlerts': true,
+      'staleDataAlerts': false,
+      'eventAlerts': true,
+    },
+    'createdAt': '2026-11-01T12:00:00Z',
+    'updatedAt': '2026-11-14T12:00:00Z',
+  },
+  'accessToken': accessToken,
+  'refreshToken': refreshToken,
+  'expiresIn': 900,
+  'expiresAt': '2026-11-14T12:15:00Z',
+};
+
+/// `GET /api/v1/iam/institutions/{id}` (200): `InstitutionResource`.
+Map<String, Object?> institutionJson({String name = 'Universidad de prueba'}) =>
+    {
+      'id': 1,
+      'name': name,
+      'active': true,
+      'createdAt': '2026-11-01T12:00:00Z',
+      'updatedAt': '2026-11-01T12:00:00Z',
+    };

@@ -19,7 +19,6 @@ import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/datasources/oc
 import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/datasources/occupancy_realtime_datasource.dart';
 import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/datasources/occupancy_remote_datasource.dart';
 import 'package:quadrapp_mobile/contexts/occupancy/infrastructure/datasources/occupancy_ws_datasource.dart';
-import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
 import 'package:quadrapp_mobile/core/network/web_socket_connector.dart';
 import 'package:quadrapp_mobile/core/storage/key_value_store.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -119,14 +118,14 @@ void main() {
     });
   }
 
-  test('occupancySocketUri deriva ws/wss de la URL base de la API', () {
+  test('realtimeSocketUri deriva ws/wss y /ws de la URL base de la API', () {
     expect(
-      occupancySocketUri('http://10.0.2.2:8080/api/v1', const LotId(7)),
-      Uri.parse('ws://10.0.2.2:8080/api/v1/ws/parking-lots/7'),
+      realtimeSocketUri('http://10.0.2.2:8080/api/v1'),
+      Uri.parse('ws://10.0.2.2:8080/ws'),
     );
     expect(
-      occupancySocketUri('https://api.test/api/v1/', const LotId(7)),
-      Uri.parse('wss://api.test/api/v1/ws/parking-lots/7'),
+      realtimeSocketUri('https://api.test/api/v1/'),
+      Uri.parse('wss://api.test/ws'),
     );
   });
 

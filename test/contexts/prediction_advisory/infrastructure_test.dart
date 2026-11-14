@@ -169,12 +169,78 @@ void main() {
       expect(result.failureOrNull, isA<NetworkFailure>());
     });
 
+    // `ForecastResource` del backend, campo por campo.
+    Map<String, Object?> backendForecast(
+      int horizon, {
+      Object? saturationExpectedAt,
+    }) => {
+      'id': 100 + horizon,
+      'parkingLotId': 1,
+      'horizonMinutes': horizon,
+      'generatedAt': '2026-11-14T15:00:04Z',
+      'targetAt': '2026-11-14T15:15:00Z',
+      'expectedOccupancyPct': 72.5,
+      'confidence': 0.81,
+      'confidenceLevel': 'HIGH',
+      'method': 'PRIMARY_MODEL',
+      'modelVersion': 'v3',
+      'saturationExpectedAt': saturationExpectedAt,
+      'observedOccupancyPct': null,
+      'absoluteError': null,
+      'runId': '6f1c2a8e-0f4e-4a43-9c55-1b2a3c4d5e6f',
+      'runSlot': '2026-11-14T15:00:00Z',
+      'trigger': 'SCHEDULED',
+    };
+
+    test('lee el horizonte pedido de la última corrida '
+        '(GET /parking-lots/{id}/forecasts)', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/parking-lots/1'
+            ? jsonResponse({'id': 1, 'saturationThresholdPct': 85})
+            : jsonResponse(
+                [
+                  backendForecast(15),
+                  backendForecast(
+                    30,
+                    saturationExpectedAt: '2026-11-14T15:25:00Z',
+                  ),
+                ],
+                headers: {
+                  'date': ['Fri, 14 Nov 2026 15:01:00 GMT'],
+                },
+              ),
+      );
+
+      final dto = await ForecastHttpDataSource(
+        dioWith(adapter),
+      ).fetch(lotId, 30);
+
+      expect(adapter.requests.first.path, '/parking-lots/1/forecasts');
+      expect(dto.horizon, 30);
+      expect(dto.expectedOccupancyPct, 72.5);
+      expect(dto.confidence.value, 0.81);
+      expect(dto.confidence.level, 'HIGH');
+      expect(dto.method, 'PRIMARY_MODEL');
+      expect(dto.modelVersion, 'v3');
+      expect(dto.generatedAt, DateTime.utc(2026, 11, 14, 15, 0, 4));
+      expect(dto.validUntil, DateTime.utc(2026, 11, 14, 15, 10));
+      expect(dto.serverTime, DateTime.utc(2026, 11, 14, 15, 1));
+      expect(dto.saturation?.expectedAt, DateTime.utc(2026, 11, 14, 15, 25));
+      expect(dto.saturation?.pct, 85);
+      final forecast = mapper.toForecast(
+        dto,
+        ForecastHorizon.min30,
+        receivedAt: Duration.zero,
+      );
+      expect(forecast.method, ForecastMethod.primaryModel);
+      expect(forecast.confidence.level, ConfidenceLevel.high);
+    });
+
     test(
-      '404 de un horizonte es NotFoundFailure y pide lotId y horizon',
+      'un horizonte que no está en la corrida es NotFoundFailure',
       () async {
         final adapter = FakeHttpAdapter(
-          (options) =>
-              jsonResponse({'status': 404, 'title': 'Not Found'}, status: 404),
+          (_) => jsonResponse([backendForecast(15)]),
         );
         final reader = ForecastReaderImpl(
           remote: ForecastHttpDataSource(dioWith(adapter)),
@@ -185,15 +251,11 @@ void main() {
         final result = await reader.read(lotId, ForecastHorizon.min45);
 
         expect(result.failureOrNull, isA<NotFoundFailure>());
-        expect(adapter.requests.single.queryParameters, {
-          'lotId': 1,
-          'horizon': 45,
-        });
       },
     );
 
-    test('una respuesta que no es un objeto JSON es ParseFailure', () async {
-      final adapter = FakeHttpAdapter((_) => jsonResponse([1, 2]));
+    test('una respuesta que no es un arreglo es ParseFailure', () async {
+      final adapter = FakeHttpAdapter((_) => jsonResponse({'a': 1}));
       final reader = ForecastReaderImpl(
         remote: ForecastHttpDataSource(dioWith(adapter)),
         mapper: mapper,
@@ -203,6 +265,47 @@ void main() {
       final result = await reader.read(lotId, ForecastHorizon.min15);
 
       expect(result.failureOrNull, isA<ParseFailure>());
+    });
+
+    test(
+      'la asesoría de llegada lee el ArrivalAdviceResource del backend',
+      () async {
+        final adapter = FakeHttpAdapter(
+          (_) => jsonResponse({
+            'etaMinutes': 20,
+            'probabilityOfSpace': 0.62,
+            'category': 'LIMITED',
+            'confidence': {'value': 0.55, 'level': 'MEDIUM'},
+            'horizonUsed': 30,
+            'generatedAt': '2026-11-14T15:00:04Z',
+            'serverTime': '2026-11-14T15:01:00Z',
+          }),
+        );
+        final requester = ArrivalAdviceRequesterImpl(
+          remote: ArrivalAdviceHttpDataSource(dioWith(adapter)),
+          mapper: mapper,
+          clock: FakeClock(),
+        );
+
+        final advice = (await RequestArrivalAdvice(requester)(
+          const RequestArrivalAdviceParams(lotId: lotId, etaMinutes: 20),
+        )).valueOrNull!;
+
+        expect(adapter.requests.single.path, '/arrival-advices');
+        expect(advice.category, ArrivalCategory.limited);
+        expect(advice.probabilityOfSpace, 0.62);
+        expect(advice.horizonUsed, ForecastHorizon.min30);
+        expect(advice.confidence.level, ConfidenceLevel.medium);
+      },
+    );
+
+    test('sin ruta en el backend, la próxima liberación es "sin estimación" '
+        'y no llama a la red', () async {
+      final dto = await const UnavailableNextAvailabilityDataSource().fetch(
+        lotId,
+      );
+
+      expect(mapper.toNextAvailability(dto), isA<NextAvailabilityNoEstimate>());
     });
   });
 

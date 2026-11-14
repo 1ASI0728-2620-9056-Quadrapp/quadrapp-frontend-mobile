@@ -171,14 +171,136 @@ void main() {
     });
   });
 
-  group('OccupancyHttpDataSource', () {
-    test('pide /parking-lots/{id}/occupancy y lee el DTO', () async {
-      final adapter = FakeHttpAdapter((_) => jsonResponse(occupancyJson()));
+  group('OccupancyHttpDataSource (backend)', () {
+    Map<String, Object?> summary(
+      String scope,
+      int id, {
+      required int total,
+      required int free,
+      required int occupied,
+      required int unknown,
+    }) => {
+      'scopeType': scope,
+      'scopeId': id,
+      'takenAt': '2026-11-14T15:00:00Z',
+      'totalSpaces': total,
+      'freeCount': free,
+      'occupiedCount': occupied,
+      'unknownCount': unknown,
+    };
+
+    // `SpaceStatusResource[]` del backend, campo por campo, por `spaceId`.
+    Map<String, Object?> spaceStatus(
+      int spaceId,
+      int zoneId,
+      String status, {
+      String? unknownReason,
+    }) => {
+      'spaceId': spaceId,
+      'zoneId': zoneId,
+      'levelId': zoneId * 10,
+      'status': status,
+      'unknownReason': unknownReason,
+      'statusSince': '2026-11-14T14:58:00Z',
+      'lastDetectedAt': status == 'UNKNOWN' ? null : '2026-11-14T14:58:00Z',
+    };
+    final spaceStatuses = [
+      spaceStatus(1, 10, 'FREE'),
+      spaceStatus(2, 10, 'OCCUPIED'),
+      spaceStatus(3, 10, 'UNKNOWN', unknownReason: 'GATEWAY_OFFLINE'),
+      spaceStatus(4, 10, 'FREE'),
+      spaceStatus(5, 11, 'UNKNOWN', unknownReason: 'NOT_YET_REPORTED'),
+      spaceStatus(6, 11, 'OCCUPIED'),
+    ];
+
+    ResponseBody backend(RequestOptions options) => switch (options.path) {
+      '/parking-lots/1' => jsonResponse({
+        'id': 1,
+        'name': 'Estacionamiento 1',
+        'staleAfterSeconds': 120,
+        'layoutVersion': 0,
+      }),
+      '/parking-lots/1/occupancy' => jsonResponse(
+        summary('PARKING_LOT', 1, total: 6, free: 3, occupied: 2, unknown: 1),
+      ),
+      '/parking-lots/1/zones' => jsonResponse([
+        {'id': 10, 'name': 'A', 'sortOrder': 1},
+        {'id': 11, 'name': 'B', 'sortOrder': 2},
+      ]),
+      '/zones/10/occupancy' => jsonResponse(
+        summary('ZONE', 10, total: 4, free: 2, occupied: 1, unknown: 1),
+      ),
+      '/zones/11/occupancy' => jsonResponse(
+        summary('ZONE', 11, total: 2, free: 1, occupied: 1, unknown: 0),
+      ),
+      '/parking-lots/1/spaces/status' => jsonResponse(spaceStatuses),
+      _ => jsonResponse({'title': 'Not found'}, status: 404),
+    };
+
+    test('arma la ocupación con los conteos del lote y de cada zona', () async {
+      final adapter = FakeHttpAdapter(backend);
 
       final dto = await OccupancyHttpDataSource(dioWith(adapter)).fetch(lotId);
 
-      expect(adapter.requests.single.path, '/parking-lots/1/occupancy');
-      expect(dto.capacity, 4);
+      expect(dto.capacity, 6);
+      expect(dto.free, 3);
+      expect(dto.occupied, 2);
+      expect(dto.unknown, 1);
+      expect(dto.consolidatedAt, DateTime.utc(2026, 11, 14, 15));
+      expect(dto.serverTime, DateTime.utc(2026, 11, 14, 15));
+      expect(dto.staleAfterSeconds, 120);
+      expect(dto.zones.map((z) => (z.id, z.free, z.occupied, z.unknown)), [
+        (10, 2, 1, 1),
+        (11, 1, 1, 0),
+      ]);
+      final logger = RecordingLogger();
+      final entity = OccupancyMapper(
+        logger,
+      ).toEntity(dto, lotId, receivedAt: Duration.zero);
+      expect(entity.isFull, isFalse);
+      expect(
+        entity.spaces.map((s) => (s.id.value, s.status, s.unknownReason)),
+        [
+          (1, SpaceStatus.free, null),
+          (2, SpaceStatus.occupied, null),
+          (3, SpaceStatus.unknown, UnknownReason.noHeartbeat),
+          (4, SpaceStatus.free, null),
+          (5, SpaceStatus.unknown, null),
+          (6, SpaceStatus.occupied, null),
+        ],
+      );
+      // Los motivos del backend se reconocen sin avisos.
+      expect(logger.messages, isEmpty);
+    });
+
+    test('un backend sin /spaces/status deja los espacios vacíos y conserva '
+        'los conteos', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/parking-lots/1/spaces/status'
+            ? jsonResponse({'title': 'Not found'}, status: 404)
+            : backend(options),
+      );
+
+      final dto = await OccupancyHttpDataSource(dioWith(adapter)).fetch(lotId);
+
+      expect(dto.spaces, isEmpty);
+      expect(dto.capacity, 6);
+      expect(dto.zones, hasLength(2));
+    });
+
+    test('un estado de espacio sin status es ParseException', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/parking-lots/1/spaces/status'
+            ? jsonResponse([
+                {'spaceId': 1, 'zoneId': 10, 'levelId': 100},
+              ])
+            : backend(options),
+      );
+
+      await expectLater(
+        OccupancyHttpDataSource(dioWith(adapter)).fetch(lotId),
+        throwsA(isA<ParseException>()),
+      );
     });
 
     test('un 404 llega como NotFoundFailure', () async {
@@ -193,8 +315,12 @@ void main() {
       expect(result.failureOrNull, isA<NotFoundFailure>());
     });
 
-    test('un cuerpo que no es un objeto es ParseException', () async {
-      final adapter = FakeHttpAdapter((_) => jsonResponse([1, 2]));
+    test('un resumen sin conteos es ParseException', () async {
+      final adapter = FakeHttpAdapter(
+        (options) => options.path == '/parking-lots/1/occupancy'
+            ? jsonResponse({'takenAt': '2026-11-14T15:00:00Z'})
+            : backend(options),
+      );
 
       await expectLater(
         OccupancyHttpDataSource(dioWith(adapter)).fetch(lotId),
@@ -438,6 +564,23 @@ void main() {
       expect(emitted.last.valueOrNull!.free, 3);
     });
 
+    test('un aviso de conteos vuelve a pedir el estado completo', () async {
+      await settle();
+      snapshots = [
+        Success(sampleOccupancy()),
+        Success(sampleOccupancy().copyWith(free: 2)),
+      ];
+      events.add(const RealtimeConnected());
+      await settle();
+      expect(snapshotCalls, 1);
+
+      events.add(const RealtimeCountsChanged());
+      await settle();
+
+      expect(snapshotCalls, 2);
+      expect(emitted.last.valueOrNull!.free, 2);
+    });
+
     test(
       'si el estado inicial falló, la primera conexión lo pide de nuevo',
       () async {
@@ -532,15 +675,14 @@ void main() {
     });
   });
 
-  group('OccupancyWsDataSource', () {
+  group('OccupancyWsDataSource (STOMP)', () {
     OccupancyWsDataSource build(
       FakeWebSocketConnector connector, {
       List<Duration>? delays,
       String? token = 'T1',
     }) => OccupancyWsDataSource(
       connector: connector,
-      urlFor: (id) =>
-          Uri.parse('wss://api.test/api/v1/ws/parking-lots/${id.value}'),
+      url: Uri.parse('wss://api.test/ws'),
       accessToken: () => token,
       logger: const NoopLogger(),
       delay: (duration) async {
@@ -549,35 +691,85 @@ void main() {
       },
     );
 
-    test(
-      'se conecta con la cabecera de autenticación y avisa Connected',
-      () async {
-        final channel = FakeWebSocketChannel();
-        final connector = FakeWebSocketConnector([channel]);
-        final events = <OccupancyRealtimeEvent>[];
-        final sub = build(connector).connect(lotId).listen(events.add);
+    const connected = 'CONNECTED\nversion:1.2\nheart-beat:0,0\n\n\u0000';
 
-        await pumpEventQueue();
+    String message(Map<String, Object?> body) =>
+        'MESSAGE\ndestination:/topic/parking-lots/1/occupancy\n'
+        'content-type:application/json\nsubscription:occupancy-1\n'
+        'message-id:m-1\n\n${jsonEncode(body)}\u0000';
 
-        expect(connector.uris.single.path, '/api/v1/ws/parking-lots/1');
-        expect(connector.headers.single, {'Authorization': 'Bearer T1'});
-        expect(events.single, isA<RealtimeConnected>());
-        await sub.cancel();
+    // `OccupancyRealtimeMessage` del backend, campo por campo.
+    final backendMessage = <String, Object?>{
+      'parkingLotId': 1,
+      'zoneId': 10,
+      'zone': {
+        'totalSpaces': 4,
+        'freeCount': 2,
+        'occupiedCount': 1,
+        'unknownCount': 1,
       },
-    );
+      'parkingLot': {
+        'totalSpaces': 6,
+        'freeCount': 3,
+        'occupiedCount': 2,
+        'unknownCount': 1,
+      },
+      'lowAvailability': false,
+      'consolidatedAt': '2026-11-14T15:00:01Z',
+      'spaces': [
+        {
+          'spaceId': 3,
+          'status': 'FREE',
+          'unknownReason': null,
+          'statusSince': '2026-11-14T15:00:00Z',
+        },
+      ],
+    };
 
-    test('sin token no manda la cabecera', () async {
-      final connector = FakeWebSocketConnector([FakeWebSocketChannel()]);
-      final sub = build(connector, token: null).connect(lotId).listen((_) {});
-
+    test('se conecta a /ws, manda el token en CONNECT y se suscribe al '
+        'tópico del estacionamiento tras CONNECTED', () async {
+      final channel = FakeWebSocketChannel();
+      final connector = FakeWebSocketConnector([channel]);
+      final events = <OccupancyRealtimeEvent>[];
+      final sub = build(connector).connect(lotId).listen(events.add);
       await pumpEventQueue();
 
+      expect(connector.uris.single, Uri.parse('wss://api.test/ws'));
       expect(connector.headers.single, isEmpty);
+      final connect = channel.sent.single as String;
+      expect(connect, startsWith('CONNECT\n'));
+      expect(connect, contains('accept-version:1.2\n'));
+      expect(connect, contains('Authorization:Bearer T1\n'));
+      expect(connect, endsWith('\n\n\u0000'));
+      expect(events, isEmpty);
+
+      channel.emit(connected);
+      await pumpEventQueue();
+
+      final subscribe = channel.sent.last as String;
+      expect(subscribe, startsWith('SUBSCRIBE\n'));
+      expect(
+        subscribe,
+        contains('destination:/topic/parking-lots/1/occupancy\n'),
+      );
+      expect(events.single, isA<RealtimeConnected>());
       await sub.cancel();
     });
 
-    test('convierte los mensajes y descarta los ilegibles sin cortar la '
-        'conexión', () async {
+    test('sin token, CONNECT no lleva Authorization', () async {
+      final channel = FakeWebSocketChannel();
+      final sub = build(
+        FakeWebSocketConnector([channel]),
+        token: null,
+      ).connect(lotId).listen((_) {});
+      await pumpEventQueue();
+
+      expect(channel.sent.single as String, isNot(contains('Authorization')));
+      await sub.cancel();
+    });
+
+    test('cada MESSAGE con conteos avisa RealtimeCountsChanged; los '
+        'ilegibles y los latidos se descartan sin cortar', () async {
       final channel = FakeWebSocketChannel();
       final events = <OccupancyRealtimeEvent>[];
       final sub = build(
@@ -586,66 +778,59 @@ void main() {
       await pumpEventQueue();
 
       channel
-        ..emit(
-          jsonEncode({
-            'eventId': 'e1',
-            'spaceId': 3,
-            'status': 'FREE',
-            'at': '2026-09-28T13:42:00Z',
-          }),
-        )
-        ..emit('basura')
-        ..emit(jsonEncode({'eventId': 'e2'}))
-        ..emit(
-          jsonEncode({
-            'eventId': 'e3',
-            'spaceId': 4,
-            'status': 'OCCUPIED',
-            'at': '2026-09-28T13:43:00Z',
-          }),
-        );
+        ..emit(connected)
+        ..emit('\n')
+        ..emit(message(backendMessage))
+        ..emit('MESSAGE\ndestination:/x\n\nbasura\u0000')
+        ..emit(message({'zoneId': 10}));
       await pumpEventQueue();
 
-      final changes = events.whereType<RealtimeChange>().toList();
-      expect(changes.map((c) => c.change.eventId), ['e1', 'e3']);
-      expect(events.whereType<RealtimeDisconnected>(), isEmpty);
+      expect(events.map((e) => e.runtimeType), [
+        RealtimeConnected,
+        RealtimeCountsChanged,
+      ]);
       await sub.cancel();
     });
 
-    test(
-      'si se corta, avisa Disconnected y reconecta tras la espera',
-      () async {
-        final first = FakeWebSocketChannel();
-        final second = FakeWebSocketChannel();
-        final delays = <Duration>[];
-        final events = <OccupancyRealtimeEvent>[];
-        final sub = build(
-          FakeWebSocketConnector([first, second]),
-          delays: delays,
-        ).connect(lotId).listen(events.add);
-        await pumpEventQueue();
+    test('un ERROR (token rechazado) corta, avisa Disconnected y reintenta '
+        'con el token actual', () async {
+      final first = FakeWebSocketChannel();
+      final second = FakeWebSocketChannel();
+      final delays = <Duration>[];
+      final events = <OccupancyRealtimeEvent>[];
+      final sub = build(
+        FakeWebSocketConnector([first, second]),
+        delays: delays,
+      ).connect(lotId).listen(events.add);
+      await pumpEventQueue();
 
-        await first.drop();
-        await pumpEventQueue();
+      first.emit(
+        'ERROR\nmessage:The access token is not valid.\n\n\u0000',
+      );
+      await pumpEventQueue();
+      second.emit(connected);
+      await pumpEventQueue();
 
-        expect(
-          events.map((e) => e.runtimeType),
-          [RealtimeConnected, RealtimeDisconnected, RealtimeConnected],
-        );
-        expect(delays, [const Duration(seconds: 1)]);
-        await sub.cancel();
-      },
-    );
+      expect(first.isClosedByClient, isTrue);
+      expect(events.map((e) => e.runtimeType), [
+        RealtimeDisconnected,
+        RealtimeConnected,
+      ]);
+      expect(delays, [const Duration(seconds: 1)]);
+      expect(second.sent.first as String, contains('Authorization:Bearer T1'));
+      await sub.cancel();
+    });
 
     test(
       'la espera crece con los fallos y se reinicia tras conectar',
       () async {
         final delays = <Duration>[];
+        final last = FakeWebSocketChannel();
         final connector = FakeWebSocketConnector([
           FakeWebSocketChannel(readyError: StateError('sin servidor')),
           FakeWebSocketChannel(readyError: StateError('sin servidor')),
           FakeWebSocketChannel(readyError: StateError('sin servidor')),
-          FakeWebSocketChannel(),
+          last,
         ]);
         final events = <OccupancyRealtimeEvent>[];
         final sub = build(
@@ -654,8 +839,10 @@ void main() {
         ).connect(lotId).listen(events.add);
 
         await pumpEventQueue(times: 60);
+        last.emit(connected);
+        await pumpEventQueue();
 
-        expect(delays.take(3), [
+        expect(delays, [
           const Duration(seconds: 1),
           const Duration(seconds: 2),
           const Duration(seconds: 4),
@@ -672,6 +859,8 @@ void main() {
         FakeWebSocketConnector([channel]),
         delays: delays,
       ).connect(lotId).listen((_) {});
+      await pumpEventQueue();
+      channel.emit(connected);
       await pumpEventQueue();
 
       await sub.cancel();

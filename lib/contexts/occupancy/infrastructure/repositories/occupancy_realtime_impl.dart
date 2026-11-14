@@ -15,7 +15,8 @@ import 'package:quadrapp_mobile/core/time/clock.dart';
 /// - emite primero el estado completo;
 /// - aplica cada cambio con un [OccupancyReducer] (idempotencia por `eventId`
 ///   y descarte de eventos fuera de orden);
-/// - al reconectar vuelve a pedir el estado completo;
+/// - al reconectar, o cuando el servidor avisa que cambiaron los conteos
+///   ([RealtimeCountsChanged]), vuelve a pedir el estado completo;
 /// - avisa el estado real de la conexión ([RealtimeLink]) en [feed].
 class OccupancyRealtimeImpl implements OccupancyRealtime {
   const OccupancyRealtimeImpl({
@@ -58,6 +59,23 @@ class OccupancyRealtimeImpl implements OccupancyRealtime {
       controller.add(OccupancyReceived(result));
     }
 
+    // Una ráfaga de avisos de conteo pide el estado a lo sumo una vez más
+    // mientras hay una consulta en curso (y nunca dos a la vez).
+    Future<void>? reloading;
+    var reloadAgain = false;
+    Future<void> reload() async {
+      if (reloading != null) {
+        reloadAgain = true;
+        return;
+      }
+      do {
+        reloadAgain = false;
+        reloading = loadSnapshot();
+        await reloading;
+        reloading = null;
+      } while (reloadAgain && !cancelled);
+    }
+
     Future<void> onEvent(OccupancyRealtimeEvent event) async {
       switch (event) {
         case RealtimeConnected():
@@ -76,6 +94,8 @@ class OccupancyRealtimeImpl implements OccupancyRealtime {
           if (next != null && !cancelled) {
             controller.add(OccupancyReceived(Success(next)));
           }
+        case RealtimeCountsChanged():
+          await reload();
         case RealtimeDisconnected():
           setLink(RealtimeLink.reconnecting);
       }

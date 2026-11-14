@@ -18,6 +18,12 @@ final class RealtimeChange extends OccupancyRealtimeEvent {
   final SpaceChangeDto change;
 }
 
+/// Cambiaron los conteos del estacionamiento: hay que volver a pedir el
+/// estado completo (el backend no envía un evento por espacio).
+final class RealtimeCountsChanged extends OccupancyRealtimeEvent {
+  const RealtimeCountsChanged();
+}
+
 /// Se perdió la conexión (se reintenta sola).
 final class RealtimeDisconnected extends OccupancyRealtimeEvent {
   const RealtimeDisconnected();

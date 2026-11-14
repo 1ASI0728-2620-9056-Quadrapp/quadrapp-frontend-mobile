@@ -70,13 +70,13 @@ void main() {
       final dio = dioWith(adapter, interceptors: [SafeLogInterceptor(logger)]);
 
       await dio.post<dynamic>(
-        '/auth/login',
+        '/iam/auth/sign-in',
         data: {'email': 'a@upc.edu.pe', 'code': '123456'},
         options: Options(headers: {'Authorization': 'Bearer SECRET'}),
       );
 
       final log = logger.lines.join('\n');
-      expect(log, contains('POST /api/v1/auth/login → 200'));
+      expect(log, contains('POST /api/v1/iam/auth/sign-in → 200'));
       for (final secret in ['SECRET', '123456', 'a@upc.edu.pe', 'Bearer']) {
         expect(log, isNot(contains(secret)));
       }
@@ -129,7 +129,7 @@ void main() {
       final dio = build(adapter, _FakeTokens('T1'));
 
       await dio.get<dynamic>('/parking-lots');
-      await dio.post<dynamic>('/auth/otp');
+      await dio.post<dynamic>('/iam/auth/request-otp');
 
       expect(adapter.requests[0].headers['Authorization'], 'Bearer T1');
       expect(adapter.requests[1].headers.containsKey('Authorization'), isFalse);
@@ -249,7 +249,7 @@ void main() {
       final dio = build(adapter, tokens);
 
       await expectLater(
-        dio.post<dynamic>('/auth/login'),
+        dio.post<dynamic>('/iam/auth/sign-in'),
         throwsA(isA<DioException>()),
       );
 

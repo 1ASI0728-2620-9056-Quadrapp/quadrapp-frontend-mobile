@@ -143,6 +143,39 @@ void main() {
     },
   );
 
+  test('sin estado por espacio (backend), los pabellones usan los conteos '
+      'por zona del servidor', () async {
+    final base = occupancy(spaces: const []);
+    when(() => getOccupancy(any())).thenAnswer(
+      (_) async => Success(
+        LotOccupancy(
+          lotId: base.lotId,
+          capacity: 8,
+          free: 3,
+          occupied: 4,
+          unknown: 1,
+          freshness: base.freshness,
+          zones: const [
+            ZoneOccupancy(
+              zoneId: ZoneId(11),
+              free: 2,
+              occupied: 3,
+              unknown: 1,
+            ),
+          ],
+        ),
+      ),
+    );
+    final c = cubit();
+    await c.setLot(lot());
+
+    expect(
+      dataOf(c).countsOfZone(const ZoneId(11)),
+      const AreaCounts(free: 2, occupied: 3, unknown: 1),
+    );
+    await c.close();
+  });
+
   test('sin la ocupación: parcial, con la estructura y sin conteos', () async {
     when(
       () => getOccupancy(any()),

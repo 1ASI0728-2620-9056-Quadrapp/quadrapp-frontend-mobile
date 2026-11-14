@@ -147,18 +147,24 @@ class ZonesCubit extends Cubit<ViewState<ZonesOverview>> {
   // ----------------------------------------------------------------- estado
 
   /// Recalcula los conteos por pabellón y por nivel con la distribución.
+  /// Sin el estado de cada espacio (el backend solo da conteos), el conteo
+  /// por pabellón es el que trajo el servidor.
   ZonesOverview _counted(ZonesOverview overview) {
     final layout = overview.layout;
     final occupancy = overview.occupancy;
     if (layout == null || occupancy == null) return overview;
+    final serverZones = occupancy.spaces.isEmpty && occupancy.zones.isNotEmpty;
     return overview.copyWith(
       zoneCounts: {
-        for (final zone in _getZoneSummary(
-          GetZoneSummaryParams(
-            occupancy: occupancy,
-            membership: layout.membership,
-          ),
-        ))
+        for (final zone
+            in serverZones
+                ? occupancy.zones
+                : _getZoneSummary(
+                    GetZoneSummaryParams(
+                      occupancy: occupancy,
+                      membership: layout.membership,
+                    ),
+                  ))
           zone.zoneId: zone,
       },
       levelCounts: {

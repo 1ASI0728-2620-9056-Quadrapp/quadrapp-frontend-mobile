@@ -4,7 +4,16 @@ import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dt
 import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
 import 'package:quadrapp_mobile/core/network/parse_exception.dart';
 
-/// `GET /parking-lots` y `GET /parking-lots/{lotId}`.
+/// La versión de distribución que ve la app. El backend todavía no tiene un
+/// paso de publicación: todo estacionamiento registrado queda en
+/// `layoutVersion` 0. Para la app, un estacionamiento del backend siempre
+/// tiene una distribución legible (versión 1 como mínimo).
+int effectiveLayoutVersion(int backendVersion) =>
+    backendVersion < 1 ? 1 : backendVersion;
+
+/// `GET /parking-lots` (los de la institución del usuario) y
+/// `GET /parking-lots/{lotId}`: `ParkingLotResource` del backend. Solo se
+/// muestran los estacionamientos activos.
 class ParkingLotHttpDataSource implements ParkingLotRemoteDataSource {
   const ParkingLotHttpDataSource(this._dio);
 
@@ -21,7 +30,8 @@ class ParkingLotHttpDataSource implements ParkingLotRemoteDataSource {
     }
     return [
       for (final item in data)
-        ParkingLotDto.fromJson(item as Map<String, dynamic>),
+        if (item is! Map<String, dynamic> || item['active'] != false)
+          _dto(item as Map<String, dynamic>),
     ];
   }
 
@@ -32,6 +42,20 @@ class ParkingLotHttpDataSource implements ParkingLotRemoteDataSource {
     if (data is! Map<String, dynamic>) {
       throw const ParseException('El estacionamiento no es un objeto JSON.');
     }
-    return ParkingLotDto.fromJson(data);
+    return _dto(data);
+  }
+
+  static ParkingLotDto _dto(Map<String, dynamic> json) {
+    final dto = ParkingLotDto.fromJson(json);
+    return ParkingLotDto(
+      id: dto.id,
+      name: dto.name,
+      address: dto.address,
+      latitude: dto.latitude,
+      longitude: dto.longitude,
+      layoutVersion: effectiveLayoutVersion(dto.layoutVersion),
+      staleAfterSeconds: dto.staleAfterSeconds,
+      saturationThresholdPct: dto.saturationThresholdPct,
+    );
   }
 }

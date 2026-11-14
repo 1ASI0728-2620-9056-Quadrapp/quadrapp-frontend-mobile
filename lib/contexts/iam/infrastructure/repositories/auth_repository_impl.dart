@@ -1,6 +1,8 @@
 import 'package:quadrapp_mobile/contexts/iam/domain/entities/login_grant.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/entities/otp_challenge.dart';
+import 'package:quadrapp_mobile/contexts/iam/domain/entities/session.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/repositories/auth_repository.dart';
+import 'package:quadrapp_mobile/contexts/iam/domain/repositories/session_store.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/value_objects/access_token.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/value_objects/email_address.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/value_objects/otp_code.dart';
@@ -14,16 +16,22 @@ import 'package:quadrapp_mobile/core/time/clock.dart';
 
 /// La autenticación del servidor. Cualquier falla de infraestructura (401,
 /// 403, 429 con `retryAfter`, red, JSON ilegible) llega como una `Failure`.
+///
+/// Si el servidor rota el refresh token al renovar la sesión, el nuevo se
+/// guarda en [_sessions] antes de devolver el token de acceso: el anterior
+/// queda revocado y presentarlo otra vez cerraría la sesión.
 class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({
     required this._remote,
     required this._mapper,
     required this._clock,
+    this._sessions,
   });
 
   final AuthRemoteDataSource _remote;
   final IamMapper _mapper;
   final Clock _clock;
+  final SessionStore? _sessions;
 
   @override
   Future<Result<OtpChallenge>> requestOtp(EmailAddress email) =>
@@ -43,13 +51,24 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
   @override
-  Future<Result<AccessToken>> refresh(RefreshToken refreshToken) => guardResult(
-    () async => _mapper.toAccessToken(
-      await _remote.refresh(
-        RefreshTokenRequestDto(refreshToken: refreshToken.value),
-      ),
-    ),
-  );
+  Future<Result<AccessToken>> refresh(RefreshToken refreshToken) =>
+      guardResult(() async {
+        final dto = await _remote.refresh(
+          RefreshTokenRequestDto(refreshToken: refreshToken.value),
+        );
+        final accessToken = _mapper.toAccessToken(dto);
+        final rotated = _mapper.toRotatedRefreshToken(dto);
+        final sessions = _sessions;
+        if (rotated != null && sessions != null) {
+          final stored = await sessions.read();
+          if (stored != null) {
+            await sessions.save(
+              StoredSession(session: stored.session, refreshToken: rotated),
+            );
+          }
+        }
+        return accessToken;
+      });
 
   @override
   Future<Result<void>> logout(RefreshToken refreshToken) => guardResult(

@@ -75,6 +75,14 @@ class IamMapper {
   AccessToken toAccessToken(RefreshResponseDto dto) =>
       _required(AccessToken.create(dto.accessToken), 'accessToken');
 
+  /// El refresh token nuevo si el servidor lo rotó; `null` si no vino.
+  RefreshToken? toRotatedRefreshToken(RefreshResponseDto dto) {
+    final raw = dto.refreshToken;
+    return raw == null
+        ? null
+        : _required(RefreshToken.create(raw), 'refreshToken');
+  }
+
   /// `DRIVER`, `OPERATOR` o `ADMIN`, sin distinguir mayúsculas; otro valor es
   /// `DRIVER`.
   UserRole parseRole(String raw) {
