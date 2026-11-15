@@ -3297,18 +3297,6 @@ abstract class AppLocalizations {
   /// Placeholder title.
   ///
   /// In en, this message translates to:
-  /// **'Analytics arrive soon'**
-  String get ops_analyticsSoonTitle;
-
-  /// Placeholder message.
-  ///
-  /// In en, this message translates to:
-  /// **'Soon you\'ll see the occupancy history and how accurate the forecast is.'**
-  String get ops_analyticsSoonMessage;
-
-  /// Placeholder title.
-  ///
-  /// In en, this message translates to:
   /// **'Administration arrives soon'**
   String get ops_moreSoonTitle;
 
@@ -4355,6 +4343,442 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Needs a directional sensor'**
   String get accesses_needsDirectional;
+
+  /// Analytics heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics and accuracy'**
+  String get analytics_title;
+
+  /// Lot and evaluated period.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · {phrase}'**
+  String analytics_subtitle(String name, String phrase);
+
+  /// Subtitle phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'today\'s evaluation'**
+  String get analytics_evaluationToday;
+
+  /// Subtitle phrase.
+  ///
+  /// In en, this message translates to:
+  /// **'evaluation of the last {days} days'**
+  String analytics_evaluationDays(int days);
+
+  /// Screen reader text while loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading analytics…'**
+  String get analytics_loading;
+
+  /// Error title.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the analytics'**
+  String get analytics_errorTitle;
+
+  /// 403 message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your role doesn\'t have access to analytics.'**
+  String get analytics_forbidden;
+
+  /// Partial response banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of the analytics didn\'t load. Showing what arrived.'**
+  String get analytics_partial;
+
+  /// Period segment.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get analytics_periodToday;
+
+  /// Period segment.
+  ///
+  /// In en, this message translates to:
+  /// **'7 days'**
+  String get analytics_period7;
+
+  /// Period segment.
+  ///
+  /// In en, this message translates to:
+  /// **'30 days'**
+  String get analytics_period30;
+
+  /// No zone filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole parking lot'**
+  String get analytics_wholeLot;
+
+  /// Occupancy card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupancy · {scope}'**
+  String analytics_occupancyTitle(String scope);
+
+  /// Button that opens the zone filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Zone'**
+  String get analytics_filterZone;
+
+  /// Occupancy missing.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the occupancy for this period.'**
+  String get analytics_occupancyUnavailable;
+
+  /// US21 sc. 3.
+  ///
+  /// In en, this message translates to:
+  /// **'No records in this period'**
+  String get analytics_noRecordsTitle;
+
+  /// US21 sc. 3.
+  ///
+  /// In en, this message translates to:
+  /// **'There\'s no occupancy data for these dates yet. Try another period.'**
+  String get analytics_noRecordsMessage;
+
+  /// US21 sc. 3 with a zone.
+  ///
+  /// In en, this message translates to:
+  /// **'This zone has no records for these dates. Try another period or the whole parking lot.'**
+  String get analytics_noRecordsZoneMessage;
+
+  /// How recent the history is.
+  ///
+  /// In en, this message translates to:
+  /// **'Data up to {time}'**
+  String analytics_dataUntil(String time);
+
+  /// Screen reader summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s occupancy chart: it started at {first}%, it\'s at {latest}% now, highest {peak}% at {peakTime}.'**
+  String analytics_chartSpokenHourly(
+    int first,
+    int latest,
+    int peak,
+    String peakTime,
+  );
+
+  /// Screen reader summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily occupancy chart: average {average}%, highest {peak}% on {peakDay}.'**
+  String analytics_chartSpokenDaily(int average, int peak, String peakDay);
+
+  /// Screen reader summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Forecast: {pct}% at {time}.'**
+  String analytics_chartSpokenForecast(int pct, String time);
+
+  /// Legend.
+  ///
+  /// In en, this message translates to:
+  /// **'Observed'**
+  String get analytics_legendObserved;
+
+  /// Legend.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily average'**
+  String get analytics_legendDailyAverage;
+
+  /// Legend.
+  ///
+  /// In en, this message translates to:
+  /// **'Forecast'**
+  String get analytics_legendForecast;
+
+  /// Legend: the lot occupancy alert.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert {pct}%'**
+  String analytics_legendThreshold(int pct);
+
+  /// Forecast missing.
+  ///
+  /// In en, this message translates to:
+  /// **'The forecast isn\'t available right now.'**
+  String get analytics_forecastUnavailable;
+
+  /// Forecast risk window.
+  ///
+  /// In en, this message translates to:
+  /// **'Risk: over {threshold}% · {window} · confidence {confidence}% · forecast from {generated}'**
+  String analytics_risk(
+    int threshold,
+    String window,
+    int confidence,
+    String generated,
+  );
+
+  /// No forecast risk.
+  ///
+  /// In en, this message translates to:
+  /// **'No risk of going over {threshold}% in the next hour.'**
+  String analytics_noRisk(int threshold);
+
+  /// Daily chart summary.
+  ///
+  /// In en, this message translates to:
+  /// **'Average {average}% · highest {peak}% on {day}'**
+  String analytics_dailySummary(int average, int peak, String day);
+
+  /// Peaks missing.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t find the peak hours.'**
+  String get analytics_peaksUnavailable;
+
+  /// US22 sc. 3.
+  ///
+  /// In en, this message translates to:
+  /// **'There isn\'t enough history yet to find the peak hours.'**
+  String get analytics_peaksInsufficient;
+
+  /// US22 sc. 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Peak hours: {list}'**
+  String analytics_peaks(String list);
+
+  /// A peak window.
+  ///
+  /// In en, this message translates to:
+  /// **'{window} ({pct}% on average)'**
+  String analytics_peakWindow(String window, int pct);
+
+  /// Accuracy card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Forecast accuracy'**
+  String get analytics_accuracyTitle;
+
+  /// Accuracy missing.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the forecast accuracy.'**
+  String get analytics_accuracyUnavailable;
+
+  /// US34 sc. 3.
+  ///
+  /// In en, this message translates to:
+  /// **'This period doesn\'t allow calculating the accuracy: there aren\'t enough forecasts and observed occupancy.'**
+  String get analytics_accuracyNotComputable;
+
+  /// Accuracy card subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluation · {period} · model {version}'**
+  String analytics_accuracySubtitle(String period, String version);
+
+  /// Under the overall percentage.
+  ///
+  /// In en, this message translates to:
+  /// **'overall'**
+  String get analytics_global;
+
+  /// Screen reader text.
+  ///
+  /// In en, this message translates to:
+  /// **'{pct}% of forecasts within the margin overall'**
+  String analytics_globalSpoken(int pct);
+
+  /// Accuracy explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'Share of forecasts within the configured margin, by horizon.'**
+  String get analytics_accuracyHelp;
+
+  /// US34 sc. 1.
+  ///
+  /// In en, this message translates to:
+  /// **'Mean absolute error: {value} points'**
+  String analytics_maeGlobal(String value);
+
+  /// US34 sc. 2.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous model {version}: {pct}% ({diff} points now)'**
+  String analytics_previousModel(String version, int pct, String diff);
+
+  /// Forecast horizon.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String analytics_horizon(int minutes);
+
+  /// Horizon without accuracy.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough data'**
+  String get analytics_horizonNotComputable;
+
+  /// Horizon mean absolute error.
+  ///
+  /// In en, this message translates to:
+  /// **'Mean error {value} pts'**
+  String analytics_mae(String value);
+
+  /// Screen reader text.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}: {pct}% within the margin'**
+  String analytics_horizonSpoken(String label, int pct);
+
+  /// Screen reader warning.
+  ///
+  /// In en, this message translates to:
+  /// **'Below 80%'**
+  String get analytics_belowGood;
+
+  /// Zone sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter by zone'**
+  String get analytics_zoneSheetTitle;
+
+  /// Zone sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'The chart shows only that zone. Peak hours and accuracy are for the whole parking lot.'**
+  String get analytics_zoneSheetSubtitle;
+
+  /// Opens the export sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Export report'**
+  String get analytics_exportOpen;
+
+  /// Export sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Export report'**
+  String get analytics_exportTitle;
+
+  /// Export sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics and accuracy · {name}'**
+  String analytics_exportSubtitle(String name);
+
+  /// Export field.
+  ///
+  /// In en, this message translates to:
+  /// **'Period'**
+  String get analytics_exportPeriod;
+
+  /// Custom period.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom'**
+  String get analytics_custom;
+
+  /// Chosen custom range.
+  ///
+  /// In en, this message translates to:
+  /// **'From {from} to {to}'**
+  String analytics_customRange(String from, String to);
+
+  /// Export field.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get analytics_exportContent;
+
+  /// Report section.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupancy and forecast'**
+  String get analytics_sectionOccupancy;
+
+  /// Report section.
+  ///
+  /// In en, this message translates to:
+  /// **'Forecast accuracy'**
+  String get analytics_sectionAccuracy;
+
+  /// Report section.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts in the period'**
+  String get analytics_sectionAlerts;
+
+  /// Export validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose at least one content.'**
+  String get analytics_exportNoContent;
+
+  /// Export field.
+  ///
+  /// In en, this message translates to:
+  /// **'Format'**
+  String get analytics_exportFormat;
+
+  /// Format.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF'**
+  String get analytics_pdf;
+
+  /// Format.
+  ///
+  /// In en, this message translates to:
+  /// **'CSV'**
+  String get analytics_csv;
+
+  /// Export note.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'ll email the file to your institutional address.'**
+  String get analytics_exportNote;
+
+  /// Export button.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get analytics_export;
+
+  /// Export loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Requesting the report…'**
+  String get analytics_exporting;
+
+  /// Export confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re sending the report to {email}.'**
+  String analytics_exportSent(String email);
+
+  /// Export 403.
+  ///
+  /// In en, this message translates to:
+  /// **'Your role can\'t export reports.'**
+  String get analytics_exportForbidden;
+
+  /// Export 400.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the period and the content.'**
+  String get analytics_exportInvalid;
+
+  /// Export generic error.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t request the report. Try again in a moment.'**
+  String get analytics_exportError;
 }
 
 class _AppLocalizationsDelegate

@@ -1945,13 +1945,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nav_more => 'More';
 
   @override
-  String get ops_analyticsSoonTitle => 'Analytics arrive soon';
-
-  @override
-  String get ops_analyticsSoonMessage =>
-      'Soon you\'ll see the occupancy history and how accurate the forecast is.';
-
-  @override
   String get ops_moreSoonTitle => 'Administration arrives soon';
 
   @override
@@ -2627,4 +2620,286 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accesses_needsDirectional => 'Needs a directional sensor';
+
+  @override
+  String get analytics_title => 'Analytics and accuracy';
+
+  @override
+  String analytics_subtitle(String name, String phrase) {
+    return '$name · $phrase';
+  }
+
+  @override
+  String get analytics_evaluationToday => 'today\'s evaluation';
+
+  @override
+  String analytics_evaluationDays(int days) {
+    return 'evaluation of the last $days days';
+  }
+
+  @override
+  String get analytics_loading => 'Loading analytics…';
+
+  @override
+  String get analytics_errorTitle => 'We couldn\'t load the analytics';
+
+  @override
+  String get analytics_forbidden =>
+      'Your role doesn\'t have access to analytics.';
+
+  @override
+  String get analytics_partial =>
+      'Part of the analytics didn\'t load. Showing what arrived.';
+
+  @override
+  String get analytics_periodToday => 'Today';
+
+  @override
+  String get analytics_period7 => '7 days';
+
+  @override
+  String get analytics_period30 => '30 days';
+
+  @override
+  String get analytics_wholeLot => 'Whole parking lot';
+
+  @override
+  String analytics_occupancyTitle(String scope) {
+    return 'Occupancy · $scope';
+  }
+
+  @override
+  String get analytics_filterZone => 'Zone';
+
+  @override
+  String get analytics_occupancyUnavailable =>
+      'We couldn\'t load the occupancy for this period.';
+
+  @override
+  String get analytics_noRecordsTitle => 'No records in this period';
+
+  @override
+  String get analytics_noRecordsMessage =>
+      'There\'s no occupancy data for these dates yet. Try another period.';
+
+  @override
+  String get analytics_noRecordsZoneMessage =>
+      'This zone has no records for these dates. Try another period or the whole parking lot.';
+
+  @override
+  String analytics_dataUntil(String time) {
+    return 'Data up to $time';
+  }
+
+  @override
+  String analytics_chartSpokenHourly(
+    int first,
+    int latest,
+    int peak,
+    String peakTime,
+  ) {
+    return 'Today\'s occupancy chart: it started at $first%, it\'s at $latest% now, highest $peak% at $peakTime.';
+  }
+
+  @override
+  String analytics_chartSpokenDaily(int average, int peak, String peakDay) {
+    return 'Daily occupancy chart: average $average%, highest $peak% on $peakDay.';
+  }
+
+  @override
+  String analytics_chartSpokenForecast(int pct, String time) {
+    return 'Forecast: $pct% at $time.';
+  }
+
+  @override
+  String get analytics_legendObserved => 'Observed';
+
+  @override
+  String get analytics_legendDailyAverage => 'Daily average';
+
+  @override
+  String get analytics_legendForecast => 'Forecast';
+
+  @override
+  String analytics_legendThreshold(int pct) {
+    return 'Alert $pct%';
+  }
+
+  @override
+  String get analytics_forecastUnavailable =>
+      'The forecast isn\'t available right now.';
+
+  @override
+  String analytics_risk(
+    int threshold,
+    String window,
+    int confidence,
+    String generated,
+  ) {
+    return 'Risk: over $threshold% · $window · confidence $confidence% · forecast from $generated';
+  }
+
+  @override
+  String analytics_noRisk(int threshold) {
+    return 'No risk of going over $threshold% in the next hour.';
+  }
+
+  @override
+  String analytics_dailySummary(int average, int peak, String day) {
+    return 'Average $average% · highest $peak% on $day';
+  }
+
+  @override
+  String get analytics_peaksUnavailable => 'We couldn\'t find the peak hours.';
+
+  @override
+  String get analytics_peaksInsufficient =>
+      'There isn\'t enough history yet to find the peak hours.';
+
+  @override
+  String analytics_peaks(String list) {
+    return 'Peak hours: $list';
+  }
+
+  @override
+  String analytics_peakWindow(String window, int pct) {
+    return '$window ($pct% on average)';
+  }
+
+  @override
+  String get analytics_accuracyTitle => 'Forecast accuracy';
+
+  @override
+  String get analytics_accuracyUnavailable =>
+      'We couldn\'t load the forecast accuracy.';
+
+  @override
+  String get analytics_accuracyNotComputable =>
+      'This period doesn\'t allow calculating the accuracy: there aren\'t enough forecasts and observed occupancy.';
+
+  @override
+  String analytics_accuracySubtitle(String period, String version) {
+    return 'Evaluation · $period · model $version';
+  }
+
+  @override
+  String get analytics_global => 'overall';
+
+  @override
+  String analytics_globalSpoken(int pct) {
+    return '$pct% of forecasts within the margin overall';
+  }
+
+  @override
+  String get analytics_accuracyHelp =>
+      'Share of forecasts within the configured margin, by horizon.';
+
+  @override
+  String analytics_maeGlobal(String value) {
+    return 'Mean absolute error: $value points';
+  }
+
+  @override
+  String analytics_previousModel(String version, int pct, String diff) {
+    return 'Previous model $version: $pct% ($diff points now)';
+  }
+
+  @override
+  String analytics_horizon(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get analytics_horizonNotComputable => 'Not enough data';
+
+  @override
+  String analytics_mae(String value) {
+    return 'Mean error $value pts';
+  }
+
+  @override
+  String analytics_horizonSpoken(String label, int pct) {
+    return '$label: $pct% within the margin';
+  }
+
+  @override
+  String get analytics_belowGood => 'Below 80%';
+
+  @override
+  String get analytics_zoneSheetTitle => 'Filter by zone';
+
+  @override
+  String get analytics_zoneSheetSubtitle =>
+      'The chart shows only that zone. Peak hours and accuracy are for the whole parking lot.';
+
+  @override
+  String get analytics_exportOpen => 'Export report';
+
+  @override
+  String get analytics_exportTitle => 'Export report';
+
+  @override
+  String analytics_exportSubtitle(String name) {
+    return 'Analytics and accuracy · $name';
+  }
+
+  @override
+  String get analytics_exportPeriod => 'Period';
+
+  @override
+  String get analytics_custom => 'Custom';
+
+  @override
+  String analytics_customRange(String from, String to) {
+    return 'From $from to $to';
+  }
+
+  @override
+  String get analytics_exportContent => 'Content';
+
+  @override
+  String get analytics_sectionOccupancy => 'Occupancy and forecast';
+
+  @override
+  String get analytics_sectionAccuracy => 'Forecast accuracy';
+
+  @override
+  String get analytics_sectionAlerts => 'Alerts in the period';
+
+  @override
+  String get analytics_exportNoContent => 'Choose at least one content.';
+
+  @override
+  String get analytics_exportFormat => 'Format';
+
+  @override
+  String get analytics_pdf => 'PDF';
+
+  @override
+  String get analytics_csv => 'CSV';
+
+  @override
+  String get analytics_exportNote =>
+      'We\'ll email the file to your institutional address.';
+
+  @override
+  String get analytics_export => 'Export';
+
+  @override
+  String get analytics_exporting => 'Requesting the report…';
+
+  @override
+  String analytics_exportSent(String email) {
+    return 'We\'re sending the report to $email.';
+  }
+
+  @override
+  String get analytics_exportForbidden => 'Your role can\'t export reports.';
+
+  @override
+  String get analytics_exportInvalid => 'Check the period and the content.';
+
+  @override
+  String get analytics_exportError =>
+      'We couldn\'t request the report. Try again in a moment.';
 }

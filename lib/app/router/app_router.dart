@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:quadrapp_mobile/app/di/alerts_module.dart';
+import 'package:quadrapp_mobile/app/di/analytics_module.dart';
 import 'package:quadrapp_mobile/app/di/arrival_module.dart';
 import 'package:quadrapp_mobile/app/di/auth_module.dart';
 import 'package:quadrapp_mobile/app/di/eta_module.dart';
@@ -24,6 +25,7 @@ import 'package:quadrapp_mobile/app/shell/operations_soon_page.dart';
 import 'package:quadrapp_mobile/app/shell/shell_tabs.dart';
 import 'package:quadrapp_mobile/composition/accesses/accesses_page.dart';
 import 'package:quadrapp_mobile/composition/alerts/alerts_tab_page.dart';
+import 'package:quadrapp_mobile/composition/analytics/analytics_page.dart';
 import 'package:quadrapp_mobile/composition/arrival/home_page.dart';
 import 'package:quadrapp_mobile/composition/forecast/forecast_tab_page.dart';
 import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
@@ -141,6 +143,7 @@ GoRouter createAppRouter({
   required CreateAlertsCubit createAlertsCubit,
   required CreateShiftCubit createShiftCubit,
   required CreateAccessesCubit createAccessesCubit,
+  required CreateAnalyticsCubit createAnalyticsCubit,
   required CreateLayoutEditorCubit createLayoutEditorCubit,
   required Clock clock,
   LanguageCubit? languageCubit,
@@ -497,10 +500,14 @@ GoRouter createAppRouter({
             routes: [
               GoRoute(
                 path: opsAnalyticsPath,
-                builder: (context, state) => OperationsSoonPage(
-                  kind: OpsSoon.analytics,
-                  tabIndex: OpsTab.analytics,
-                  onOpenAccount: () => context.push(opsAccountPath),
+                // Ambos roles consultan la analítica y exportan reportes.
+                builder: (context, state) => BlocProvider(
+                  create: (_) => createAnalyticsCubit(),
+                  child: AnalyticsPage(
+                    clock: clock,
+                    tabIndex: OpsTab.analytics,
+                    onOpenAccount: () => context.push(opsAccountPath),
+                  ),
                 ),
               ),
             ],

@@ -1965,13 +1965,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nav_more => 'Más';
 
   @override
-  String get ops_analyticsSoonTitle => 'La analítica llega pronto';
-
-  @override
-  String get ops_analyticsSoonMessage =>
-      'Pronto verás el historial de ocupación y qué tan preciso es el pronóstico.';
-
-  @override
   String get ops_moreSoonTitle => 'La administración llega pronto';
 
   @override
@@ -2651,4 +2644,286 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get accesses_needsDirectional => 'Necesita un sensor direccional';
+
+  @override
+  String get analytics_title => 'Analítica y precisión';
+
+  @override
+  String analytics_subtitle(String name, String phrase) {
+    return '$name · $phrase';
+  }
+
+  @override
+  String get analytics_evaluationToday => 'evaluación de hoy';
+
+  @override
+  String analytics_evaluationDays(int days) {
+    return 'evaluación de los últimos $days días';
+  }
+
+  @override
+  String get analytics_loading => 'Cargando la analítica…';
+
+  @override
+  String get analytics_errorTitle => 'No pudimos cargar la analítica';
+
+  @override
+  String get analytics_forbidden => 'Tu rol no tiene acceso a la analítica.';
+
+  @override
+  String get analytics_partial =>
+      'Parte de la analítica no llegó. Se muestra lo que hay.';
+
+  @override
+  String get analytics_periodToday => 'Hoy';
+
+  @override
+  String get analytics_period7 => '7 días';
+
+  @override
+  String get analytics_period30 => '30 días';
+
+  @override
+  String get analytics_wholeLot => 'Todo el estacionamiento';
+
+  @override
+  String analytics_occupancyTitle(String scope) {
+    return 'Ocupación · $scope';
+  }
+
+  @override
+  String get analytics_filterZone => 'Zona';
+
+  @override
+  String get analytics_occupancyUnavailable =>
+      'No pudimos cargar la ocupación de este periodo.';
+
+  @override
+  String get analytics_noRecordsTitle => 'No hay registros en este periodo';
+
+  @override
+  String get analytics_noRecordsMessage =>
+      'Aún no hay datos de ocupación para estas fechas. Prueba con otro periodo.';
+
+  @override
+  String get analytics_noRecordsZoneMessage =>
+      'Esta zona no tiene registros en estas fechas. Prueba con otro periodo o con todo el estacionamiento.';
+
+  @override
+  String analytics_dataUntil(String time) {
+    return 'Datos hasta el $time';
+  }
+
+  @override
+  String analytics_chartSpokenHourly(
+    int first,
+    int latest,
+    int peak,
+    String peakTime,
+  ) {
+    return 'Gráfica de la ocupación de hoy: empezó en $first %, ahora está en $latest %, máximo $peak % a las $peakTime.';
+  }
+
+  @override
+  String analytics_chartSpokenDaily(int average, int peak, String peakDay) {
+    return 'Gráfica de la ocupación por día: promedio $average %, máximo $peak % el $peakDay.';
+  }
+
+  @override
+  String analytics_chartSpokenForecast(int pct, String time) {
+    return 'Pronóstico: $pct % a las $time.';
+  }
+
+  @override
+  String get analytics_legendObserved => 'Observada';
+
+  @override
+  String get analytics_legendDailyAverage => 'Promedio del día';
+
+  @override
+  String get analytics_legendForecast => 'Pronóstico';
+
+  @override
+  String analytics_legendThreshold(int pct) {
+    return 'Alerta $pct %';
+  }
+
+  @override
+  String get analytics_forecastUnavailable =>
+      'El pronóstico no está disponible ahora.';
+
+  @override
+  String analytics_risk(
+    int threshold,
+    String window,
+    int confidence,
+    String generated,
+  ) {
+    return 'Riesgo: más del $threshold % · $window · confianza $confidence % · pronóstico de las $generated';
+  }
+
+  @override
+  String analytics_noRisk(int threshold) {
+    return 'Sin riesgo de superar el $threshold % en la próxima hora.';
+  }
+
+  @override
+  String analytics_dailySummary(int average, int peak, String day) {
+    return 'Promedio $average % · máximo $peak % el $day';
+  }
+
+  @override
+  String get analytics_peaksUnavailable =>
+      'No pudimos calcular las horas pico.';
+
+  @override
+  String get analytics_peaksInsufficient =>
+      'Aún no hay historial suficiente para identificar las horas pico.';
+
+  @override
+  String analytics_peaks(String list) {
+    return 'Horas pico: $list';
+  }
+
+  @override
+  String analytics_peakWindow(String window, int pct) {
+    return '$window ($pct % en promedio)';
+  }
+
+  @override
+  String get analytics_accuracyTitle => 'Precisión del pronóstico';
+
+  @override
+  String get analytics_accuracyUnavailable =>
+      'No pudimos cargar la precisión del pronóstico.';
+
+  @override
+  String get analytics_accuracyNotComputable =>
+      'Este periodo no permite calcular la precisión: no hay suficientes pronósticos y ocupación observada.';
+
+  @override
+  String analytics_accuracySubtitle(String period, String version) {
+    return 'Evaluación · $period · modelo $version';
+  }
+
+  @override
+  String get analytics_global => 'global';
+
+  @override
+  String analytics_globalSpoken(int pct) {
+    return '$pct % de los pronósticos dentro del margen en total';
+  }
+
+  @override
+  String get analytics_accuracyHelp =>
+      'Porcentaje de pronósticos dentro del margen configurado, por horizonte.';
+
+  @override
+  String analytics_maeGlobal(String value) {
+    return 'Error absoluto medio: $value puntos';
+  }
+
+  @override
+  String analytics_previousModel(String version, int pct, String diff) {
+    return 'Modelo anterior $version: $pct % ($diff puntos ahora)';
+  }
+
+  @override
+  String analytics_horizon(int minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String get analytics_horizonNotComputable => 'Sin datos suficientes';
+
+  @override
+  String analytics_mae(String value) {
+    return 'Error medio $value pts';
+  }
+
+  @override
+  String analytics_horizonSpoken(String label, int pct) {
+    return '$label: $pct % dentro del margen';
+  }
+
+  @override
+  String get analytics_belowGood => 'Por debajo del 80 %';
+
+  @override
+  String get analytics_zoneSheetTitle => 'Filtrar por zona';
+
+  @override
+  String get analytics_zoneSheetSubtitle =>
+      'La gráfica muestra solo esa zona. Las horas pico y la precisión son de todo el estacionamiento.';
+
+  @override
+  String get analytics_exportOpen => 'Exportar reporte';
+
+  @override
+  String get analytics_exportTitle => 'Exportar reporte';
+
+  @override
+  String analytics_exportSubtitle(String name) {
+    return 'Analítica y precisión · $name';
+  }
+
+  @override
+  String get analytics_exportPeriod => 'Periodo';
+
+  @override
+  String get analytics_custom => 'Personalizado';
+
+  @override
+  String analytics_customRange(String from, String to) {
+    return 'Del $from al $to';
+  }
+
+  @override
+  String get analytics_exportContent => 'Contenido';
+
+  @override
+  String get analytics_sectionOccupancy => 'Ocupación y pronóstico';
+
+  @override
+  String get analytics_sectionAccuracy => 'Precisión del pronóstico';
+
+  @override
+  String get analytics_sectionAlerts => 'Alertas del periodo';
+
+  @override
+  String get analytics_exportNoContent => 'Elige al menos un contenido.';
+
+  @override
+  String get analytics_exportFormat => 'Formato';
+
+  @override
+  String get analytics_pdf => 'PDF';
+
+  @override
+  String get analytics_csv => 'CSV';
+
+  @override
+  String get analytics_exportNote =>
+      'Te enviaremos el archivo a tu correo institucional.';
+
+  @override
+  String get analytics_export => 'Exportar';
+
+  @override
+  String get analytics_exporting => 'Pidiendo el reporte…';
+
+  @override
+  String analytics_exportSent(String email) {
+    return 'Te enviaremos el reporte a $email.';
+  }
+
+  @override
+  String get analytics_exportForbidden => 'Tu rol no puede exportar reportes.';
+
+  @override
+  String get analytics_exportInvalid => 'Revisa el periodo y el contenido.';
+
+  @override
+  String get analytics_exportError =>
+      'No pudimos pedir el reporte. Inténtalo de nuevo en un momento.';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:quadrapp_mobile/app/config/app_config.dart';
 import 'package:quadrapp_mobile/app/di/alerts_module.dart';
+import 'package:quadrapp_mobile/app/di/analytics_module.dart';
 import 'package:quadrapp_mobile/app/di/arrival_module.dart';
 import 'package:quadrapp_mobile/app/di/auth_module.dart';
 import 'package:quadrapp_mobile/app/di/core_module.dart';
@@ -60,6 +61,7 @@ Future<GetIt> configureDependencies({
   registerPredictionAdvisoryModule(target, config);
   registerNotificationsModule(target, config);
   registerOperationsModule(target, config);
+  registerAnalyticsModule(target, config);
   registerSignOutModule(target);
   registerAuthModule(target);
   registerArrivalModule(target);

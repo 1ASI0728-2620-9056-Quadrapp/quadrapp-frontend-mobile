@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:quadrapp_mobile/app/config/app_config.dart';
 import 'package:quadrapp_mobile/app/debug/mock_controls_page.dart';
 import 'package:quadrapp_mobile/app/di/alerts_module.dart';
+import 'package:quadrapp_mobile/app/di/analytics_module.dart';
 import 'package:quadrapp_mobile/app/di/arrival_module.dart';
 import 'package:quadrapp_mobile/app/di/auth_module.dart';
 import 'package:quadrapp_mobile/app/di/eta_module.dart';
@@ -77,6 +78,7 @@ GoRouter createRouterFrom(
     createAlertsCubit: locator<CreateAlertsCubit>(),
     createShiftCubit: locator<CreateShiftCubit>(),
     createAccessesCubit: locator<CreateAccessesCubit>(),
+    createAnalyticsCubit: locator<CreateAnalyticsCubit>(),
     createLayoutEditorCubit: locator<CreateLayoutEditorCubit>(),
     clock: locator<Clock>(),
     languageCubit: locator<LanguageCubit>(),

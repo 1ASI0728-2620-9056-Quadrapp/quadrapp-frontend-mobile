@@ -357,6 +357,48 @@ void main() {
       );
     });
   }
+  // Operación: Analítica y precisión (Monterrico en 30 días y hoy, Villa con
+  // horizontes no calculables, San Miguel sin registros), el filtro de zona y
+  // la ventana de exportación.
+  for (final (name, lot, before)
+      in <(String, int, Future<void> Function(WidgetTester)?)>[
+        ('ops_analytics', 1, null),
+        (
+          'ops_analytics_today',
+          1,
+          (tester) async => tester.tap(find.text('Hoy')),
+        ),
+        ('ops_analytics_villa', 4, null),
+        ('ops_analytics_empty', 3, null),
+        (
+          'ops_analytics_zone',
+          1,
+          (tester) async => tester.tap(find.text('Zona')),
+        ),
+        (
+          'ops_analytics_export',
+          1,
+          (tester) async {
+            await tester.ensureVisible(find.text('Exportar reporte'));
+            await tester.tap(find.text('Exportar reporte'));
+          },
+        ),
+      ]) {
+    testWidgets('$name ${small.width}', (tester) async {
+      await withRealShadows(
+        () => shoot(
+          tester,
+          name,
+          const Shot(tall, Brightness.light, 1),
+          '/ops/analytics',
+          selectedLot: lot,
+          role: UserRole.admin,
+          language: AppLanguage.es,
+          before: before,
+        ),
+      );
+    });
+  }
   for (final (name, lot) in <(String, int)>[
     ('ops_shift', 1),
     ('ops_shift_full', 2),

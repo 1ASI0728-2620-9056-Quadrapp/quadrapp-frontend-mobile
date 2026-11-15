@@ -20,6 +20,10 @@ class AppTimeFormatter {
   String formatTime(DateTime instant, String locale) =>
       DateFormat.jm(locale).format(toLima(instant));
 
+  /// Día y mes, por ejemplo "Sep 28" o "28 sept".
+  String formatDayMonth(DateTime instant, String locale) =>
+      DateFormat.MMMd(locale).format(toLima(instant));
+
   /// Fecha y hora, por ejemplo "Sep 28, 8:42 AM".
   String formatDateTime(DateTime instant, String locale) =>
       DateFormat.MMMd(locale).add_jm().format(toLima(instant));
