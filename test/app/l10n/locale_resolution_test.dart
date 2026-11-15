@@ -1,3 +1,4 @@
+
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -19,9 +20,19 @@ void main() {
       expect(resolveLocale(const Locale('en', 'GB')), const Locale('en'));
     });
 
+    test('ignora otras regiones cuando el idioma está soportado', () {
+      expect(resolveLocale(const Locale('es', 'MX')), const Locale('es'));
+      expect(resolveLocale(const Locale('en', 'US')), const Locale('en'));
+    });
+
     test('un idioma no soportado usa inglés', () {
       expect(resolveLocale(const Locale('fr')), const Locale('en'));
       expect(resolveLocale(const Locale('pt', 'BR')), const Locale('en'));
+    });
+
+    test('idiomas no soportados con región usan inglés', () {
+      expect(resolveLocale(const Locale('fr', 'FR')), const Locale('en'));
+      expect(resolveLocale(const Locale('de', 'DE')), const Locale('en'));
     });
   });
 }
