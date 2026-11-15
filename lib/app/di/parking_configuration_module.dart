@@ -13,20 +13,25 @@ import 'package:quadrapp_mobile/contexts/parking_configuration/application/useca
 import 'package:quadrapp_mobile/contexts/parking_configuration/application/usecases/list_parking_lots.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/application/usecases/resolve_selected_lot.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/application/usecases/select_lot.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/application/usecases/update_lot_settings.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/layout_draft_store.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/layout_publisher.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/lot_layout_reader.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/lot_settings_writer.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/parking_lot_reader.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/selected_lot_store.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/layout_publish_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/lot_layout_cache_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/lot_layout_http_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/lot_layout_remote_datasource.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/lot_settings_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/parking_lot_http_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/parking_lot_remote_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/mappers/layout_draft_mapper.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/mappers/lot_settings_mapper.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/repositories/layout_draft_repositories.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/repositories/lot_layout_reader_impl.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/repositories/lot_settings_writer_impl.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/repositories/parking_lot_reader_impl.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/repositories/selected_lot_store_impl.dart';
 import 'package:quadrapp_mobile/core/logging/logger.dart';
@@ -84,7 +89,21 @@ void registerParkingConfigurationModule(GetIt locator, AppConfig config) {
     ..addLazy<LayoutPublisher>(
       () => LayoutPublisherImpl(remote: locator(), mapper: locator()),
     )
+    // --- configuración propia del estacionamiento (US19) ---
+    ..addLazy<LotSettingsMapper>(() => LotSettingsMapper(locator<Logger>()))
+    ..addLazy<LotSettingsRemoteDataSource>(
+      () => config.useMocks
+          ? MockLotSettingsDataSource(
+              locator<MockWorld>(),
+              mockCallerRole(locator),
+            )
+          : LotSettingsHttpDataSource(locator<Dio>()),
+    )
+    ..addLazy<LotSettingsWriter>(
+      () => LotSettingsWriterImpl(remote: locator(), mapper: locator()),
+    )
     // --- casos de uso ---
+    ..addLazy<UpdateLotSettings>(() => UpdateLotSettings(locator()))
     ..addLazy<ListParkingLots>(() => ListParkingLots(locator()))
     ..addLazy<GetParkingLot>(() => GetParkingLot(locator()))
     ..addLazy<GetLotLayout>(() => GetLotLayout(locator()))

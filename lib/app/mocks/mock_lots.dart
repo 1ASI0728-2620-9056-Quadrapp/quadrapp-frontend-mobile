@@ -105,6 +105,9 @@ class MockLot {
     this.saturationThresholdPct = 90,
     this.flow,
     this.consoleUnavailable = const [],
+    this.accesses = const [],
+    this.opensAt,
+    this.closesAt,
   });
 
   final int id;
@@ -120,8 +123,16 @@ class MockLot {
   final List<MockZone> zones;
   final int staleAfterSeconds;
 
-  /// `saturation_threshold_pct` de docs/06.
-  final int saturationThresholdPct;
+  /// `saturation_threshold_pct` de docs/06. Cambia con `PATCH
+  /// /parking-lots/{lotId}` (US19).
+  int saturationThresholdPct;
+
+  /// `opens_at` y `closes_at` de docs/06 (`HH:mm`); `null` sin horario.
+  String? opensAt;
+  String? closesAt;
+
+  /// Los accesos vehiculares del estacionamiento (US19).
+  final List<MockAccess> accesses;
   final MockForecastSeed forecast;
 
   /// Flujo de entradas y salidas del periodo; `null` sin conteo habilitado.

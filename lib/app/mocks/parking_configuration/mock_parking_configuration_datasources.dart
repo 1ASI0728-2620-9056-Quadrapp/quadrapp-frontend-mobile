@@ -4,8 +4,10 @@ import 'package:quadrapp_mobile/app/mocks/mock_errors.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_world.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/layout_publish_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/lot_layout_remote_datasource.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/lot_settings_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/datasources/parking_lot_remote_datasource.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dto/lot_layout_dto.dart';
+import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dto/lot_settings_dto.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dto/parking_lot_dto.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/infrastructure/dto/publish_layout_dto.dart';
 import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
@@ -240,5 +242,69 @@ class MockLayoutPublishDataSource implements LayoutPublishRemoteDataSource {
     }
     lot.layoutVersion++;
     return PublishLayoutResponseDto(version: lot.layoutVersion);
+  }
+}
+
+/// `PATCH /parking-lots/{lotId}` sobre [MockWorld] (US19): solo un
+/// administrador de la universidad (403 a `OPERATOR` y `DRIVER`). Valida como
+/// el servidor (400 con `errors` por campo) y guarda en el estacionamiento,
+/// así `GET /parking-lots` devuelve el umbral nuevo.
+class MockLotSettingsDataSource implements LotSettingsRemoteDataSource {
+  const MockLotSettingsDataSource(this._world, this._callerRole);
+
+  final MockWorld _world;
+  final String? Function() _callerRole;
+
+  static int? _minutes(String? raw) {
+    if (raw == null) return null;
+    final match = RegExp(r'^(\d{2}):(\d{2})$').firstMatch(raw);
+    if (match == null) return -1;
+    final hour = int.parse(match.group(1)!);
+    final minute = int.parse(match.group(2)!);
+    return hour > 23 || minute > 59 ? -1 : hour * 60 + minute;
+  }
+
+  @override
+  Future<LotSettingsDto> update(LotId lotId, LotSettingsDto settings) async {
+    await _world.gate();
+    final role = _callerRole();
+    if (role == null) throw mockHttpError(401, title: 'Unauthorized');
+    if (role != 'ADMIN') {
+      throw mockHttpError(
+        403,
+        title: 'Forbidden',
+        detail: 'Solo un administrador de la universidad edita la '
+            'configuración del estacionamiento.',
+      );
+    }
+    final lot = _world.lot(lotId.value);
+    if (lot == null) throw mockHttpError(404, title: 'Not Found');
+
+    final opens = _minutes(settings.opensAt);
+    final closes = _minutes(settings.closesAt);
+    final pct = settings.saturationThresholdPct;
+    final errors = <String, List<String>>{
+      if (opens == -1) 'opensAt': ['Hora no válida.'],
+      if (closes == -1) 'closesAt': ['Hora no válida.'],
+      if ((opens == null) != (closes == null))
+        opens == null ? 'opensAt' : 'closesAt': ['Falta la otra hora.'],
+      if (opens != null && closes != null && opens >= 0 && closes <= opens)
+        'closesAt': ['El cierre debe ser posterior a la apertura.'],
+      if (pct < 1 || pct > 100)
+        'saturationThresholdPct': ['Debe estar entre 1 y 100.'],
+    };
+    if (errors.isNotEmpty) {
+      throw mockHttpError(400, title: 'Bad Request', extra: {'errors': errors});
+    }
+
+    lot
+      ..opensAt = settings.opensAt
+      ..closesAt = settings.closesAt
+      ..saturationThresholdPct = pct;
+    return LotSettingsDto(
+      opensAt: lot.opensAt,
+      closesAt: lot.closesAt,
+      saturationThresholdPct: lot.saturationThresholdPct,
+    );
   }
 }

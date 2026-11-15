@@ -2,9 +2,15 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:quadrapp_mobile/app/config/app_config.dart';
 import 'package:quadrapp_mobile/app/di/registrar.dart';
+import 'package:quadrapp_mobile/app/mocks/accesses/mock_accesses_datasource.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_world.dart';
 import 'package:quadrapp_mobile/app/mocks/parking_sensing/mock_device_datasources.dart';
 import 'package:quadrapp_mobile/app/mocks/shift/mock_shift_datasource.dart';
+import 'package:quadrapp_mobile/composition/accesses/accesses_cubit.dart';
+import 'package:quadrapp_mobile/composition/accesses/accesses_overview_mapper.dart';
+import 'package:quadrapp_mobile/composition/accesses/accesses_overview_reader_impl.dart';
+import 'package:quadrapp_mobile/composition/accesses/accesses_overview_remote_datasource.dart';
+import 'package:quadrapp_mobile/composition/accesses/get_accesses_overview.dart';
 import 'package:quadrapp_mobile/composition/shift/get_shift_overview.dart';
 import 'package:quadrapp_mobile/composition/shift/shift_cubit.dart';
 import 'package:quadrapp_mobile/composition/shift/shift_overview_mapper.dart';
@@ -30,10 +36,14 @@ import 'package:quadrapp_mobile/core/time/clock.dart';
 /// entrar a la ruta y lo cierra al salir.
 typedef CreateShiftCubit = ShiftCubit Function();
 
+/// Crea el cubit de Accesos vehiculares (`/ops/accesses`).
+typedef CreateAccessesCubit = AccessesCubit Function();
+
 /// Experiencia de Operación: el contexto `parking_sensing` (inventario y salud
-/// de dispositivos, US20, US32, TS10) y la composición `shift` (consola de
-/// turno, US29, TS17). Solo las usa un rol de Operación; el servidor responde
-/// 403 a un conductor y los mocks también.
+/// de dispositivos, US20, US32, TS10) y las composiciones `shift` (consola de
+/// turno, US29, TS17) y `accesses` (accesos vehiculares, US19). Solo las usa
+/// un rol de Operación; el servidor responde 403 a un conductor y los mocks
+/// también.
 void registerOperationsModule(GetIt locator, AppConfig config) {
   locator
     // --- parking_sensing: infraestructura ---
@@ -84,6 +94,32 @@ void registerOperationsModule(GetIt locator, AppConfig config) {
       () => ShiftCubit(
         getShiftOverview: locator(),
         getDeviceInventory: locator(),
+      ),
+    )
+    // --- accesos vehiculares (US19, US29) ---
+    ..addLazy<AccessesOverviewMapper>(
+      () => AccessesOverviewMapper(locator<Logger>()),
+    )
+    ..addLazy<AccessesOverviewRemoteDataSource>(
+      () => config.useMocks
+          ? MockAccessesOverviewRemoteDataSource(
+              locator<MockWorld>(),
+              mockCallerRole(locator),
+            )
+          : AccessesOverviewHttpDataSource(locator<Dio>()),
+    )
+    ..addLazy<AccessesOverviewReader>(
+      () => AccessesOverviewReaderImpl(
+        remote: locator(),
+        mapper: locator(),
+        clock: locator<Clock>(),
+      ),
+    )
+    ..addLazy<GetAccessesOverview>(() => GetAccessesOverview(locator()))
+    ..addValue<CreateAccessesCubit>(
+      () => AccessesCubit(
+        getAccessesOverview: locator(),
+        updateLotSettings: locator(),
       ),
     );
 }

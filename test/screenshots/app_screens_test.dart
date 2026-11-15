@@ -320,6 +320,43 @@ void main() {
       );
     });
   }
+  // Operación: Accesos vehiculares (Monterrico con flujo, Villa sin conteo,
+  // San Miguel sin accesos) y la ventana de configuración.
+  for (final (name, lot, before)
+      in <(String, int, Future<void> Function(WidgetTester)?)>[
+        ('ops_accesses', 1, null),
+        ('ops_accesses_nocount', 4, null),
+        ('ops_accesses_empty', 3, null),
+        (
+          'ops_accesses_settings',
+          1,
+          (tester) async => tester.tap(find.text('Configuración')),
+        ),
+        (
+          'ops_accesses_sheet',
+          1,
+          (tester) async {
+            await tester.tap(find.text('Configuración'));
+            await tester.pumpAndSettle();
+            await tester.tap(find.text('Editar'));
+          },
+        ),
+      ]) {
+    testWidgets('$name ${small.width}', (tester) async {
+      await withRealShadows(
+        () => shoot(
+          tester,
+          name,
+          const Shot(tall, Brightness.light, 1),
+          '/ops/accesses',
+          selectedLot: lot,
+          role: UserRole.admin,
+          language: AppLanguage.es,
+          before: before,
+        ),
+      );
+    });
+  }
   for (final (name, lot) in <(String, int)>[
     ('ops_shift', 1),
     ('ops_shift_full', 2),

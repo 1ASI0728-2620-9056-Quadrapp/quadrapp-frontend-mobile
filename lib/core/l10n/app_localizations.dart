@@ -3297,18 +3297,6 @@ abstract class AppLocalizations {
   /// Placeholder title.
   ///
   /// In en, this message translates to:
-  /// **'Gates arrive soon'**
-  String get ops_accessesSoonTitle;
-
-  /// Placeholder message.
-  ///
-  /// In en, this message translates to:
-  /// **'Soon you\'ll see the live flow of each gate and its settings.'**
-  String get ops_accessesSoonMessage;
-
-  /// Placeholder title.
-  ///
-  /// In en, this message translates to:
   /// **'Analytics arrive soon'**
   String get ops_analyticsSoonTitle;
 
@@ -4001,6 +3989,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The change couldn\'t be applied.'**
   String get layout_errorGeneric;
+
+  /// Gates screen title.
+  ///
+  /// In en, this message translates to:
+  /// **'Vehicle gates'**
+  String get accesses_title;
+
+  /// Lot and number of gates.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · {count, plural, =0{no gates} =1{1 gate} other{{count} gates}}'**
+  String accesses_subtitle(String name, int count);
+
+  /// Segment: live flow.
+  ///
+  /// In en, this message translates to:
+  /// **'Live flow'**
+  String get accesses_tabFlow;
+
+  /// Segment: settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get accesses_tabSettings;
+
+  /// Screen reader text while loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading gates…'**
+  String get accesses_loading;
+
+  /// Error title.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the gates'**
+  String get accesses_errorTitle;
+
+  /// 403.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account doesn\'t have access to the gates.'**
+  String get accesses_forbidden;
+
+  /// Flow card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Last {minutes} minutes'**
+  String accesses_flowTitle(int minutes);
+
+  /// Net flow (entries minus exits), e.g. +3.
+  ///
+  /// In en, this message translates to:
+  /// **'Net {value}'**
+  String accesses_net(String value);
+
+  /// Screen reader text for the net flow.
+  ///
+  /// In en, this message translates to:
+  /// **'Net balance {value}: entries minus exits'**
+  String accesses_netSpoken(String value);
+
+  /// Entries tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Entries'**
+  String get accesses_entries;
+
+  /// Exits tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Exits'**
+  String get accesses_exits;
+
+  /// Label under the last bar (current minute).
+  ///
+  /// In en, this message translates to:
+  /// **'{time} · now'**
+  String accesses_chartNow(String time);
+
+  /// Screen reader summary of the per-minute chart.
+  ///
+  /// In en, this message translates to:
+  /// **'Movements per minute from {from} to {to}. Busiest minute: {max} at {time}.'**
+  String accesses_chartSpoken(String from, String to, int max, String time);
+
+  /// No flow counting.
+  ///
+  /// In en, this message translates to:
+  /// **'No gate in this parking lot counts entries and exits.'**
+  String get accesses_flowNone;
+
+  /// Partial response: flow missing.
+  ///
+  /// In en, this message translates to:
+  /// **'The flow isn\'t available right now.'**
+  String get accesses_flowUnavailable;
+
+  /// Gates list title.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking lot gates'**
+  String get accesses_listTitle;
+
+  /// Lot without gates.
+  ///
+  /// In en, this message translates to:
+  /// **'No gates yet'**
+  String get accesses_emptyTitle;
+
+  /// Lot without gates.
+  ///
+  /// In en, this message translates to:
+  /// **'This parking lot has no registered gates yet.'**
+  String get accesses_emptyMessage;
+
+  /// Entries of a gate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 entry} other{{count} entries}}'**
+  String accesses_entriesCount(int count);
+
+  /// Exits of a gate.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 exit} other{{count} exits}}'**
+  String accesses_exitsCount(int count);
+
+  /// Gate whose sensor isn't reporting.
+  ///
+  /// In en, this message translates to:
+  /// **'No current data'**
+  String get accesses_noCurrentData;
+
+  /// Gate status.
+  ///
+  /// In en, this message translates to:
+  /// **'Operational'**
+  String get accesses_statusOperational;
+
+  /// Gate status.
+  ///
+  /// In en, this message translates to:
+  /// **'No signal'**
+  String get accesses_statusUnreachable;
+
+  /// Gate status.
+  ///
+  /// In en, this message translates to:
+  /// **'Not counting'**
+  String get accesses_statusNotCounting;
+
+  /// Gate type.
+  ///
+  /// In en, this message translates to:
+  /// **'Entry only'**
+  String get accesses_typeEntry;
+
+  /// Gate type.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit only'**
+  String get accesses_typeExit;
+
+  /// Gate type.
+  ///
+  /// In en, this message translates to:
+  /// **'Entry and exit'**
+  String get accesses_typeBoth;
+
+  /// Flow counting enabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Counts entries and exits with a directional sensor'**
+  String get accesses_countingOn;
+
+  /// Flow counting disabled (US19 sc. 3).
+  ///
+  /// In en, this message translates to:
+  /// **'Doesn\'t count flow: it needs a sensor that tells the direction'**
+  String get accesses_countingOff;
+
+  /// Settings tab: gates.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered gates'**
+  String get accesses_setupTitle;
+
+  /// Settings card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Lot settings'**
+  String get accesses_settingsTitle;
+
+  /// Edit settings link.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get accesses_edit;
+
+  /// Screen reader label of the edit link.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit the parking lot settings'**
+  String get accesses_editSpoken;
+
+  /// Tag for operators.
+  ///
+  /// In en, this message translates to:
+  /// **'Read only'**
+  String get accesses_readOnly;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening hours'**
+  String get accesses_schedule;
+
+  /// Opening hours.
+  ///
+  /// In en, this message translates to:
+  /// **'{opens}–{closes}'**
+  String accesses_scheduleValue(String opens, String closes);
+
+  /// Lot without opening hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Not set'**
+  String get accesses_noSchedule;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Pricing'**
+  String get accesses_mode;
+
+  /// Parking is always free.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get accesses_free;
+
+  /// Settings row.
+  ///
+  /// In en, this message translates to:
+  /// **'Occupancy alert'**
+  String get accesses_threshold;
+
+  /// A percentage.
+  ///
+  /// In en, this message translates to:
+  /// **'{value}%'**
+  String accesses_percent(int value);
+
+  /// Settings card note.
+  ///
+  /// In en, this message translates to:
+  /// **'These settings only affect this parking lot.'**
+  String get accesses_settingsNote;
+
+  /// Settings card note for operators.
+  ///
+  /// In en, this message translates to:
+  /// **'Only an administrator can change these settings.'**
+  String get accesses_readOnlyNote;
+
+  /// Settings sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Parking lot settings'**
+  String get accesses_sheetTitle;
+
+  /// Settings sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Only affects {name}.'**
+  String accesses_sheetSubtitle(String name);
+
+  /// Time field.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening *'**
+  String get accesses_opensAt;
+
+  /// Time field.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing *'**
+  String get accesses_closesAt;
+
+  /// Time field without a value.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose'**
+  String get accesses_pickTime;
+
+  /// Locked pricing field help.
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed by policy: parking is free.'**
+  String get accesses_modeHelp;
+
+  /// Slider description.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert the shift when it goes over'**
+  String get accesses_thresholdHelp;
+
+  /// Slider help.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ll get a shift alert when occupancy goes over this value.'**
+  String get accesses_thresholdNote;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the opening and the closing time.'**
+  String get accesses_errorSchedule;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Closing must be after opening.'**
+  String get accesses_errorClosesBefore;
+
+  /// Primary button.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get accesses_save;
+
+  /// Loading label.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get accesses_saving;
+
+  /// Snackbar.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings saved'**
+  String get accesses_saved;
+
+  /// 403 when saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Only an administrator can change these settings.'**
+  String get accesses_saveForbidden;
+
+  /// 400 when saving.
+  ///
+  /// In en, this message translates to:
+  /// **'The server didn\'t accept these settings. Check them and try again.'**
+  String get accesses_saveInvalid;
+
+  /// Generic save error.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t save. Try again in a moment.'**
+  String get accesses_saveError;
+
+  /// Gate without flow counting (US19 sc. 3).
+  ///
+  /// In en, this message translates to:
+  /// **'Needs a directional sensor'**
+  String get accesses_needsDirectional;
 }
 
 class _AppLocalizationsDelegate

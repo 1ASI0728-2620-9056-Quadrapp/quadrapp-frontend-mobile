@@ -1945,13 +1945,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get nav_more => 'More';
 
   @override
-  String get ops_accessesSoonTitle => 'Gates arrive soon';
-
-  @override
-  String get ops_accessesSoonMessage =>
-      'Soon you\'ll see the live flow of each gate and its settings.';
-
-  @override
   String get ops_analyticsSoonTitle => 'Analytics arrive soon';
 
   @override
@@ -2399,4 +2392,239 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get layout_errorGeneric => 'The change couldn\'t be applied.';
+
+  @override
+  String get accesses_title => 'Vehicle gates';
+
+  @override
+  String accesses_subtitle(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count gates',
+      one: '1 gate',
+      zero: 'no gates',
+    );
+    return '$name · $_temp0';
+  }
+
+  @override
+  String get accesses_tabFlow => 'Live flow';
+
+  @override
+  String get accesses_tabSettings => 'Settings';
+
+  @override
+  String get accesses_loading => 'Loading gates…';
+
+  @override
+  String get accesses_errorTitle => 'We couldn\'t load the gates';
+
+  @override
+  String get accesses_forbidden =>
+      'Your account doesn\'t have access to the gates.';
+
+  @override
+  String accesses_flowTitle(int minutes) {
+    return 'Last $minutes minutes';
+  }
+
+  @override
+  String accesses_net(String value) {
+    return 'Net $value';
+  }
+
+  @override
+  String accesses_netSpoken(String value) {
+    return 'Net balance $value: entries minus exits';
+  }
+
+  @override
+  String get accesses_entries => 'Entries';
+
+  @override
+  String get accesses_exits => 'Exits';
+
+  @override
+  String accesses_chartNow(String time) {
+    return '$time · now';
+  }
+
+  @override
+  String accesses_chartSpoken(String from, String to, int max, String time) {
+    return 'Movements per minute from $from to $to. Busiest minute: $max at $time.';
+  }
+
+  @override
+  String get accesses_flowNone =>
+      'No gate in this parking lot counts entries and exits.';
+
+  @override
+  String get accesses_flowUnavailable => 'The flow isn\'t available right now.';
+
+  @override
+  String get accesses_listTitle => 'Parking lot gates';
+
+  @override
+  String get accesses_emptyTitle => 'No gates yet';
+
+  @override
+  String get accesses_emptyMessage =>
+      'This parking lot has no registered gates yet.';
+
+  @override
+  String accesses_entriesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entries',
+      one: '1 entry',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accesses_exitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count exits',
+      one: '1 exit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accesses_noCurrentData => 'No current data';
+
+  @override
+  String get accesses_statusOperational => 'Operational';
+
+  @override
+  String get accesses_statusUnreachable => 'No signal';
+
+  @override
+  String get accesses_statusNotCounting => 'Not counting';
+
+  @override
+  String get accesses_typeEntry => 'Entry only';
+
+  @override
+  String get accesses_typeExit => 'Exit only';
+
+  @override
+  String get accesses_typeBoth => 'Entry and exit';
+
+  @override
+  String get accesses_countingOn =>
+      'Counts entries and exits with a directional sensor';
+
+  @override
+  String get accesses_countingOff =>
+      'Doesn\'t count flow: it needs a sensor that tells the direction';
+
+  @override
+  String get accesses_setupTitle => 'Registered gates';
+
+  @override
+  String get accesses_settingsTitle => 'Lot settings';
+
+  @override
+  String get accesses_edit => 'Edit';
+
+  @override
+  String get accesses_editSpoken => 'Edit the parking lot settings';
+
+  @override
+  String get accesses_readOnly => 'Read only';
+
+  @override
+  String get accesses_schedule => 'Opening hours';
+
+  @override
+  String accesses_scheduleValue(String opens, String closes) {
+    return '$opens–$closes';
+  }
+
+  @override
+  String get accesses_noSchedule => 'Not set';
+
+  @override
+  String get accesses_mode => 'Pricing';
+
+  @override
+  String get accesses_free => 'Free';
+
+  @override
+  String get accesses_threshold => 'Occupancy alert';
+
+  @override
+  String accesses_percent(int value) {
+    return '$value%';
+  }
+
+  @override
+  String get accesses_settingsNote =>
+      'These settings only affect this parking lot.';
+
+  @override
+  String get accesses_readOnlyNote =>
+      'Only an administrator can change these settings.';
+
+  @override
+  String get accesses_sheetTitle => 'Parking lot settings';
+
+  @override
+  String accesses_sheetSubtitle(String name) {
+    return 'Only affects $name.';
+  }
+
+  @override
+  String get accesses_opensAt => 'Opening *';
+
+  @override
+  String get accesses_closesAt => 'Closing *';
+
+  @override
+  String get accesses_pickTime => 'Choose';
+
+  @override
+  String get accesses_modeHelp => 'Fixed by policy: parking is free.';
+
+  @override
+  String get accesses_thresholdHelp => 'Alert the shift when it goes over';
+
+  @override
+  String get accesses_thresholdNote =>
+      'You\'ll get a shift alert when occupancy goes over this value.';
+
+  @override
+  String get accesses_errorSchedule =>
+      'Choose the opening and the closing time.';
+
+  @override
+  String get accesses_errorClosesBefore => 'Closing must be after opening.';
+
+  @override
+  String get accesses_save => 'Save changes';
+
+  @override
+  String get accesses_saving => 'Saving…';
+
+  @override
+  String get accesses_saved => 'Settings saved';
+
+  @override
+  String get accesses_saveForbidden =>
+      'Only an administrator can change these settings.';
+
+  @override
+  String get accesses_saveInvalid =>
+      'The server didn\'t accept these settings. Check them and try again.';
+
+  @override
+  String get accesses_saveError => 'We couldn\'t save. Try again in a moment.';
+
+  @override
+  String get accesses_needsDirectional => 'Needs a directional sensor';
 }

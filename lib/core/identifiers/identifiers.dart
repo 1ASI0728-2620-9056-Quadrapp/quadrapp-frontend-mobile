@@ -25,3 +25,6 @@ extension type const AlertSubscriptionId(int value) {}
 
 /// Dispositivo del inventario (sensor o gateway).
 extension type const DeviceId(int value) {}
+
+/// Acceso vehicular de un estacionamiento (entrada, salida o ambos).
+extension type const AccessId(int value) {}

@@ -1,11 +1,11 @@
-// TODO(redesign): provisional hasta las vistas de Accesos, Analítica, Más y
+// TODO(redesign): provisional hasta las vistas de Analítica, Más y
 // Dispositivos.
 import 'package:flutter/material.dart';
 import 'package:quadrapp_mobile/core/design_system/design_system.dart';
 import 'package:quadrapp_mobile/core/l10n/app_localizations.dart';
 
 /// Lo que aún no está construido en Operación.
-enum OpsSoon { accesses, analytics, more, devices }
+enum OpsSoon { analytics, more, devices }
 
 /// Pantalla provisional de Operación: un estado vacío honesto con su
 /// ilustración. Como pestaña lleva el avatar de la cuenta ([onOpenAccount]);
@@ -31,12 +31,6 @@ class OperationsSoonPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final (tab, title, message, illustration) = switch (kind) {
-      OpsSoon.accesses => (
-        l10n.nav_accesses,
-        l10n.ops_accessesSoonTitle,
-        l10n.ops_accessesSoonMessage,
-        QaIllustrationKind.car,
-      ),
       OpsSoon.analytics => (
         l10n.nav_analytics,
         l10n.ops_analyticsSoonTitle,

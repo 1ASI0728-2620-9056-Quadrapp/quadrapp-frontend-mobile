@@ -164,6 +164,12 @@ class MockSeed {
       consoleUnavailable:
           (console?['unavailable'] as List<dynamic>?)?.cast<String>() ??
           const [],
+      opensAt: raw['opensAt'] as String?,
+      closesAt: raw['closesAt'] as String?,
+      accesses: [
+        for (final access in (raw['accesses'] as List<dynamic>?) ?? const [])
+          _buildAccess(access as Map<String, dynamic>),
+      ],
       forecast: _buildForecast(raw['forecast'] as Map<String, dynamic>),
       zones: [
         for (final zone in raw['zones'] as List<dynamic>)
@@ -171,6 +177,17 @@ class MockSeed {
       ],
     );
   }
+
+  MockAccess _buildAccess(Map<String, dynamic> raw) => MockAccess(
+    id: raw['id'] as int,
+    name: raw['name'] as String,
+    type: raw['type'] as String,
+    flowCountingEnabled: raw['flowCountingEnabled'] as bool,
+    passSensorIds:
+        (raw['passSensorIds'] as List<dynamic>?)?.cast<int>() ?? const [],
+    entries: (raw['entries'] as int?) ?? 0,
+    exits: (raw['exits'] as int?) ?? 0,
+  );
 
   MockZone _buildZone(Map<String, dynamic> raw) {
     return MockZone(

@@ -45,3 +45,27 @@ class MockFlow {
   final int exits;
   final int windowMin;
 }
+
+/// Un acceso vehicular del estacionamiento (valores tal cual los envía el
+/// backend: tipo `ENTRY`, `EXIT` o `BIDIRECTIONAL`). Sus entradas y salidas del
+/// periodo suman el flujo del estacionamiento ([MockFlow]); su estado sale de
+/// sus sensores de paso ([passSensorIds]).
+class MockAccess {
+  const MockAccess({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.flowCountingEnabled,
+    this.passSensorIds = const [],
+    this.entries = 0,
+    this.exits = 0,
+  });
+
+  final int id;
+  final String name;
+  final String type;
+  final bool flowCountingEnabled;
+  final List<int> passSensorIds;
+  final int entries;
+  final int exits;
+}

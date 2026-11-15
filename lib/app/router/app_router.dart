@@ -22,6 +22,7 @@ import 'package:quadrapp_mobile/app/shell/driver_scope.dart';
 import 'package:quadrapp_mobile/app/shell/operations_scope.dart';
 import 'package:quadrapp_mobile/app/shell/operations_soon_page.dart';
 import 'package:quadrapp_mobile/app/shell/shell_tabs.dart';
+import 'package:quadrapp_mobile/composition/accesses/accesses_page.dart';
 import 'package:quadrapp_mobile/composition/alerts/alerts_tab_page.dart';
 import 'package:quadrapp_mobile/composition/arrival/home_page.dart';
 import 'package:quadrapp_mobile/composition/forecast/forecast_tab_page.dart';
@@ -139,6 +140,7 @@ GoRouter createAppRouter({
   required CreateForecastCubit createForecastCubit,
   required CreateAlertsCubit createAlertsCubit,
   required CreateShiftCubit createShiftCubit,
+  required CreateAccessesCubit createAccessesCubit,
   required CreateLayoutEditorCubit createLayoutEditorCubit,
   required Clock clock,
   LanguageCubit? languageCubit,
@@ -477,10 +479,16 @@ GoRouter createAppRouter({
             routes: [
               GoRoute(
                 path: opsAccessesPath,
-                builder: (context, state) => OperationsSoonPage(
-                  kind: OpsSoon.accesses,
-                  tabIndex: OpsTab.accesses,
-                  onOpenAccount: () => context.push(opsAccountPath),
+                // Ambos roles ven el flujo y la configuración; solo el
+                // administrador la edita (el servidor responde 403 igual).
+                builder: (context, state) => BlocProvider(
+                  create: (_) => createAccessesCubit(),
+                  child: AccessesPage(
+                    clock: clock,
+                    tabIndex: OpsTab.accesses,
+                    canEditSettings: _isAdmin(authCubit),
+                    onOpenAccount: () => context.push(opsAccountPath),
+                  ),
                 ),
               ),
             ],

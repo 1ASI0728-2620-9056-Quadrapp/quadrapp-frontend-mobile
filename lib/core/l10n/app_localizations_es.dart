@@ -1965,13 +1965,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nav_more => 'Más';
 
   @override
-  String get ops_accessesSoonTitle => 'Los accesos llegan pronto';
-
-  @override
-  String get ops_accessesSoonMessage =>
-      'Pronto verás el flujo en vivo de cada acceso y su configuración.';
-
-  @override
   String get ops_analyticsSoonTitle => 'La analítica llega pronto';
 
   @override
@@ -2419,4 +2412,243 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get layout_errorGeneric => 'No se pudo aplicar el cambio.';
+
+  @override
+  String get accesses_title => 'Accesos vehiculares';
+
+  @override
+  String accesses_subtitle(String name, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count accesos',
+      one: '1 acceso',
+      zero: 'sin accesos',
+    );
+    return '$name · $_temp0';
+  }
+
+  @override
+  String get accesses_tabFlow => 'Flujo en vivo';
+
+  @override
+  String get accesses_tabSettings => 'Configuración';
+
+  @override
+  String get accesses_loading => 'Cargando accesos…';
+
+  @override
+  String get accesses_errorTitle => 'No pudimos cargar los accesos';
+
+  @override
+  String get accesses_forbidden =>
+      'Tu cuenta no tiene acceso a los accesos vehiculares.';
+
+  @override
+  String accesses_flowTitle(int minutes) {
+    return 'Últimos $minutes minutos';
+  }
+
+  @override
+  String accesses_net(String value) {
+    return 'Neto $value';
+  }
+
+  @override
+  String accesses_netSpoken(String value) {
+    return 'Saldo neto $value: entradas menos salidas';
+  }
+
+  @override
+  String get accesses_entries => 'Entradas';
+
+  @override
+  String get accesses_exits => 'Salidas';
+
+  @override
+  String accesses_chartNow(String time) {
+    return '$time · ahora';
+  }
+
+  @override
+  String accesses_chartSpoken(String from, String to, int max, String time) {
+    return 'Movimientos por minuto de $from a $to. Minuto con más movimiento: $max a las $time.';
+  }
+
+  @override
+  String get accesses_flowNone =>
+      'Ningún acceso de este estacionamiento cuenta entradas y salidas.';
+
+  @override
+  String get accesses_flowUnavailable =>
+      'El flujo no está disponible en este momento.';
+
+  @override
+  String get accesses_listTitle => 'Accesos del estacionamiento';
+
+  @override
+  String get accesses_emptyTitle => 'Aún no hay accesos';
+
+  @override
+  String get accesses_emptyMessage =>
+      'Este estacionamiento todavía no tiene accesos registrados.';
+
+  @override
+  String accesses_entriesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count entradas',
+      one: '1 entrada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String accesses_exitsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count salidas',
+      one: '1 salida',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get accesses_noCurrentData => 'Sin datos vigentes';
+
+  @override
+  String get accesses_statusOperational => 'Operativo';
+
+  @override
+  String get accesses_statusUnreachable => 'Sin señal';
+
+  @override
+  String get accesses_statusNotCounting => 'Sin conteo';
+
+  @override
+  String get accesses_typeEntry => 'Solo entrada';
+
+  @override
+  String get accesses_typeExit => 'Solo salida';
+
+  @override
+  String get accesses_typeBoth => 'Entrada y salida';
+
+  @override
+  String get accesses_countingOn =>
+      'Cuenta entradas y salidas con un sensor direccional';
+
+  @override
+  String get accesses_countingOff =>
+      'No cuenta flujo: necesita un sensor que distinga la dirección';
+
+  @override
+  String get accesses_setupTitle => 'Accesos registrados';
+
+  @override
+  String get accesses_settingsTitle => 'Configuración propia';
+
+  @override
+  String get accesses_edit => 'Editar';
+
+  @override
+  String get accesses_editSpoken =>
+      'Editar la configuración del estacionamiento';
+
+  @override
+  String get accesses_readOnly => 'Solo lectura';
+
+  @override
+  String get accesses_schedule => 'Horario del estacionamiento';
+
+  @override
+  String accesses_scheduleValue(String opens, String closes) {
+    return '$opens–$closes';
+  }
+
+  @override
+  String get accesses_noSchedule => 'Sin horario';
+
+  @override
+  String get accesses_mode => 'Modalidad';
+
+  @override
+  String get accesses_free => 'Gratuito';
+
+  @override
+  String get accesses_threshold => 'Alerta de ocupación';
+
+  @override
+  String accesses_percent(int value) {
+    return '$value %';
+  }
+
+  @override
+  String get accesses_settingsNote =>
+      'Estos ajustes solo afectan a este estacionamiento.';
+
+  @override
+  String get accesses_readOnlyNote =>
+      'Solo un administrador puede cambiar estos ajustes.';
+
+  @override
+  String get accesses_sheetTitle => 'Configuración del estacionamiento';
+
+  @override
+  String accesses_sheetSubtitle(String name) {
+    return 'Solo afecta a $name.';
+  }
+
+  @override
+  String get accesses_opensAt => 'Apertura *';
+
+  @override
+  String get accesses_closesAt => 'Cierre *';
+
+  @override
+  String get accesses_pickTime => 'Elegir';
+
+  @override
+  String get accesses_modeHelp =>
+      'Fija por política: el estacionamiento no cobra.';
+
+  @override
+  String get accesses_thresholdHelp => 'Avisar al turno cuando supere';
+
+  @override
+  String get accesses_thresholdNote =>
+      'Recibirás una alerta del turno al superar este valor.';
+
+  @override
+  String get accesses_errorSchedule => 'Elige la apertura y el cierre.';
+
+  @override
+  String get accesses_errorClosesBefore =>
+      'El cierre debe ser después de la apertura.';
+
+  @override
+  String get accesses_save => 'Guardar cambios';
+
+  @override
+  String get accesses_saving => 'Guardando…';
+
+  @override
+  String get accesses_saved => 'Configuración guardada';
+
+  @override
+  String get accesses_saveForbidden =>
+      'Solo un administrador puede cambiar esta configuración.';
+
+  @override
+  String get accesses_saveInvalid =>
+      'El servidor no aceptó la configuración. Revísala e inténtalo de nuevo.';
+
+  @override
+  String get accesses_saveError =>
+      'No pudimos guardar. Inténtalo de nuevo en un momento.';
+
+  @override
+  String get accesses_needsDirectional => 'Necesita un sensor direccional';
 }

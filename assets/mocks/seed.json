@@ -15,6 +15,8 @@
       "layoutVersion": 4,
       "staleAfterSeconds": 180,
       "saturationThresholdPct": 90,
+      "opensAt": "07:00",
+      "closesAt": "22:00",
       "occupancy": { "ageSeconds": 20 },
       "forecast": {
         "method": "PRIMARY_MODEL",
@@ -23,6 +25,10 @@
         "nextAvailability": null
       },
       "console": { "flow": { "entries": 12, "exits": 9, "windowMin": 15 }, "unavailable": [] },
+      "accesses": [
+        { "id": 101, "name": "Acceso Norte", "type": "BIDIRECTIONAL", "flowCountingEnabled": true, "passSensorIds": [10002], "entries": 5, "exits": 4 },
+        { "id": 102, "name": "Acceso Sur", "type": "BIDIRECTIONAL", "flowCountingEnabled": true, "passSensorIds": [10003], "entries": 7, "exits": 5 }
+      ],
       "devices": [
         { "id": 10001, "hardwareId": "GW-L1-01", "type": "GATEWAY", "status": "OPERATIONAL", "lastSeenAgeSeconds": 20, "expectedReportIntervalSec": 60 },
         { "id": 10002, "hardwareId": "PASS-L1-01", "type": "PASS_SENSOR", "status": "OPERATIONAL", "batteryPct": 82, "lastSeenAgeSeconds": 8, "expectedReportIntervalSec": 60, "directional": true },
@@ -331,6 +337,8 @@
       "layoutVersion": 2,
       "staleAfterSeconds": 180,
       "saturationThresholdPct": 90,
+      "opensAt": "07:00",
+      "closesAt": "23:00",
       "occupancy": { "ageSeconds": 35 },
       "forecast": {
         "method": "PRIMARY_MODEL",
@@ -339,6 +347,10 @@
         "nextAvailability": { "minMinutes": 8, "maxMinutes": 15, "confidence": 0.55 }
       },
       "console": { "flow": { "entries": 4, "exits": 1, "windowMin": 15 }, "unavailable": [] },
+      "accesses": [
+        { "id": 201, "name": "Puerta Av. Salaverry", "type": "ENTRY", "flowCountingEnabled": true, "passSensorIds": [20002], "entries": 4, "exits": 0 },
+        { "id": 202, "name": "Salida Los Pinos", "type": "EXIT", "flowCountingEnabled": true, "passSensorIds": [20003], "entries": 0, "exits": 1 }
+      ],
       "devices": [
         { "id": 20001, "hardwareId": "GW-L2-01", "type": "GATEWAY", "status": "OPERATIONAL", "lastSeenAgeSeconds": 20, "expectedReportIntervalSec": 60 },
         { "id": 20002, "hardwareId": "PASS-L2-01", "type": "PASS_SENSOR", "status": "OPERATIONAL", "batteryPct": 85, "lastSeenAgeSeconds": 32, "expectedReportIntervalSec": 60, "directional": true },
@@ -553,6 +565,7 @@
         "nextAvailability": null
       },
       "console": { "flow": null, "unavailable": [] },
+      "accesses": [],
       "devices": [
         { "id": 30001, "hardwareId": "GW-L3-01", "type": "GATEWAY", "status": "UNREACHABLE", "lastSeenAgeSeconds": 18000, "expectedReportIntervalSec": 60 }
       ],
@@ -567,6 +580,8 @@
       "layoutVersion": 3,
       "staleAfterSeconds": 180,
       "saturationThresholdPct": 85,
+      "opensAt": "08:00",
+      "closesAt": "16:00",
       "occupancy": { "ageSeconds": 1500 },
       "forecast": {
         "method": "PRIMARY_MODEL",
@@ -575,6 +590,9 @@
         "nextAvailability": null
       },
       "console": { "flow": null, "unavailable": ["saturation"] },
+      "accesses": [
+        { "id": 401, "name": "Portón Villa", "type": "BIDIRECTIONAL", "flowCountingEnabled": false }
+      ],
       "devices": [
         { "id": 40001, "hardwareId": "GW-L4-01", "type": "GATEWAY", "status": "OPERATIONAL", "lastSeenAgeSeconds": 1500, "expectedReportIntervalSec": 60 },
         { "id": 40002, "hardwareId": "QS-L4-A-01", "type": "SPACE_SENSOR", "status": "OPERATIONAL", "batteryPct": 60, "lastSeenAgeSeconds": 1496, "expectedReportIntervalSec": 1800, "spaceId": 4001 },

@@ -76,6 +76,7 @@ GoRouter createRouterFrom(
     createForecastCubit: locator<CreateForecastCubit>(),
     createAlertsCubit: locator<CreateAlertsCubit>(),
     createShiftCubit: locator<CreateShiftCubit>(),
+    createAccessesCubit: locator<CreateAccessesCubit>(),
     createLayoutEditorCubit: locator<CreateLayoutEditorCubit>(),
     clock: locator<Clock>(),
     languageCubit: locator<LanguageCubit>(),
