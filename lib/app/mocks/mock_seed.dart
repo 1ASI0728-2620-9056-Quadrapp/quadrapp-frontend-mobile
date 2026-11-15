@@ -100,6 +100,17 @@ class MockSeed {
   Map<String, dynamic> get preferences =>
       _json['notificationPreferences'] as Map<String, dynamic>;
 
+  /// Dominios, dominios de otras instituciones y equipo de Operación (US30,
+  /// US31), tal como vienen en la semilla.
+  Map<String, dynamic> get tenant =>
+      _json['tenant'] as Map<String, dynamic>? ?? const {};
+
+  /// El calendario del campus (US35), con días relativos a hoy (Lima).
+  List<Map<String, dynamic>> get calendarEvents => [
+    for (final raw in _json['calendarEvents'] as List<dynamic>? ?? const [])
+      raw as Map<String, dynamic>,
+  ];
+
   /// Los estacionamientos que el simulador mueve (los demás quedan quietos,
   /// por ejemplo el de dato vencido).
   Set<int> get simulatedLotIds =>

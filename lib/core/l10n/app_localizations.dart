@@ -884,18 +884,6 @@ abstract class AppLocalizations {
   /// **'Devices'**
   String get nav_devices;
 
-  /// Placeholder title of the Devices tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Devices coming soon'**
-  String get ops_devicesSoonTitle;
-
-  /// Placeholder message of the Devices tab.
-  ///
-  /// In en, this message translates to:
-  /// **'Soon you\'ll see the health of every sensor and gateway.'**
-  String get ops_devicesSoonMessage;
-
   /// Chip text when no campus is chosen yet.
   ///
   /// In en, this message translates to:
@@ -3294,24 +3282,6 @@ abstract class AppLocalizations {
   /// **'More'**
   String get nav_more;
 
-  /// Placeholder title.
-  ///
-  /// In en, this message translates to:
-  /// **'Administration arrives soon'**
-  String get ops_moreSoonTitle;
-
-  /// Placeholder message.
-  ///
-  /// In en, this message translates to:
-  /// **'Soon you\'ll manage the campus calendar, the email domains and your team here.'**
-  String get ops_moreSoonMessage;
-
-  /// Link from More to Devices.
-  ///
-  /// In en, this message translates to:
-  /// **'See devices'**
-  String get ops_moreDevices;
-
   /// Heading of the Operations zones tab.
   ///
   /// In en, this message translates to:
@@ -4779,6 +4749,990 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We couldn\'t request the report. Try again in a moment.'**
   String get analytics_exportError;
+
+  /// Devices heading.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devices_title;
+
+  /// Devices subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · read-only view'**
+  String devices_subtitle(String name);
+
+  /// Screen reader text while loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading devices…'**
+  String get devices_loading;
+
+  /// Error title.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the devices'**
+  String get devices_errorTitle;
+
+  /// 403 message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your role doesn\'t have access to the devices.'**
+  String get devices_forbidden;
+
+  /// Empty state.
+  ///
+  /// In en, this message translates to:
+  /// **'No devices yet'**
+  String get devices_emptyTitle;
+
+  /// Empty state.
+  ///
+  /// In en, this message translates to:
+  /// **'Quadrapp support registers the sensors and gateways of this parking lot. If they should be here, report it.'**
+  String get devices_emptyMessage;
+
+  /// Health card title.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} health'**
+  String devices_healthTitle(String name);
+
+  /// Read-only mark.
+  ///
+  /// In en, this message translates to:
+  /// **'Read-only'**
+  String get devices_readOnly;
+
+  /// Under the active sensors count.
+  ///
+  /// In en, this message translates to:
+  /// **'{down, plural, =0{active sensors · all reporting} other{active sensors · {down} not reporting}}'**
+  String devices_sensorsActive(int down);
+
+  /// Screen reader text.
+  ///
+  /// In en, this message translates to:
+  /// **'{ok} active sensors, {down} not reporting'**
+  String devices_sensorsActiveSpoken(int ok, int down);
+
+  /// Under the online gateways count.
+  ///
+  /// In en, this message translates to:
+  /// **'{down, plural, =0{gateways online · all with signal} other{gateways online · {down} without signal}}'**
+  String devices_gatewaysOnline(int down);
+
+  /// Screen reader text.
+  ///
+  /// In en, this message translates to:
+  /// **'{ok} gateways online, {down} without signal'**
+  String devices_gatewaysOnlineSpoken(int ok, int down);
+
+  /// Low battery line.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 sensor with battery below {pct}%.} other{{count} sensors with battery below {pct}%.}}'**
+  String devices_lowBatteryCount(int count, int pct);
+
+  /// How recent the inventory is.
+  ///
+  /// In en, this message translates to:
+  /// **'Read {age}'**
+  String devices_readAgo(String age);
+
+  /// Segment.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get devices_tabIncidents;
+
+  /// Segment.
+  ///
+  /// In en, this message translates to:
+  /// **'Sensors'**
+  String get devices_tabSensors;
+
+  /// Segment.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateways'**
+  String get devices_tabGateways;
+
+  /// No incidents.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is reporting'**
+  String get devices_allGoodTitle;
+
+  /// No incidents.
+  ///
+  /// In en, this message translates to:
+  /// **'No gateway or sensor needs attention right now.'**
+  String get devices_allGoodMessage;
+
+  /// Gateway incident title.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway {id}'**
+  String devices_gatewayTitle(String id);
+
+  /// Gateway down.
+  ///
+  /// In en, this message translates to:
+  /// **'No communication: its sensors have no data. Report it to support.'**
+  String get devices_gatewayDown;
+
+  /// Gateway low battery.
+  ///
+  /// In en, this message translates to:
+  /// **'Low battery: schedule its maintenance with support.'**
+  String get devices_gatewayLowBattery;
+
+  /// Spotlight card title.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Sensor that needs attention} other{Sensors that need attention ({count})}}'**
+  String devices_spotlightTitle(int count);
+
+  /// Opens the sensors tab.
+  ///
+  /// In en, this message translates to:
+  /// **'See the {count}'**
+  String devices_seeAllSensors(int count);
+
+  /// Search field label.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get devices_search;
+
+  /// Search hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Identifier or space'**
+  String get devices_searchHint;
+
+  /// Filter.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get devices_filterAll;
+
+  /// Filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Need attention'**
+  String get devices_filterAttention;
+
+  /// Filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Operational'**
+  String get devices_filterOperational;
+
+  /// Filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Decommissioned'**
+  String get devices_filterDecommissioned;
+
+  /// Result count.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No sensors} =1{1 sensor} other{{count} sensors}}'**
+  String devices_sensorsShown(int count);
+
+  /// Empty filter.
+  ///
+  /// In en, this message translates to:
+  /// **'No sensors match'**
+  String get devices_noSensorsMatch;
+
+  /// Empty gateways.
+  ///
+  /// In en, this message translates to:
+  /// **'This parking lot has no gateways'**
+  String get devices_noGateways;
+
+  /// Shows more rows.
+  ///
+  /// In en, this message translates to:
+  /// **'Show more'**
+  String get devices_showMore;
+
+  /// Device status.
+  ///
+  /// In en, this message translates to:
+  /// **'Active'**
+  String get devices_statusOperational;
+
+  /// Device status.
+  ///
+  /// In en, this message translates to:
+  /// **'Low battery'**
+  String get devices_statusLowBattery;
+
+  /// Device status.
+  ///
+  /// In en, this message translates to:
+  /// **'No signal'**
+  String get devices_statusUnreachable;
+
+  /// Device status.
+  ///
+  /// In en, this message translates to:
+  /// **'Decommissioned'**
+  String get devices_statusDecommissioned;
+
+  /// Device type.
+  ///
+  /// In en, this message translates to:
+  /// **'Space sensor'**
+  String get devices_typeSpaceSensor;
+
+  /// Device type.
+  ///
+  /// In en, this message translates to:
+  /// **'Gate sensor'**
+  String get devices_typePassSensor;
+
+  /// Device type.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway'**
+  String get devices_typeGateway;
+
+  /// Associated space.
+  ///
+  /// In en, this message translates to:
+  /// **'space {label}'**
+  String devices_space(String label);
+
+  /// Battery level.
+  ///
+  /// In en, this message translates to:
+  /// **'Battery {pct}%'**
+  String devices_battery(int pct);
+
+  /// No battery.
+  ///
+  /// In en, this message translates to:
+  /// **'Mains power'**
+  String get devices_mainsPower;
+
+  /// Last communication.
+  ///
+  /// In en, this message translates to:
+  /// **'last seen {age}'**
+  String devices_lastSeen(String age);
+
+  /// No communication yet.
+  ///
+  /// In en, this message translates to:
+  /// **'never reported'**
+  String get devices_neverReported;
+
+  /// Opens the report sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get devices_report;
+
+  /// Report note.
+  ///
+  /// In en, this message translates to:
+  /// **'The report goes to Quadrapp support with the parking lot and the incident.'**
+  String get devices_reportNote;
+
+  /// Sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get devices_reportTitle;
+
+  /// Sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'It goes to support with the parking lot and the incident.'**
+  String get devices_reportSubtitle;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Related incident'**
+  String get devices_reportIncident;
+
+  /// No device.
+  ///
+  /// In en, this message translates to:
+  /// **'General problem of the parking lot'**
+  String get devices_reportGeneral;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Type of problem'**
+  String get devices_reportCategory;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'No communication'**
+  String get devices_categoryNoComm;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong data'**
+  String get devices_categoryWrongData;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Low battery'**
+  String get devices_categoryLowBattery;
+
+  /// Category.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get devices_categoryOther;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Description (optional)'**
+  String get devices_reportDetail;
+
+  /// Hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what you see on campus…'**
+  String get devices_reportDetailHint;
+
+  /// Submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get devices_reportSend;
+
+  /// Loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending report…'**
+  String get devices_reportSending;
+
+  /// Confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Report sent to support.'**
+  String get devices_reportSent;
+
+  /// Report 403.
+  ///
+  /// In en, this message translates to:
+  /// **'Your role can\'t send reports.'**
+  String get devices_reportForbidden;
+
+  /// Report 400.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the incident and the description.'**
+  String get devices_reportInvalid;
+
+  /// Report error.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t send the report. Try again in a moment.'**
+  String get devices_reportError;
+
+  /// More heading.
+  ///
+  /// In en, this message translates to:
+  /// **'More'**
+  String get more_title;
+
+  /// More subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Administration of {name}'**
+  String more_subtitle(String name);
+
+  /// Screen reader text while loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading administration…'**
+  String get more_loading;
+
+  /// Error title.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the administration'**
+  String get more_errorTitle;
+
+  /// 403 message.
+  ///
+  /// In en, this message translates to:
+  /// **'Your role can\'t do this.'**
+  String get more_forbidden;
+
+  /// Partial banner.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of the administration didn\'t load. Showing what arrived.'**
+  String get more_partial;
+
+  /// Generic save error.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t save. Try again in a moment.'**
+  String get more_saveError;
+
+  /// Loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get more_saving;
+
+  /// Devices entry.
+  ///
+  /// In en, this message translates to:
+  /// **'Health of sensors and gateways · report problems'**
+  String get more_devicesHint;
+
+  /// Card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus calendar'**
+  String get more_calendarTitle;
+
+  /// Opens the new event sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'+ Event'**
+  String get more_addEvent;
+
+  /// Calendar missing.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the calendar.'**
+  String get more_calendarUnavailable;
+
+  /// Empty calendar.
+  ///
+  /// In en, this message translates to:
+  /// **'No periods or events in the next 90 days.'**
+  String get more_noEvents;
+
+  /// Calendar note.
+  ///
+  /// In en, this message translates to:
+  /// **'Periods and events adjust the occupancy forecast.'**
+  String get more_calendarNote;
+
+  /// Shows all events.
+  ///
+  /// In en, this message translates to:
+  /// **'See all ({count})'**
+  String more_showAllEvents(int count);
+
+  /// Event type.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus event'**
+  String get more_typeEvent;
+
+  /// Event type.
+  ///
+  /// In en, this message translates to:
+  /// **'Classes'**
+  String get more_typeClasses;
+
+  /// Event type.
+  ///
+  /// In en, this message translates to:
+  /// **'Exams'**
+  String get more_typeExams;
+
+  /// Event type.
+  ///
+  /// In en, this message translates to:
+  /// **'Recess'**
+  String get more_typeRecess;
+
+  /// Impact.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get more_impactLow;
+
+  /// Impact.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get more_impactMedium;
+
+  /// Impact.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get more_impactHigh;
+
+  /// Scope.
+  ///
+  /// In en, this message translates to:
+  /// **'Whole campus'**
+  String get more_wholeCampus;
+
+  /// Scope.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} · whole parking lot'**
+  String more_wholeLot(String name);
+
+  /// Period dates.
+  ///
+  /// In en, this message translates to:
+  /// **'from {from} to {to}'**
+  String more_dateRange(String from, String to);
+
+  /// Sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'New event'**
+  String get more_newEventTitle;
+
+  /// Sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Events adjust the campus occupancy forecast.'**
+  String get more_newEventSubtitle;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Type'**
+  String get more_eventType;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Event name *'**
+  String get more_eventName;
+
+  /// Hint.
+  ///
+  /// In en, this message translates to:
+  /// **'Job fair'**
+  String get more_eventNameHint;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Date *'**
+  String get more_eventDate;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'From *'**
+  String get more_eventFrom;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'To *'**
+  String get more_eventTo;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get more_eventStart;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get more_eventEnd;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Affected area'**
+  String get more_eventScope;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected impact on demand'**
+  String get more_eventImpact;
+
+  /// Detail row.
+  ///
+  /// In en, this message translates to:
+  /// **'When'**
+  String get more_eventWhen;
+
+  /// Submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Save event'**
+  String get more_saveEvent;
+
+  /// Confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Event saved. The forecast will take it into account.'**
+  String get more_eventSaved;
+
+  /// Event 400.
+  ///
+  /// In en, this message translates to:
+  /// **'Check the dates and the affected area.'**
+  String get more_eventInvalid;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Write the event name.'**
+  String get more_errorNameMissing;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use up to {max} characters.'**
+  String more_errorNameTooLong(int max);
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'The end must be after the start.'**
+  String get more_errorEndsBefore;
+
+  /// Cancel action.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel event'**
+  String get more_cancelEvent;
+
+  /// Loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelling…'**
+  String get more_cancelling;
+
+  /// Dialog cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it'**
+  String get more_keepEvent;
+
+  /// Dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this event?'**
+  String get more_cancelEventConfirmTitle;
+
+  /// Dialog message.
+  ///
+  /// In en, this message translates to:
+  /// **'The forecast will stop considering it and the affected hours will be recalculated.'**
+  String get more_cancelEventConfirmMessage;
+
+  /// Detail note.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelling it regenerates the forecast of the affected hours.'**
+  String get more_cancelEventNote;
+
+  /// Confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Event cancelled.'**
+  String get more_eventCancelled;
+
+  /// Card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Institutional domains'**
+  String get more_domainsTitle;
+
+  /// Opens the add domain sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get more_addDomain;
+
+  /// Domains missing.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the domains.'**
+  String get more_domainsUnavailable;
+
+  /// Empty domains.
+  ///
+  /// In en, this message translates to:
+  /// **'No email domains enabled yet.'**
+  String get more_noDomains;
+
+  /// Domain status.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get more_domainVerified;
+
+  /// Domain status.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get more_domainPending;
+
+  /// Remove button tooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {domain}'**
+  String more_removeDomain(String domain);
+
+  /// Operator note.
+  ///
+  /// In en, this message translates to:
+  /// **'Only an administrator manages the domains.'**
+  String get more_adminOnlyDomains;
+
+  /// Sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Add domain'**
+  String get more_addDomainTitle;
+
+  /// Sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Emails from this domain will be able to sign in and join your university.'**
+  String get more_addDomainSubtitle;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain *'**
+  String get more_domainField;
+
+  /// Hint.
+  ///
+  /// In en, this message translates to:
+  /// **'graduate.university.edu'**
+  String get more_domainHint;
+
+  /// Helper.
+  ///
+  /// In en, this message translates to:
+  /// **'No @. Example: students.university.edu'**
+  String get more_domainHelper;
+
+  /// Pending note.
+  ///
+  /// In en, this message translates to:
+  /// **'It will stay Pending until it\'s verified. Meanwhile nobody can sign in with that domain.'**
+  String get more_domainPendingNote;
+
+  /// Submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Add domain'**
+  String get more_addDomainSubmit;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a domain like alumnos.universidad.edu.'**
+  String get more_domainInvalid;
+
+  /// US30 sc. 3.
+  ///
+  /// In en, this message translates to:
+  /// **'That domain belongs to another institution.'**
+  String get more_domainTaken;
+
+  /// Duplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'Your university already has that domain.'**
+  String get more_domainDuplicate;
+
+  /// Confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain added. It will stay pending until verified.'**
+  String get more_domainAdded;
+
+  /// Dialog title.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this domain?'**
+  String get more_removeDomainTitle;
+
+  /// US30 sc. 2.
+  ///
+  /// In en, this message translates to:
+  /// **'No new accounts will be able to sign up with it. Accounts already verified are kept.'**
+  String get more_removeDomainMessage;
+
+  /// Dialog confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get more_removeDomainConfirm;
+
+  /// Confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Domain removed.'**
+  String get more_domainRemoved;
+
+  /// Card title.
+  ///
+  /// In en, this message translates to:
+  /// **'Team and invitations'**
+  String get more_teamTitle;
+
+  /// Team missing.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t load the team.'**
+  String get more_teamUnavailable;
+
+  /// Team summary.
+  ///
+  /// In en, this message translates to:
+  /// **'{members, plural, =1{1 member} other{{members} members}} · {pending, plural, =0{no pending invitations} =1{1 pending invitation} other{{pending} pending invitations}}'**
+  String more_teamSummary(int members, int pending);
+
+  /// Marks the signed-in person.
+  ///
+  /// In en, this message translates to:
+  /// **'you'**
+  String get more_you;
+
+  /// Role.
+  ///
+  /// In en, this message translates to:
+  /// **'Administrator'**
+  String get more_roleAdmin;
+
+  /// Role.
+  ///
+  /// In en, this message translates to:
+  /// **'Operator'**
+  String get more_roleOperator;
+
+  /// Role help.
+  ///
+  /// In en, this message translates to:
+  /// **'Manages layout, gates, domains and team.'**
+  String get more_roleAdminHelp;
+
+  /// Role help.
+  ///
+  /// In en, this message translates to:
+  /// **'Runs the shift and handles the alerts.'**
+  String get more_roleOperatorHelp;
+
+  /// Member status.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation pending'**
+  String get more_invitationPending;
+
+  /// US31 sc. 3.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation expired'**
+  String get more_invitationExpired;
+
+  /// Operator note.
+  ///
+  /// In en, this message translates to:
+  /// **'Only an administrator invites people.'**
+  String get more_adminOnlyTeam;
+
+  /// Opens the invite sheet.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite administrator or operator'**
+  String get more_invite;
+
+  /// Sheet title.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite to the team'**
+  String get more_inviteTitle;
+
+  /// Sheet subtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'They\'ll get a link at their institutional email.'**
+  String get more_inviteSubtitle;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Institutional email *'**
+  String get more_inviteEmail;
+
+  /// Hint.
+  ///
+  /// In en, this message translates to:
+  /// **'person@university.edu'**
+  String get more_inviteEmailHint;
+
+  /// Field.
+  ///
+  /// In en, this message translates to:
+  /// **'Role'**
+  String get more_inviteRole;
+
+  /// Invite note.
+  ///
+  /// In en, this message translates to:
+  /// **'They\'ll show as «Invitation pending» until they accept.'**
+  String get more_inviteNote;
+
+  /// Submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Send invitation'**
+  String get more_inviteSend;
+
+  /// Loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending invitation…'**
+  String get more_inviteSending;
+
+  /// Confirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation sent.'**
+  String get more_inviteSent;
+
+  /// Validation.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a valid email.'**
+  String get more_inviteEmailInvalid;
+
+  /// Invite 400.
+  ///
+  /// In en, this message translates to:
+  /// **'Use an email from a verified domain of your university.'**
+  String get more_inviteEmailDomain;
+
+  /// Invite 409.
+  ///
+  /// In en, this message translates to:
+  /// **'That person already has an account or a current invitation.'**
+  String get more_inviteEmailTaken;
 }
 
 class _AppLocalizationsDelegate

@@ -2,6 +2,7 @@
 /// y casos de uso. Nada más.
 library;
 
+export 'application/usecases/calendar_usecases.dart';
 export 'application/usecases/get_lot_layout.dart';
 export 'application/usecases/get_parking_lot.dart';
 export 'application/usecases/get_selected_lot.dart';
@@ -10,6 +11,7 @@ export 'application/usecases/list_parking_lots.dart';
 export 'application/usecases/resolve_selected_lot.dart';
 export 'application/usecases/select_lot.dart';
 export 'application/usecases/update_lot_settings.dart';
+export 'domain/entities/calendar_event.dart';
 export 'domain/entities/layout_draft.dart';
 export 'domain/entities/level.dart';
 export 'domain/entities/lot_layout.dart';

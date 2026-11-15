@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:quadrapp_mobile/app/config/app_config.dart';
+import 'package:quadrapp_mobile/app/di/administration_module.dart';
 import 'package:quadrapp_mobile/app/di/alerts_module.dart';
 import 'package:quadrapp_mobile/app/di/analytics_module.dart';
 import 'package:quadrapp_mobile/app/di/arrival_module.dart';
@@ -62,6 +63,7 @@ Future<GetIt> configureDependencies({
   registerNotificationsModule(target, config);
   registerOperationsModule(target, config);
   registerAnalyticsModule(target, config);
+  registerAdministrationModule(target, config);
   registerSignOutModule(target);
   registerAuthModule(target);
   registerArrivalModule(target);

@@ -28,3 +28,12 @@ extension type const DeviceId(int value) {}
 
 /// Acceso vehicular de un estacionamiento (entrada, salida o ambos).
 extension type const AccessId(int value) {}
+
+/// Dominio de correo habilitado de una institución.
+extension type const InstitutionDomainId(int value) {}
+
+/// Evento del calendario del campus (periodo académico o evento especial).
+extension type const CalendarEventId(int value) {}
+
+/// Incidencia de la bitácora de dispositivos (un reporte de problema es una).
+extension type const DeviceIncidentId(int value) {}

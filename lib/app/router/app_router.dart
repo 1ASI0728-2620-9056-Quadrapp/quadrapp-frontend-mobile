@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:quadrapp_mobile/app/di/administration_module.dart';
 import 'package:quadrapp_mobile/app/di/alerts_module.dart';
 import 'package:quadrapp_mobile/app/di/analytics_module.dart';
 import 'package:quadrapp_mobile/app/di/arrival_module.dart';
@@ -21,16 +22,17 @@ import 'package:quadrapp_mobile/app/session/session_expiry_coordinator.dart';
 import 'package:quadrapp_mobile/app/shell/app_shell.dart';
 import 'package:quadrapp_mobile/app/shell/driver_scope.dart';
 import 'package:quadrapp_mobile/app/shell/operations_scope.dart';
-import 'package:quadrapp_mobile/app/shell/operations_soon_page.dart';
 import 'package:quadrapp_mobile/app/shell/shell_tabs.dart';
 import 'package:quadrapp_mobile/composition/accesses/accesses_page.dart';
 import 'package:quadrapp_mobile/composition/alerts/alerts_tab_page.dart';
 import 'package:quadrapp_mobile/composition/analytics/analytics_page.dart';
 import 'package:quadrapp_mobile/composition/arrival/home_page.dart';
+import 'package:quadrapp_mobile/composition/devices/devices_page.dart';
 import 'package:quadrapp_mobile/composition/forecast/forecast_tab_page.dart';
 import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/composition/layout_editor/layout_editor_page.dart';
 import 'package:quadrapp_mobile/composition/lots/lots_page.dart';
+import 'package:quadrapp_mobile/composition/more/more_page.dart';
 import 'package:quadrapp_mobile/composition/settings/settings_page.dart';
 import 'package:quadrapp_mobile/composition/shift/shift_page.dart';
 import 'package:quadrapp_mobile/composition/zones/level_page.dart';
@@ -144,6 +146,8 @@ GoRouter createAppRouter({
   required CreateShiftCubit createShiftCubit,
   required CreateAccessesCubit createAccessesCubit,
   required CreateAnalyticsCubit createAnalyticsCubit,
+  required CreateMoreCubit createMoreCubit,
+  required CreateDevicesCubit createDevicesCubit,
   required CreateLayoutEditorCubit createLayoutEditorCubit,
   required Clock clock,
   LanguageCubit? languageCubit,
@@ -516,18 +520,34 @@ GoRouter createAppRouter({
             routes: [
               GoRoute(
                 path: opsMorePath,
-                builder: (context, state) => OperationsSoonPage(
-                  kind: OpsSoon.more,
-                  tabIndex: OpsTab.more,
-                  onOpenAccount: () => context.push(opsAccountPath),
-                  onOpenDevices: () => context.go(opsDevicesPath),
-                ),
+                // Ambos roles ven todo y administran el calendario; solo el
+                // administrador gestiona dominios e invita (el servidor
+                // responde 403 igual).
+                builder: (context, state) {
+                  final auth = authCubit.state;
+                  if (auth is! Authenticated) return const SizedBox.shrink();
+                  return BlocProvider(
+                    create: (_) => createMoreCubit(),
+                    child: MorePage(
+                      clock: clock,
+                      tabIndex: OpsTab.more,
+                      canManage: _isAdmin(authCubit),
+                      session: auth.session,
+                      onOpenAccount: () => context.push(opsAccountPath),
+                      onOpenDevices: () => context.push(opsDevicesPath),
+                    ),
+                  );
+                },
                 routes: [
+                  // Modo lectura para ambos roles; los dos reportan problemas.
                   GoRoute(
                     path: 'devices',
-                    builder: (context, state) => OperationsSoonPage(
-                      kind: OpsSoon.devices,
-                      onBack: () => _backTo(context, opsMorePath),
+                    builder: (context, state) => BlocProvider(
+                      create: (_) => createDevicesCubit(),
+                      child: DevicesPage(
+                        clock: clock,
+                        onBack: () => _backTo(context, opsMorePath),
+                      ),
                     ),
                   ),
                 ],

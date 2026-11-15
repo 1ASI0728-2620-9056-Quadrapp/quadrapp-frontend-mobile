@@ -481,13 +481,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nav_devices => 'Dispositivos';
 
   @override
-  String get ops_devicesSoonTitle => 'Los dispositivos llegan pronto';
-
-  @override
-  String get ops_devicesSoonMessage =>
-      'Pronto verás la salud de cada sensor y gateway.';
-
-  @override
   String get sede_choose => 'Elegir sede';
 
   @override
@@ -1965,16 +1958,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nav_more => 'Más';
 
   @override
-  String get ops_moreSoonTitle => 'La administración llega pronto';
-
-  @override
-  String get ops_moreSoonMessage =>
-      'Pronto gestionarás aquí el calendario del campus, los dominios y tu equipo.';
-
-  @override
-  String get ops_moreDevices => 'Ver dispositivos';
-
-  @override
   String get lots_title => 'Estacionamientos';
 
   @override
@@ -2926,4 +2909,613 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get analytics_exportError =>
       'No pudimos pedir el reporte. Inténtalo de nuevo en un momento.';
+
+  @override
+  String get devices_title => 'Dispositivos';
+
+  @override
+  String devices_subtitle(String name) {
+    return '$name · consulta en modo lectura';
+  }
+
+  @override
+  String get devices_loading => 'Cargando los dispositivos…';
+
+  @override
+  String get devices_errorTitle => 'No pudimos cargar los dispositivos';
+
+  @override
+  String get devices_forbidden => 'Tu rol no tiene acceso a los dispositivos.';
+
+  @override
+  String get devices_emptyTitle => 'Aún no hay dispositivos';
+
+  @override
+  String get devices_emptyMessage =>
+      'El soporte de Quadrapp registra los sensores y gateways de este estacionamiento. Si deberían estar aquí, repórtalo.';
+
+  @override
+  String devices_healthTitle(String name) {
+    return 'Salud de $name';
+  }
+
+  @override
+  String get devices_readOnly => 'Solo lectura';
+
+  @override
+  String devices_sensorsActive(int down) {
+    String _temp0 = intl.Intl.pluralLogic(
+      down,
+      locale: localeName,
+      other: 'sensores activos · $down sin comunicación',
+      one: 'sensores activos · 1 sin comunicación',
+      zero: 'sensores activos · todos reportan',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String devices_sensorsActiveSpoken(int ok, int down) {
+    return '$ok sensores activos, $down sin comunicación';
+  }
+
+  @override
+  String devices_gatewaysOnline(int down) {
+    String _temp0 = intl.Intl.pluralLogic(
+      down,
+      locale: localeName,
+      other: 'gateways en línea · $down sin señal',
+      one: 'gateways en línea · 1 sin señal',
+      zero: 'gateways en línea · todos con señal',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String devices_gatewaysOnlineSpoken(int ok, int down) {
+    return '$ok gateways en línea, $down sin señal';
+  }
+
+  @override
+  String devices_lowBatteryCount(int count, int pct) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sensores con batería por debajo del $pct %.',
+      one: '1 sensor con batería por debajo del $pct %.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String devices_readAgo(String age) {
+    return 'Leído $age';
+  }
+
+  @override
+  String get devices_tabIncidents => 'Avisos';
+
+  @override
+  String get devices_tabSensors => 'Sensores';
+
+  @override
+  String get devices_tabGateways => 'Gateways';
+
+  @override
+  String get devices_allGoodTitle => 'Todo reporta con normalidad';
+
+  @override
+  String get devices_allGoodMessage =>
+      'Ningún gateway ni sensor pide atención ahora.';
+
+  @override
+  String devices_gatewayTitle(String id) {
+    return 'Gateway $id';
+  }
+
+  @override
+  String get devices_gatewayDown =>
+      'Sin comunicación: sus sensores quedan sin datos. Repórtalo a soporte.';
+
+  @override
+  String get devices_gatewayLowBattery =>
+      'Batería baja: coordina su mantenimiento con soporte.';
+
+  @override
+  String devices_spotlightTitle(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Sensores que piden atención ($count)',
+      one: 'Sensor que pide atención',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String devices_seeAllSensors(int count) {
+    return 'Ver los $count';
+  }
+
+  @override
+  String get devices_search => 'Buscar';
+
+  @override
+  String get devices_searchHint => 'Identificador o espacio';
+
+  @override
+  String get devices_filterAll => 'Todos';
+
+  @override
+  String get devices_filterAttention => 'Piden atención';
+
+  @override
+  String get devices_filterOperational => 'Operativos';
+
+  @override
+  String get devices_filterDecommissioned => 'De baja';
+
+  @override
+  String devices_sensorsShown(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count sensores',
+      one: '1 sensor',
+      zero: 'Ningún sensor',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get devices_noSensorsMatch => 'Ningún sensor coincide';
+
+  @override
+  String get devices_noGateways => 'Este estacionamiento no tiene gateways';
+
+  @override
+  String get devices_showMore => 'Mostrar más';
+
+  @override
+  String get devices_statusOperational => 'Activo';
+
+  @override
+  String get devices_statusLowBattery => 'Batería baja';
+
+  @override
+  String get devices_statusUnreachable => 'Sin señal';
+
+  @override
+  String get devices_statusDecommissioned => 'De baja';
+
+  @override
+  String get devices_typeSpaceSensor => 'Sensor de espacio';
+
+  @override
+  String get devices_typePassSensor => 'Sensor de acceso';
+
+  @override
+  String get devices_typeGateway => 'Gateway';
+
+  @override
+  String devices_space(String label) {
+    return 'espacio $label';
+  }
+
+  @override
+  String devices_battery(int pct) {
+    return 'Batería $pct %';
+  }
+
+  @override
+  String get devices_mainsPower => 'Alimentación de red';
+
+  @override
+  String devices_lastSeen(String age) {
+    return 'comunicación $age';
+  }
+
+  @override
+  String get devices_neverReported => 'nunca reportó';
+
+  @override
+  String get devices_report => 'Reportar problema';
+
+  @override
+  String get devices_reportNote =>
+      'El reporte se envía al soporte de Quadrapp con el estacionamiento y la incidencia.';
+
+  @override
+  String get devices_reportTitle => 'Reportar problema';
+
+  @override
+  String get devices_reportSubtitle =>
+      'Se envía a soporte con el estacionamiento y la incidencia.';
+
+  @override
+  String get devices_reportIncident => 'Incidencia relacionada';
+
+  @override
+  String get devices_reportGeneral => 'Problema general del estacionamiento';
+
+  @override
+  String get devices_reportCategory => 'Tipo de problema';
+
+  @override
+  String get devices_categoryNoComm => 'Sin comunicación';
+
+  @override
+  String get devices_categoryWrongData => 'Datos incorrectos';
+
+  @override
+  String get devices_categoryLowBattery => 'Batería baja';
+
+  @override
+  String get devices_categoryOther => 'Otro';
+
+  @override
+  String get devices_reportDetail => 'Descripción (opcional)';
+
+  @override
+  String get devices_reportDetailHint => 'Cuéntanos qué observas en el campus…';
+
+  @override
+  String get devices_reportSend => 'Enviar reporte';
+
+  @override
+  String get devices_reportSending => 'Enviando el reporte…';
+
+  @override
+  String get devices_reportSent => 'Reporte enviado a soporte.';
+
+  @override
+  String get devices_reportForbidden => 'Tu rol no puede enviar reportes.';
+
+  @override
+  String get devices_reportInvalid => 'Revisa la incidencia y la descripción.';
+
+  @override
+  String get devices_reportError =>
+      'No pudimos enviar el reporte. Inténtalo de nuevo en un momento.';
+
+  @override
+  String get more_title => 'Más';
+
+  @override
+  String more_subtitle(String name) {
+    return 'Administración de $name';
+  }
+
+  @override
+  String get more_loading => 'Cargando la administración…';
+
+  @override
+  String get more_errorTitle => 'No pudimos cargar la administración';
+
+  @override
+  String get more_forbidden => 'Tu rol no puede hacer esto.';
+
+  @override
+  String get more_partial =>
+      'Parte de la administración no llegó. Se muestra lo que hay.';
+
+  @override
+  String get more_saveError =>
+      'No pudimos guardar. Inténtalo de nuevo en un momento.';
+
+  @override
+  String get more_saving => 'Guardando…';
+
+  @override
+  String get more_devicesHint =>
+      'Salud de sensores y gateways · reportar problemas';
+
+  @override
+  String get more_calendarTitle => 'Calendario del campus';
+
+  @override
+  String get more_addEvent => '+ Evento';
+
+  @override
+  String get more_calendarUnavailable => 'No pudimos cargar el calendario.';
+
+  @override
+  String get more_noEvents =>
+      'No hay periodos ni eventos en los próximos 90 días.';
+
+  @override
+  String get more_calendarNote =>
+      'Los periodos y eventos ajustan la previsión de ocupación.';
+
+  @override
+  String more_showAllEvents(int count) {
+    return 'Ver todos ($count)';
+  }
+
+  @override
+  String get more_typeEvent => 'Evento del campus';
+
+  @override
+  String get more_typeClasses => 'Clases';
+
+  @override
+  String get more_typeExams => 'Exámenes';
+
+  @override
+  String get more_typeRecess => 'Receso';
+
+  @override
+  String get more_impactLow => 'Bajo';
+
+  @override
+  String get more_impactMedium => 'Medio';
+
+  @override
+  String get more_impactHigh => 'Alto';
+
+  @override
+  String get more_wholeCampus => 'Todo el campus';
+
+  @override
+  String more_wholeLot(String name) {
+    return '$name · todo el estacionamiento';
+  }
+
+  @override
+  String more_dateRange(String from, String to) {
+    return 'del $from al $to';
+  }
+
+  @override
+  String get more_newEventTitle => 'Nuevo evento';
+
+  @override
+  String get more_newEventSubtitle =>
+      'Los eventos ajustan la previsión de ocupación del campus.';
+
+  @override
+  String get more_eventType => 'Tipo';
+
+  @override
+  String get more_eventName => 'Nombre del evento *';
+
+  @override
+  String get more_eventNameHint => 'Feria de empleo';
+
+  @override
+  String get more_eventDate => 'Fecha *';
+
+  @override
+  String get more_eventFrom => 'Desde *';
+
+  @override
+  String get more_eventTo => 'Hasta *';
+
+  @override
+  String get more_eventStart => 'Inicio';
+
+  @override
+  String get more_eventEnd => 'Fin';
+
+  @override
+  String get more_eventScope => 'Zona afectada';
+
+  @override
+  String get more_eventImpact => 'Impacto esperado en la demanda';
+
+  @override
+  String get more_eventWhen => 'Cuándo';
+
+  @override
+  String get more_saveEvent => 'Guardar evento';
+
+  @override
+  String get more_eventSaved =>
+      'Evento guardado. El pronóstico lo tendrá en cuenta.';
+
+  @override
+  String get more_eventInvalid => 'Revisa las fechas y la zona afectada.';
+
+  @override
+  String get more_errorNameMissing => 'Escribe el nombre del evento.';
+
+  @override
+  String more_errorNameTooLong(int max) {
+    return 'Usa hasta $max caracteres.';
+  }
+
+  @override
+  String get more_errorEndsBefore => 'El fin debe ser posterior al inicio.';
+
+  @override
+  String get more_cancelEvent => 'Cancelar evento';
+
+  @override
+  String get more_cancelling => 'Cancelando…';
+
+  @override
+  String get more_keepEvent => 'Conservarlo';
+
+  @override
+  String get more_cancelEventConfirmTitle => '¿Cancelar este evento?';
+
+  @override
+  String get more_cancelEventConfirmMessage =>
+      'El pronóstico dejará de considerarlo y se recalcularán las franjas afectadas.';
+
+  @override
+  String get more_cancelEventNote =>
+      'Cancelarlo regenera el pronóstico de las franjas afectadas.';
+
+  @override
+  String get more_eventCancelled => 'Evento cancelado.';
+
+  @override
+  String get more_domainsTitle => 'Dominios institucionales';
+
+  @override
+  String get more_addDomain => 'Añadir';
+
+  @override
+  String get more_domainsUnavailable => 'No pudimos cargar los dominios.';
+
+  @override
+  String get more_noDomains => 'Aún no hay dominios de correo habilitados.';
+
+  @override
+  String get more_domainVerified => 'Verificado';
+
+  @override
+  String get more_domainPending => 'Pendiente';
+
+  @override
+  String more_removeDomain(String domain) {
+    return 'Retirar $domain';
+  }
+
+  @override
+  String get more_adminOnlyDomains =>
+      'Solo un administrador gestiona los dominios.';
+
+  @override
+  String get more_addDomainTitle => 'Añadir dominio';
+
+  @override
+  String get more_addDomainSubtitle =>
+      'Los correos de este dominio podrán entrar y se asociarán a tu universidad.';
+
+  @override
+  String get more_domainField => 'Dominio *';
+
+  @override
+  String get more_domainHint => 'posgrado.universidad.edu';
+
+  @override
+  String get more_domainHelper => 'Sin @. Ejemplo: alumnos.universidad.edu';
+
+  @override
+  String get more_domainPendingNote =>
+      'Quedará como Pendiente hasta que se verifique. Mientras tanto nadie podrá entrar con ese dominio.';
+
+  @override
+  String get more_addDomainSubmit => 'Añadir dominio';
+
+  @override
+  String get more_domainInvalid =>
+      'Escribe un dominio como alumnos.universidad.edu.';
+
+  @override
+  String get more_domainTaken => 'Ese dominio pertenece a otra institución.';
+
+  @override
+  String get more_domainDuplicate => 'Tu universidad ya tiene ese dominio.';
+
+  @override
+  String get more_domainAdded =>
+      'Dominio añadido. Quedará pendiente hasta que se verifique.';
+
+  @override
+  String get more_removeDomainTitle => '¿Retirar este dominio?';
+
+  @override
+  String get more_removeDomainMessage =>
+      'Nadie nuevo podrá registrarse con él. Las cuentas ya verificadas se conservan.';
+
+  @override
+  String get more_removeDomainConfirm => 'Retirar';
+
+  @override
+  String get more_domainRemoved => 'Dominio retirado.';
+
+  @override
+  String get more_teamTitle => 'Equipo e invitaciones';
+
+  @override
+  String get more_teamUnavailable => 'No pudimos cargar el equipo.';
+
+  @override
+  String more_teamSummary(int members, int pending) {
+    String _temp0 = intl.Intl.pluralLogic(
+      members,
+      locale: localeName,
+      other: '$members miembros',
+      one: '1 miembro',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      pending,
+      locale: localeName,
+      other: '$pending invitaciones pendientes',
+      one: '1 invitación pendiente',
+      zero: 'sin invitaciones pendientes',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get more_you => 'tú';
+
+  @override
+  String get more_roleAdmin => 'Administrador';
+
+  @override
+  String get more_roleOperator => 'Operador';
+
+  @override
+  String get more_roleAdminHelp =>
+      'Gestiona distribución, accesos, dominios y equipo.';
+
+  @override
+  String get more_roleOperatorHelp => 'Opera el turno y atiende las alertas.';
+
+  @override
+  String get more_invitationPending => 'Invitación pendiente';
+
+  @override
+  String get more_invitationExpired => 'Invitación vencida';
+
+  @override
+  String get more_adminOnlyTeam => 'Solo un administrador invita personas.';
+
+  @override
+  String get more_invite => 'Invitar administrador u operador';
+
+  @override
+  String get more_inviteTitle => 'Invitar al equipo';
+
+  @override
+  String get more_inviteSubtitle =>
+      'Recibirá un enlace en su correo institucional.';
+
+  @override
+  String get more_inviteEmail => 'Correo institucional *';
+
+  @override
+  String get more_inviteEmailHint => 'persona@universidad.edu';
+
+  @override
+  String get more_inviteRole => 'Rol';
+
+  @override
+  String get more_inviteNote =>
+      'Aparecerá como «Invitación pendiente» hasta que acepte.';
+
+  @override
+  String get more_inviteSend => 'Enviar invitación';
+
+  @override
+  String get more_inviteSending => 'Enviando la invitación…';
+
+  @override
+  String get more_inviteSent => 'Invitación enviada.';
+
+  @override
+  String get more_inviteEmailInvalid => 'Escribe un correo válido.';
+
+  @override
+  String get more_inviteEmailDomain =>
+      'Usa un correo de un dominio verificado de tu universidad.';
+
+  @override
+  String get more_inviteEmailTaken =>
+      'Esa persona ya tiene cuenta o una invitación vigente.';
 }

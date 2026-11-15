@@ -5,6 +5,27 @@
     { "id": 1, "email": "conductor@upc.edu.pe", "fullName": "Camila Rojas", "role": "DRIVER" },
     { "id": 2, "email": "administrador@upc.edu.pe", "role": "ADMIN" }
   ],
+  "tenant": {
+    "domains": [
+      { "id": 1, "domain": "upc.edu.pe", "verifiedDaysAgo": 400 },
+      { "id": 2, "domain": "alumnos.upc.edu.pe", "verifiedDaysAgo": 120 },
+      { "id": 3, "domain": "posgrado.upc.edu.pe" }
+    ],
+    "otherInstitutionDomains": ["pucp.edu.pe", "ulima.edu.pe"],
+    "team": [
+      { "id": 3, "email": "laura.mendez@upc.edu.pe", "fullName": "Laura Méndez", "role": "ADMIN", "status": "ACTIVE" },
+      { "id": 4, "email": "carlos.rivas@upc.edu.pe", "fullName": "Carlos Rivas", "role": "OPERATOR", "status": "ACTIVE" },
+      { "id": 5, "email": "jorge.salas@upc.edu.pe", "fullName": "Jorge Salas", "role": "OPERATOR", "status": "ACTIVE" },
+      { "id": 6, "email": "mariana.soto@upc.edu.pe", "fullName": "Mariana Soto", "role": "OPERATOR", "status": "INVITED", "invitationExpiresInDays": 5 },
+      { "id": 7, "email": "diego.paz@upc.edu.pe", "role": "OPERATOR", "status": "INVITED", "invitationExpiresInDays": -2 }
+    ]
+  },
+  "calendarEvents": [
+    { "id": 1, "type": "CLASSES", "name": "Clases del ciclo", "impact": "MEDIUM", "startDay": -60, "endDay": 45 },
+    { "id": 2, "type": "EXAMS", "name": "Exámenes parciales", "impact": "HIGH", "startDay": 3, "endDay": 7 },
+    { "id": 3, "type": "CAMPUS_EVENT", "name": "Feria universitaria", "impact": "MEDIUM", "startDay": 5, "startTime": "09:00", "endTime": "17:00", "lotId": 1, "zoneId": 13 },
+    { "id": 4, "type": "RECESS", "name": "Día sin clases", "impact": "LOW", "startDay": 10, "endDay": 10 }
+  ],
   "parkingLots": [
     {
       "id": 1,

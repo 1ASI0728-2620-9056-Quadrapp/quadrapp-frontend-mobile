@@ -10,6 +10,7 @@ import 'package:quadrapp_mobile/composition/language/language_cubit.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/repositories/session_store.dart';
 import 'package:quadrapp_mobile/contexts/iam/domain/value_objects/user_role.dart';
 import 'package:quadrapp_mobile/contexts/parking_configuration/domain/repositories/selected_lot_store.dart';
+import 'package:quadrapp_mobile/core/design_system/design_system.dart';
 import 'package:quadrapp_mobile/core/identifiers/identifiers.dart';
 
 import '../contexts/iam/support.dart';
@@ -393,6 +394,74 @@ void main() {
           '/ops/analytics',
           selectedLot: lot,
           role: UserRole.admin,
+          language: AppLanguage.es,
+          before: before,
+        ),
+      );
+    });
+  }
+  // Operación: Más (administrador y operador) con sus ventanas, y
+  // Dispositivos con sus vistas y «Reportar problema».
+  for (final (name, path, role, before)
+      in <(String, String, UserRole, Future<void> Function(WidgetTester)?)>[
+        ('ops_more', '/ops/more', UserRole.admin, null),
+        ('ops_more_operator', '/ops/more', UserRole.operator, null),
+        (
+          'ops_more_event',
+          '/ops/more',
+          UserRole.admin,
+          (tester) async => tester.tap(find.text('+ Evento')),
+        ),
+        (
+          'ops_more_event_detail',
+          '/ops/more',
+          UserRole.admin,
+          (tester) async => tester.tap(find.text('Feria universitaria')),
+        ),
+        (
+          'ops_more_domain',
+          '/ops/more',
+          UserRole.admin,
+          (tester) async => tester.tap(find.text('Añadir')),
+        ),
+        (
+          'ops_more_invite',
+          '/ops/more',
+          UserRole.admin,
+          (tester) async {
+            final button = find.text('Invitar administrador u operador');
+            await tester.ensureVisible(button);
+            await tester.pumpAndSettle();
+            await tester.tap(button);
+          },
+        ),
+        ('ops_devices', '/ops/more/devices', UserRole.admin, null),
+        (
+          'ops_devices_sensors',
+          '/ops/more/devices',
+          UserRole.operator,
+          (tester) async => tester.tap(find.text('Sensores')),
+        ),
+        (
+          'ops_devices_report',
+          '/ops/more/devices',
+          UserRole.admin,
+          (tester) async {
+            final button = find.widgetWithText(QaButton, 'Reportar problema');
+            await tester.ensureVisible(button);
+            await tester.pumpAndSettle();
+            await tester.tap(button);
+          },
+        ),
+      ]) {
+    testWidgets('$name ${small.width}', (tester) async {
+      await withRealShadows(
+        () => shoot(
+          tester,
+          name,
+          const Shot(tall, Brightness.light, 1),
+          path,
+          role: role,
           language: AppLanguage.es,
           before: before,
         ),

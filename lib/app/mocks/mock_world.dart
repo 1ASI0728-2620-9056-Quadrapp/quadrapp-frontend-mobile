@@ -9,6 +9,7 @@ import 'package:quadrapp_mobile/app/mocks/mock_errors.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_lots.dart';
 import 'package:quadrapp_mobile/app/mocks/mock_seed.dart';
 import 'package:quadrapp_mobile/app/mocks/notifications/mock_notifications_state.dart';
+import 'package:quadrapp_mobile/app/mocks/tenant/mock_tenant_state.dart';
 import 'package:quadrapp_mobile/core/time/clock.dart';
 
 export 'package:quadrapp_mobile/app/mocks/mock_devices.dart';
@@ -65,6 +66,7 @@ class MockWorld {
     final now = clock.now();
     lots = seed.buildLots(now);
     devices = seed.buildDevices(now);
+    tenant = MockTenantState(seed, now);
   }
 
   /// Los datos de prueba de partida.
@@ -88,6 +90,9 @@ class MockWorld {
 
   /// Suscripciones, preferencias y tokens de notificaciones.
   final MockNotificationsState notifications;
+
+  /// Dominios, equipo, calendario del campus e incidencias reportadas.
+  late MockTenantState tenant;
 
   final StreamController<MockSpaceEvent> _events =
       StreamController<MockSpaceEvent>.broadcast();
@@ -273,6 +278,7 @@ class MockWorld {
     lots = seed.buildLots(now);
     devices = seed.buildDevices(now);
     notifications.loadSeed(seed);
+    tenant.load(seed, now);
     iam.resetCodes();
   }
 
