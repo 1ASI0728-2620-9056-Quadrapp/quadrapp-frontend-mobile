@@ -1,0 +1,34 @@
+reference/
+build/
+.dart_tool/
+.gradle/
+node_modules/
+.idea/
+*.iml
+
+# --- Flutter / Dart (agregado en la Fase 0) ---
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+*.iws
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/coverage/
+*.log
+app.*.symbols
+app.*.map.json
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Capturas de diseño generadas por las pruebas golden (test/screenshots).
+/docs/screenshots/
+
+# Preferencias locales de Flutter DevTools.
+devtools_options.yaml
